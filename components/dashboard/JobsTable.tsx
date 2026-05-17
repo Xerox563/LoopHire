@@ -2,33 +2,33 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { JobRecord, JobStatus } from "@/types";
-import { formatDate, statusColor } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { useState } from "react";
+import { 
+  Search, 
+  ExternalLink, 
+  Trash2, 
+  Filter,
+  MoreHorizontal
+} from "lucide-react";
 
-const STATUS_LABELS: Record<JobStatus, string> = {
-  pending: "Pending",
-  applied: "Applied",
-  failed: "Failed",
-  skipped: "Skipped",
-};
-
-const STATUS_ICONS: Record<JobStatus, string> = {
-  pending: "⏳",
-  applied: "✅",
-  failed: "❌",
-  skipped: "⏭️",
+const STATUS_CONFIG: Record<JobStatus, { label: string; icon: string; color: string }> = {
+  pending: { label: "Pending", icon: "⏳", color: "#f59e0b" },
+  applied: { label: "Applied", icon: "✅", color: "#10b981" },
+  failed: { label: "Failed", icon: "❌", color: "#ef4444" },
+  skipped: { label: "Skipped", icon: "⏭️", color: "#a1a1aa" },
 };
 
 type FilterStatus = JobStatus | "all";
 
 /**
- * Interactive table for displaying and managing job applications
+ * Enterprise-Grade Jobs Table
+ * Features: Cinematic hover, glassmorphism, advanced filtering
  */
 export default function JobsTable({ jobs, onDelete }: { jobs: JobRecord[]; onDelete?: (id: string) => void }) {
   const [filter, setFilter] = useState<FilterStatus>("all");
   const [search, setSearch] = useState("");
 
-  // Apply search and status filters
   const filtered = jobs.filter((j) => {
     const matchStatus = filter === "all" || j.status === filter;
     const matchSearch = !search || 
@@ -44,47 +44,38 @@ export default function JobsTable({ jobs, onDelete }: { jobs: JobRecord[]; onDel
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="rounded-2xl overflow-hidden" 
-      style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+      className="glass-card !p-0"
     >
-      {/* Table Header with Search and Filters */}
-      <div 
-        className="px-6 py-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
-        style={{ borderBottom: "1px solid var(--border)" }}
-      >
+      {/* Table Toolbar */}
+      <div className="px-8 py-6 border-b border-white/5 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
         <div>
-          <h2 className="font-semibold text-lg" style={{ color: "var(--text-primary)" }}>
-            Job Applications
-          </h2>
-          <p className="text-sm mt-0.5" style={{ color: "var(--text-muted)" }}>
-            {filtered.length} of {jobs.length} jobs
+          <h2 className="text-xl font-bold tracking-tight mb-1">Application Nodes</h2>
+          <p className="text-xs font-medium text-text-muted uppercase tracking-widest">
+            {filtered.length} active instances
           </p>
         </div>
-        <div className="flex gap-3 flex-wrap">
-          {/* Company/Role Search Input */}
-          <input 
-            value={search} 
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            placeholder="Search company or role…"
-            className="text-sm px-4 py-2 rounded-xl outline-none"
-            style={{ 
-              background: "var(--surface-2)", 
-              border: "1px solid var(--border)", 
-              color: "var(--text-primary)", 
-              width: 220 
-            }} 
-          />
-          {/* Status Filter Tabs */}
-          <div className="flex gap-1 p-1 rounded-xl" style={{ background: "var(--surface-2)" }}>
+        
+        <div className="flex flex-wrap gap-4 items-center">
+          {/* Futuristic Search */}
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within:text-accent transition-colors" />
+            <input 
+              value={search} 
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filter by company or role..."
+              className="pl-11 pr-6 py-2.5 rounded-xl bg-white/5 border border-white/10 outline-none text-sm w-[260px] focus:border-accent/50 focus:bg-white/[0.08] transition-all"
+            />
+          </div>
+
+          {/* Minimal Filter Tabs */}
+          <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
             {filters.map(f => (
               <button 
                 key={f} 
                 onClick={() => setFilter(f)}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize"
-                style={{
-                  background: filter === f ? "var(--accent)" : "transparent",
-                  color: filter === f ? "white" : "var(--text-secondary)",
-                }}
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
+                  filter === f ? "bg-accent text-white shadow-lg shadow-accent/20" : "text-text-muted hover:text-text-secondary"
+                }`}
               >
                 {f}
               </button>
@@ -93,81 +84,92 @@ export default function JobsTable({ jobs, onDelete }: { jobs: JobRecord[]; onDel
         </div>
       </div>
 
-      {/* Responsive Data Table */}
+      {/* Modern Table Body */}
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full">
           <thead>
-            <tr style={{ borderBottom: "1px solid var(--border)" }}>
-              {["Company", "Role", "Status", "Applied At", "Notes", ""].map(h => (
+            <tr className="border-b border-white/5">
+              {["Identity", "Node Status", "Timestamp", "System Notes", ""].map((h, i) => (
                 <th 
                   key={h} 
-                  className="text-left px-6 py-3 text-xs font-medium uppercase tracking-wider"
-                  style={{ color: "var(--text-muted)" }}
+                  className={`px-8 py-4 text-left text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted ${i === 4 ? "text-right" : ""}`}
                 >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            <AnimatePresence initial={false}>
+          <tbody className="divide-y divide-white/5">
+            <AnimatePresence mode="popLayout">
               {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-16" style={{ color: "var(--text-muted)" }}>
-                    No jobs found
+                <motion.tr initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <td colSpan={5} className="text-center py-20 text-sm text-text-muted italic">
+                    No matching application nodes found in the current buffer.
                   </td>
-                </tr>
+                </motion.tr>
               ) : filtered.map((job, i) => (
                 <motion.tr 
                   key={job.id}
                   initial={{ opacity: 0, x: -10 }} 
                   animate={{ opacity: 1, x: 0 }} 
                   exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.2, delay: i * 0.03 }}
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.02)" }}
-                  style={{ borderBottom: "1px solid var(--border)" }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="group hover:bg-white/[0.02] transition-colors"
                 >
-                  <td className="px-6 py-4 font-medium" style={{ color: "var(--text-primary)" }}>
-                    <a 
-                      href={job.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:underline" 
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {job.company || "—"}
-                    </a>
+                  <td className="px-8 py-5">
+                    <div className="flex flex-col">
+                      <span className="font-bold text-sm tracking-tight group-hover:text-accent transition-colors">
+                        {job.company || "Unknown Entity"}
+                      </span>
+                      <span className="text-xs text-text-secondary mt-1">
+                        {job.role || "Standard Role"}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4" style={{ color: "var(--text-secondary)", maxWidth: 200 }}>
-                    <span className="truncate block">{job.role || "—"}</span>
+                  
+                  <td className="px-8 py-5">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/5 bg-white/5">
+                      <span className="text-xs">{STATUS_CONFIG[job.status].icon}</span>
+                      <span 
+                        className="text-[10px] font-bold uppercase tracking-widest"
+                        style={{ color: STATUS_CONFIG[job.status].color }}
+                      >
+                        {STATUS_CONFIG[job.status].label}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span 
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-                      style={{ background: statusColor(job.status) + "15", color: statusColor(job.status) }}
-                    >
-                      <span>{STATUS_ICONS[job.status]}</span>
-                      {STATUS_LABELS[job.status]}
+
+                  <td className="px-8 py-5">
+                    <span className="text-xs text-text-muted font-mono">
+                      {formatDate(job.appliedAt)}
                     </span>
                   </td>
-                  <td className="px-6 py-4" style={{ color: "var(--text-muted)" }}>
-                    {formatDate(job.appliedAt)}
-                  </td>
-                  <td className="px-6 py-4 max-w-xs" style={{ color: "var(--text-muted)" }}>
-                    <span className="truncate block text-xs">
+
+                  <td className="px-8 py-5 max-w-xs">
+                    <span className="text-xs text-text-secondary truncate block">
                       {job.failureReason || job.notes || "—"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    {onDelete && (
-                      <button 
-                        onClick={() => onDelete(job.id)}
-                        className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors"
-                        style={{ color: "var(--text-muted)" }}
+
+                  <td className="px-8 py-5 text-right">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <a 
+                        href={job.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg hover:bg-white/10 text-text-muted hover:text-white transition-all"
                       >
-                        🗑️
-                      </button>
-                    )}
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                      {onDelete && (
+                        <button 
+                          onClick={() => onDelete(job.id)}
+                          className="p-2 rounded-lg hover:bg-error/10 text-text-muted hover:text-error transition-all"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </motion.tr>
               ))}

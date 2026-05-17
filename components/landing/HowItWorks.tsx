@@ -1,130 +1,108 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { 
+  FileSearch, 
+  BrainCircuit, 
+  Send, 
+  CheckCircle2 
+} from "lucide-react";
 
-// The process steps for using LoopHire
 const STEPS = [
   {
-    n: "01",
-    icon: "📋",
-    title: "Upload your Profile",
-    desc: "Simply upload your resume and fill in your preferences. Our AI will understand your background and career goals.",
-    detail: "AI-powered profile analysis",
+    icon: FileSearch,
+    title: "Upload Profile",
+    desc: "Our neural engine analyzes your career trajectory and technical strengths.",
+    label: "Step 01"
   },
   {
-    n: "02",
-    icon: "🤖",
-    title: "AI Finds Matches",
-    desc: "LoopHire scans thousands of job listings to find the ones that perfectly match your skills and experience level.",
-    detail: "Real-time job discovery",
+    icon: BrainCircuit,
+    title: "AI Analysis",
+    desc: "Autonomous agents match your profile against millions of open positions.",
+    label: "Step 02"
   },
   {
-    n: "03",
-    icon: "🖱️",
+    icon: Send,
     title: "One-Click Apply",
-    desc: "Our automation handles the repetitive parts of the application process, ensuring everything is filled out correctly.",
-    detail: "Seamless application flow",
+    desc: "Automated delivery of high-signal applications tailored for each role.",
+    label: "Step 03"
   },
   {
-    n: "04",
-    icon: "⏸️",
-    title: "Track Your Success",
-    desc: "Monitor your application status and get insights into your progress through our centralized dashboard.",
-    detail: "Comprehensive tracking tools",
-  },
+    icon: CheckCircle2,
+    title: "Track Success",
+    desc: "Experience real-time updates and interview invites on your dashboard.",
+    label: "Step 04"
+  }
 ];
 
 /**
- * How It Works section with a vertical timeline
+ * How It Works - Premium SaaS Timeline
+ * Features: Cinematic reveal, glassmorphism, vertical rhythm
  */
 export default function HowItWorks() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section id="how" ref={ref} className="py-32 px-6 relative">
-      <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={inView ? { opacity: 1, y: 0 } : {}} 
-          transition={{ duration: 0.7 }} 
-          className="text-center mb-20"
-        >
-          <p className="text-xs font-medium tracking-widest mb-4" style={{ color: "var(--accent)" }}>
-            HOW IT WORKS
-          </p>
-          <h2 className="font-display text-5xl md:text-6xl" style={{ color: "var(--text-primary)" }}>
-            Four steps.<br />
-            <span className="gradient-text italic">Zero tedium.</span>
-          </h2>
-        </motion.div>
-
-        {/* Steps — vertical timeline visualization */}
-        <div className="relative">
-          {/* Vertical central line */}
-          <div 
-            className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px" 
-            style={{ 
-              background: "linear-gradient(to bottom, transparent, var(--border), var(--border-bright), var(--border), transparent)" 
-            }} 
-          />
-
-          {STEPS.map((step, i) => (
-            <motion.div 
-              key={step.n}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.7, delay: i * 0.15 }}
-              className={`relative flex gap-8 mb-16 md:mb-12 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} flex-row items-start`}
+    <section id="how" className="py-32 px-6 relative">
+      <div className="container mx-auto">
+        <div className="flex flex-col lg:flex-row items-center gap-20">
+          {/* Left Side: Content */}
+          <div className="lg:w-1/2">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-6"
             >
-              {/* Icon and Step Number bubble */}
-              <div 
-                className="relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center text-xl"
-                style={{ background: "var(--surface-2)", border: "1px solid var(--border-bright)" }}
-              >
-                {step.icon}
-                <div 
-                  className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ background: "var(--accent)", color: "white" }}
-                >
-                  {i + 1}
-                </div>
-              </div>
+              The Protocol
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-gradient font-display text-5xl md:text-7xl font-bold tracking-tight mb-8"
+            >
+              Four steps to <br /> <span className="italic accent-gradient">career mastery.</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-text-secondary text-lg max-w-xl mb-12 leading-relaxed"
+            >
+              LoopHire eliminates the friction of manual job searching. 
+              Our autonomous agents handle the complexity, so you can focus on the interviews.
+            </motion.p>
+          </div>
 
-              {/* Step Content Card */}
-              <motion.div 
-                whileHover={{ y: -4 }} 
-                transition={{ duration: 0.2 }}
-                className="card-glass rounded-2xl p-6 flex-1 max-w-md"
-                style={{ background: "var(--surface)" }}
+          {/* Right Side: Visual Steps */}
+          <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {STEPS.map((step, i) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="glass-card p-8 group"
               >
-                <p className="text-xs font-medium mb-2" style={{ color: "var(--text-muted)" }}>
-                  STEP {step.n}
-                </p>
-                <h3 className="text-xl font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+                <div className="flex items-start justify-between mb-8">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <step.icon className="w-6 h-6 text-accent group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <span className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
+                    {step.label}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-accent transition-colors">
                   {step.title}
                 </h3>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm text-text-secondary leading-relaxed">
                   {step.desc}
                 </p>
-                <span 
-                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full"
-                  style={{ 
-                    background: "rgba(255,102,64,0.08)", 
-                    color: "var(--accent)", 
-                    border: "1px solid rgba(255,102,64,0.15)" 
-                  }}
-                >
-                  ✦ {step.detail}
-                </span>
               </motion.div>
-
-              {/* Layout spacer for alternating desktop view */}
-              <div className="hidden md:block flex-1 max-w-md" />
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,109 +1,122 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { 
+  Zap, 
+  Shield, 
+  Cpu, 
+  LineChart, 
+  Target, 
+  Layout, 
+  Clock, 
+  Rocket 
+} from "lucide-react";
 
-// List of features to highlight
 const FEATURES = [
   { 
-    icon: "🧠", 
-    title: "AI-Powered Matching", 
-    desc: "Our smart matching engine analyzes your profile and job requirements to find the perfect fit for you." 
+    icon: Cpu, 
+    title: "Neural Engine", 
+    desc: "Advanced matching algorithms that learn from your preferences and successful applications." 
   },
   { 
-    icon: "⚡", 
-    title: "Instant Applications", 
-    desc: "Apply to multiple positions with just a few clicks. Save time on repetitive data entry." 
+    icon: Rocket, 
+    title: "Turbo Apply", 
+    desc: "Scale your reach with one-click multi-platform application automation." 
   },
   { 
-    icon: "📊", 
-    title: "Progress Tracking", 
-    desc: "Keep tabs on all your applications in one centralized dashboard. Know exactly where you stand." 
+    icon: LineChart, 
+    title: "Deep Analytics", 
+    desc: "Real-time insights into your application performance and matching scores." 
   },
   { 
-    icon: "🔐", 
-    title: "Secure & Private", 
-    desc: "Your data is encrypted and handled with care. We prioritize your privacy and security." 
+    icon: Shield, 
+    title: "Privacy First", 
+    desc: "Enterprise-grade encryption for your personal data and application history." 
   },
   { 
-    icon: "🎯", 
-    title: "Targeted Outreach", 
-    desc: "Craft personalized messages for each application to increase your chances of getting noticed." 
+    icon: Target, 
+    title: "Precision Matching", 
+    desc: "Identify the high-signal opportunities that actually fit your career trajectory." 
   },
   { 
-    icon: "📸", 
-    title: "Visual History", 
-    desc: "Maintain a visual record of your applications and communications for easy reference." 
+    icon: Zap, 
+    title: "Instant Alerts", 
+    desc: "Be the first to apply with our ultra-low latency job discovery engine." 
   },
   { 
-    icon: "⏸️", 
-    title: "Full Control", 
-    desc: "Review every application before it's sent. You stay in the driver's seat at all times." 
+    icon: Clock, 
+    title: "Auto-Scheduler", 
+    desc: "Optimal timing for application delivery based on historical recruiter activity." 
   },
   { 
-    icon: "🚀", 
-    title: "Modern Tech Stack", 
-    desc: "Built with the latest technologies like Next.js and Tailwind CSS for a smooth, fast experience." 
+    icon: Layout, 
+    title: "Bento Workflow", 
+    desc: "A beautifully organized workspace designed for clarity and high productivity." 
   },
 ];
 
 /**
- * Features section showcasing the platform's capabilities
+ * Modern Bento Grid Features
+ * Features: Cinematic reveal, glassmorphism, depth shadows
  */
 export default function Features() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
   return (
-    <section id="features" ref={ref} className="py-32 px-6 relative">
-      {/* Subtle background decoration */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5"
-          style={{ background: "radial-gradient(circle, var(--accent), transparent)" }} 
-        />
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
+    <section id="features" className="py-32 px-6 relative overflow-hidden">
+      <div className="container mx-auto">
         {/* Section Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={inView ? { opacity: 1, y: 0 } : {}} 
-          transition={{ duration: 0.7 }} 
-          className="text-center mb-16"
-        >
-          <p className="text-xs font-medium tracking-widest mb-4" style={{ color: "var(--accent)" }}>
-            FEATURES
-          </p>
-          <h2 className="font-display text-5xl md:text-6xl" style={{ color: "var(--text-primary)" }}>
-            Everything you need.<br />
-            <span className="gradient-text italic">Nothing you don't.</span>
-          </h2>
-        </motion.div>
+        <div className="text-center mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4"
+          >
+            Engineering Excellence
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-gradient font-display text-5xl md:text-7xl font-bold tracking-tight"
+          >
+            Built for the <br /> <span className="italic accent-gradient">high-growth</span> elite.
+          </motion.h2>
+        </div>
 
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((f, i) => (
-            <motion.div 
+            <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.07 }}
-              whileHover={{ y: -6, borderColor: "rgba(255,102,64,0.3)" }}
-              className="p-6 rounded-2xl cursor-default transition-colors"
-              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="glass-card group"
             >
-              <div className="text-3xl mb-4">{f.icon}</div>
-              <h3 className="font-semibold text-base mb-2" style={{ color: "var(--text-primary)" }}>
-                {f.title}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                {f.desc}
-              </p>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+                  <f.icon className="w-6 h-6 text-accent group-hover:text-accent-2 transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-accent transition-colors">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+              
+              {/* Subtle light effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Background Decorative Element */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px] pointer-events-none z-0 opacity-50" />
     </section>
   );
 }

@@ -1,24 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0a0f;
-  --color-surface: #111118;
-  --color-surface-2: #16161f;
-  --color-border: #1e1e2e;
-  --color-border-bright: #2a2a3e;
-  --color-text-primary: #f0f0f8;
-  --color-text-secondary: #8888aa;
-  --color-text-muted: #44445a;
+  /* Premium SaaS Color Palette */
+  --color-background: #050505;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #121212;
+  --color-border: #1a1a1a;
+  --color-border-bright: #2a2a2a;
+  
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #52525b;
+  
   --color-accent: #ff6640;
   --color-accent-2: #ff9060;
-  --color-accent-glow: rgba(255, 102, 64, 0.15);
-  --color-green: #22c55e;
-  --color-yellow: #eab308;
-  --color-red: #ef4444;
-  --color-blue: #3b82f6;
+  --color-accent-glow: rgba(255, 102, 64, 0.2);
   
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body: 'DM Sans', sans-serif;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Typography */
+  --font-display: "Geist Sans", "Inter", system-ui, sans-serif;
+  --font-body: "Geist Sans", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", monospace;
 }
 
 @layer base {
@@ -26,10 +32,12 @@
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
+    cursor: none !important; /* Force custom cursor */
   }
   
   html { 
-    scroll-behavior: smooth; 
+    scroll-behavior: initial; /* Lenis handles this */
+    background: var(--color-background);
   }
   
   body {
@@ -38,63 +46,116 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: white;
   }
 }
 
 @layer components {
-  .btn-primary {
-    background: var(--color-accent);
-    color: white;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .btn-primary:hover {
-    background: var(--color-accent-2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px var(--color-accent-glow);
+  /* Apple/Linear style button */
+  .btn-premium {
+    @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full font-medium transition-all duration-300 overflow-hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+    border: 1px solid var(--color-border-bright);
+    backdrop-filter: blur(10px);
   }
 
-  .card-glass {
-    background: rgba(17,17,24,0.8);
-    backdrop-filter: blur(20px);
+  .btn-premium:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Cinematic Primary Action */
+  .btn-cinematic {
+    @apply relative inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-white transition-all duration-500 overflow-hidden;
+    background: var(--color-accent);
+    box-shadow: 0 0 20px var(--color-accent-glow);
+  }
+
+  .btn-cinematic:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 40px var(--color-accent-glow);
+    background: var(--color-accent-2);
+  }
+
+  /* Glassmorphic Bento Cards */
+  .glass-card {
+    @apply relative p-8 rounded-[2rem] overflow-hidden transition-all duration-500;
+    background: rgba(10, 10, 10, 0.4);
     border: 1px solid var(--color-border);
+    backdrop-filter: blur(20px);
+  }
+
+  .glass-card:hover {
+    border-color: var(--color-border-bright);
+    background: rgba(15, 15, 15, 0.6);
+  }
+
+  /* Premium Sidebar/Nav Blur */
+  .premium-blur {
+    background: rgba(5, 5, 5, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
   }
 }
 
 @layer utilities {
-  .font-display { font-family: var(--font-display); }
-  
-  .gradient-text {
-    background: linear-gradient(135deg, #ff6640 0%, #ff9060 50%, #ffb480 100%);
+  .text-gradient {
+    background: linear-gradient(to right, #ffffff 30%, #a1a1aa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
-  .glow-orange { 
-    box-shadow: 0 0 40px rgba(255,102,64,0.2), 0 0 80px rgba(255,102,64,0.05); 
+
+  .accent-gradient {
+    background: linear-gradient(135deg, #ff6640 0%, #ff9060 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-mesh {
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(255, 102, 64, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 40%);
+  }
+
+  .mask-radial {
+    mask-image: radial-gradient(circle, black 0%, transparent 100%);
   }
 }
 
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-@keyframes pulse-glow { 0%,100%{opacity:.4} 50%{opacity:.8} }
-@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-@keyframes fade-up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes beam { 0%{transform:translateX(-100%) skewX(-15deg)} 100%{transform:translateX(300%) skewX(-15deg)} }
+/* Custom Scrollbar - Minimal */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: var(--color-border-bright); 
+  border-radius: 10px; 
+}
 
-.animate-float { animation: float 6s ease-in-out infinite; }
-.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-marquee { animation: marquee 30s linear infinite; }
-.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+/* Animations */
+@keyframes noise {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+}
 
-.status-pending { color: var(--color-yellow); }
-.status-applied { color: var(--color-green); }
-.status-failed { color: var(--color-red); }
-.status-skipped { color: var(--color-text-secondary); }
-
+.noise-bg {
+  position: fixed;
+  inset: -200%;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.02;
+  animation: noise 8s steps(10) infinite;
+}

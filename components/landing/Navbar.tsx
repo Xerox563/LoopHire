@@ -1,72 +1,111 @@
 "use client";
 
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Menu, X, Rocket, LayoutDashboard } from "lucide-react";
 
 /**
- * Top navigation bar that becomes opaque on scroll
+ * Premium Sticky Navbar
+ * Features: Magnetic buttons, blur effects, animated indicators
  */
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const { scrollY } = useScroll();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Change background when scrolling past 40px
-  useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 40));
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <motion.nav 
-      initial={{ y: -20, opacity: 0 }} 
-      animate={{ y: 0, opacity: 1 }} 
-      transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between transition-all duration-300"
-      style={{ 
-        background: scrolled ? "rgba(10,10,15,0.9)" : "transparent", 
-        backdropFilter: scrolled ? "blur(20px)" : "none", 
-        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent" 
-      }}
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8, ease: "circOut" }}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
+        scrolled ? "py-4" : "py-8"
+      }`}
     >
-      {/* Brand logo and name */}
-      <Link href="/" className="flex items-center gap-2">
-        <div 
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-          style={{ background: "var(--accent)", color: "white" }}
-        >
-          L
-        </div>
-        <span className="font-semibold text-base" style={{ color: "var(--text-primary)" }}>
-          LoopHire
-        </span>
-      </Link>
+      <div className="container mx-auto px-6">
+        <div className={`relative flex items-center justify-between px-6 py-3 rounded-2xl border transition-all duration-500 ${
+          scrolled 
+            ? "bg-black/40 border-white/10 backdrop-blur-xl shadow-2xl shadow-black/50" 
+            : "bg-transparent border-transparent"
+        }`}>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-accent/20">
+              <Rocket className="w-6 h-6 text-white" />
+            </div>
+            <span className="font-display text-xl font-bold tracking-tight text-white">
+              LoopHire
+            </span>
+          </Link>
 
-      {/* Navigation links - hidden on mobile */}
-      <div className="hidden md:flex items-center gap-8">
-        {[
-          ["#how", "How it works"], 
-          ["#features", "Features"], 
-          ["#demo", "Demo"]
-        ].map(([href, label]) => (
-          <a 
-            key={label} 
-            href={href} 
-            className="text-sm transition-colors duration-200 hover:opacity-100"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {label}
-          </a>
-        ))}
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            {[
+              { label: "Features", href: "#features" },
+              { label: "Protocol", href: "#how" },
+              { label: "Analytics", href: "/dashboard" },
+            ].map((link) => (
+              <Link 
+                key={link.label} 
+                href={link.href}
+                className="text-xs font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors relative group"
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-500 group-hover:w-full" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <button className="btn-premium !py-2 !px-5 flex items-center gap-2 group">
+                <LayoutDashboard className="w-4 h-4 text-accent" />
+                <span className="text-xs font-bold uppercase tracking-widest">Dashboard</span>
+              </button>
+            </Link>
+
+            {/* Mobile Toggle */}
+            <button 
+              className="md:hidden p-2 text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Dashboard access button */}
-      <Link href="/dashboard">
-        <motion.button 
-          whileHover={{ scale: 1.04 }} 
-          whileTap={{ scale: 0.96 }}
-          className="btn-primary px-5 py-2.5 rounded-lg text-sm font-medium"
+      {/* Mobile Menu - Premium Slide */}
+      <motion.div
+        initial={false}
+        animate={mobileMenuOpen ? { x: 0, opacity: 1 } : { x: "100%", opacity: 0 }}
+        className="fixed inset-0 z-[101] bg-black/95 backdrop-blur-2xl p-12 md:hidden flex flex-col items-center justify-center gap-12"
+      >
+        <button 
+          className="absolute top-8 right-8 p-4 text-white"
+          onClick={() => setMobileMenuOpen(false)}
         >
-          Dashboard →
-        </motion.button>
-      </Link>
+          <X className="w-8 h-8" />
+        </button>
+        
+        {["Features", "Protocol", "Dashboard"].map((label) => (
+          <Link 
+            key={label} 
+            href={label === "Dashboard" ? "/dashboard" : `#${label.toLowerCase()}`}
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-4xl font-bold tracking-tighter text-white hover:text-accent transition-colors"
+          >
+            {label}
+          </Link>
+        ))}
+      </motion.div>
     </motion.nav>
   );
 }
