@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Terminal as TerminalIcon, Cpu, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { Play, Square, Terminal as TerminalIcon, Cpu, AlertCircle, CheckCircle2, Loader2, Save } from "lucide-react";
+import { JobRecord } from "@/types";
+import { ResumeData } from "./ResumeSection";
 
 interface LogEntry {
   id: string;
@@ -11,7 +13,12 @@ interface LogEntry {
   message: string;
 }
 
-export default function AutomationSection() {
+interface AutomationSectionProps {
+  jobs: JobRecord[];
+  resumeData?: ResumeData;
+}
+
+export default function AutomationSection({ jobs, resumeData }: AutomationSectionProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [progress, setProgress] = useState(0);
@@ -34,15 +41,22 @@ export default function AutomationSection() {
   }, [logs]);
 
   const startAutomation = async () => {
+    if (!resumeData) {
+      addLog("Cannot start: No resume profile found. Please upload and parse your resume first.", "error");
+      return;
+    }
+
     setIsRunning(true);
     setLogs([]);
     setProgress(0);
     addLog("Initializing LoopHire OS Automation Core...", "system");
-    addLog("Connecting to Playwright browser engine...", "info");
+    addLog("Syncing jobs and resume profile to automation engine...", "info");
 
     try {
       const response = await fetch("/api/run-automation", {
         method: "POST",
+        body: JSON.stringify({ jobs, resumeData }),
+        headers: { "Content-Type": "application/json" },
       });
 
       if (!response.body) throw new Error("No response body");

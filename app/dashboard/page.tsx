@@ -195,7 +195,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <AutomationSection />
+            <AutomationSection jobs={jobs} resumeData={resumeData} />
           </motion.div>
         )}
       </div>

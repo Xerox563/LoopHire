@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 
 export async function POST(req: NextRequest) {
+  const { jobs, resumeData } = await req.json();
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
@@ -17,6 +18,19 @@ export async function POST(req: NextRequest) {
         
         send({ type: "log", message: "Starting automation engine...", level: "system" });
         send({ type: "progress", value: 5 });
+
+        // Sync Resume
+        const resumeText = `EXPERIENCE:\n${resumeData.experience}\n\nTECHNICAL SKILLS:\n${resumeData.technicalSkills}\n\nEDUCATION:\n${resumeData.education}\n\nPROJECTS:\n${resumeData.projects}`;
+        fs.writeFileSync(path.join(automationPath, "resume/resume.txt"), resumeText);
+        send({ type: "log", message: "Resume profile synced.", level: "info" });
+
+        // Sync Jobs
+        const csvHeader = "id,url,company,role,status,appliedAt,failureReason,notes\n";
+        const csvRows = jobs.map((j: any) => 
+          `${j.id},${j.url},${j.company},${j.role},${j.status},${j.appliedAt || ""},${j.failureReason || ""},${j.notes || ""}`
+        ).join("\n");
+        fs.writeFileSync(path.join(automationPath, "storage/jobs.csv"), csvHeader + csvRows);
+        send({ type: "log", message: `Synced ${jobs.length} jobs to storage.`, level: "info" });
 
         // In a real production app, we would use a proper job queue (like BullMQ)
         // For this demo/internal tool, we'll spawn the process directly
