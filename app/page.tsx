@@ -4,6 +4,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
 import TerminalDemo from "@/components/landing/TerminalDemo";
 import CTA from "@/components/landing/CTA";
+import Footer from "@/components/landing/Footer";
 
 /**
  * Landing page entry point - orchestrates all landing sections
@@ -34,13 +35,8 @@ export default function Home() {
       {/* Bottom call to action */}
       <CTA />
       
-      {/* Simple footer with technology stack info */}
-      <footer 
-        className="text-center py-8 text-sm" 
-        style={{ color: "var(--text-muted)", borderTop: "1px solid var(--border)" }}
-      >
-        Built with Modern Web Technologies · LoopHire 2026
-      </footer>
+      {/* Simple footer with technology stack info and navigation */}
+      <Footer />
     </main>
   );
 }
