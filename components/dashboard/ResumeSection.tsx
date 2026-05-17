@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, FileText, Check, Edit2, Save, X } from "lucide-react";
+import { Upload, FileText, Check, Edit2, Save, X, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
 
 interface ResumeSectionProps {
   onUpdate: (data: ResumeData) => void;
@@ -26,6 +28,38 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
     projects: "",
   });
   const [tempData, setTempData] = useState<ResumeData>(data);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load resume from Supabase on mount
+  useEffect(() => {
+    async function loadResume() {
+      try {
+        const { data: resume, error } = await supabase
+          .from("resume")
+          .select("*")
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .single();
+
+        if (resume) {
+          const loadedData = {
+            experience: resume.experience,
+            technicalSkills: resume.technical_skills,
+            education: resume.education,
+            projects: resume.projects,
+          };
+          setData(loadedData);
+          setTempData(loadedData);
+          onUpdate(loadedData);
+        }
+      } catch (err) {
+        console.error("Failed to load resume from Supabase:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadResume();
+  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,11 +77,22 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
       });
       
       if (response.ok) {
-        const parsed = await response.json();
-        setData(parsed);
-        setTempData(parsed);
-        onUpdate(parsed);
-      } else {
+          const parsed = await response.json();
+          
+          // Save to Supabase
+          const { error: dbError } = await supabase.from("resume").insert({
+            experience: parsed.experience,
+            technical_skills: parsed.technicalSkills,
+            education: parsed.education,
+            projects: parsed.projects,
+          });
+
+          if (dbError) console.error("Supabase error:", dbError);
+
+          setData(parsed);
+          setTempData(parsed);
+          onUpdate(parsed);
+        } else {
         try {
           const err = await response.json();
           const errorMsg = err.details 
@@ -67,7 +112,21 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // Update in Supabase
+    const { error: dbError } = await supabase.from("resume").insert({
+      experience: tempData.experience,
+      technical_skills: tempData.technicalSkills,
+      education: tempData.education,
+      projects: tempData.projects,
+    });
+
+    if (dbError) {
+      console.error("Supabase error:", dbError);
+      alert("Failed to save changes to database");
+      return;
+    }
+
     setData(tempData);
     onUpdate(tempData);
     setIsEditing(false);
@@ -77,6 +136,15 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
     setTempData(data);
     setIsEditing(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-96 flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-10 h-10 text-accent animate-spin" />
+        <span className="text-text-muted font-bold uppercase tracking-widest">Loading Profile...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

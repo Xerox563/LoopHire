@@ -11,6 +11,8 @@ export interface JobRecord {
   appliedAt?: string;
   failureReason?: string;
   notes?: string;
+  outreachMessage?: string;
+  outreachSubject?: string;
 }
 
 // Statistics for the dashboard display
