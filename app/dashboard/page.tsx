@@ -9,6 +9,7 @@ import StatsCards from "@/components/dashboard/StatsCards";
 import JobsTable from "@/components/dashboard/JobsTable";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import AddJobModal from "@/components/dashboard/AddJobModal";
+import ResumeSection, { ResumeData } from "@/components/dashboard/ResumeSection";
 
 // Initial demo data to show the dashboard in action
 const DEMO_JOBS: JobRecord[] = [
@@ -28,7 +29,9 @@ let idCounter = 100;
  * Main dashboard page for managing and tracking job applications
  */
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState<"overview" | "resume" | "automation">("overview");
   const [jobs, setJobs] = useState<JobRecord[]>(DEMO_JOBS);
+  const [resumeData, setResumeData] = useState<ResumeData | undefined>();
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -71,73 +74,138 @@ export default function DashboardPage() {
         <motion.div 
           initial={{ opacity: 0, y: 16 }} 
           animate={{ opacity: 1, y: 0 }} 
-          className="mb-8 flex items-start justify-between"
+          className="mb-8 flex items-end justify-between"
         >
           <div>
             <h1 className="font-display text-4xl mb-1" style={{ color: "var(--text-primary)" }}>
-              Dashboard Overview
+              {activeTab === "overview" ? "Dashboard Overview" : activeTab === "resume" ? "Resume Profile" : "Automation Control"}
             </h1>
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-              Manage and track your job search progress
+              {activeTab === "overview" 
+                ? "Manage and track your job search progress" 
+                : activeTab === "resume" 
+                ? "Your parsed resume sections used for AI personalization" 
+                : "Run and monitor your application automation"}
             </p>
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.04, y: -2 }} 
-            whileTap={{ scale: 0.96 }}
-            onClick={() => setModalOpen(true)}
-            className="btn-primary px-6 py-3 rounded-xl text-sm font-medium flex items-center gap-2"
-          >
-            <span>＋</span> Add New Job
-          </motion.button>
+          <div className="flex gap-4">
+            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10">
+              <button 
+                onClick={() => setActiveTab("overview")}
+                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "overview" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
+              >
+                Overview
+              </button>
+              <button 
+                onClick={() => setActiveTab("resume")}
+                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "resume" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
+              >
+                Resume
+              </button>
+              <button 
+                onClick={() => setActiveTab("automation")}
+                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "automation" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
+              >
+                Automation
+              </button>
+            </div>
+            {activeTab === "overview" && (
+              <motion.button 
+                whileHover={{ scale: 1.04, y: -2 }} 
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setModalOpen(true)}
+                className="btn-primary px-6 py-3 rounded-xl text-sm font-medium flex items-center gap-2"
+              >
+                <span>＋</span> Add New Job
+              </motion.button>
+            )}
+          </div>
         </motion.div>
 
-        {/* Overview Stats Cards */}
-        <div className="mb-8">
-          <StatsCards stats={stats} />
-        </div>
+        {activeTab === "overview" && (
+          <>
+            {/* Overview Stats Cards */}
+            <div className="mb-8">
+              <StatsCards stats={stats} />
+            </div>
 
-        {/* Application Success Progress Visualization */}
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.3 }}
-          className="mb-8 rounded-2xl p-6" 
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
-              Overall Success Rate
-            </span>
-            <span className="text-sm font-bold" style={{ color: "var(--accent)" }}>
-              {stats.successRate}% successful applications
-            </span>
-          </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--surface-2)" }}>
+            {/* Application Success Progress Visualization */}
             <motion.div 
-              initial={{ width: 0 }} 
-              animate={{ width: `${stats.successRate}%` }}
-              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-              className="h-full rounded-full"
-              style={{ background: "linear-gradient(90deg, var(--accent), var(--accent-2))" }} 
-            />
-          </div>
-          <div className="flex gap-6 mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
-            <span><span style={{ color: "#22c55e" }}>●</span> {stats.applied} applied</span>
-            <span><span style={{ color: "#eab308" }}>●</span> {stats.pending} pending</span>
-            <span><span style={{ color: "#ef4444" }}>●</span> {stats.failed} failed</span>
-            <span><span style={{ color: "#8888aa" }}>●</span> {stats.skipped} skipped</span>
-          </div>
-        </motion.div>
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ delay: 0.3 }}
+              className="mb-8 rounded-2xl p-6" 
+              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+                  Overall Success Rate
+                </span>
+                <span className="text-sm font-bold" style={{ color: "var(--accent)" }}>
+                  {stats.successRate}% successful applications
+                </span>
+              </div>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--surface-2)" }}>
+                <motion.div 
+                  initial={{ width: 0 }} 
+                  animate={{ width: `${stats.successRate}%` }}
+                  transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                  className="h-full rounded-full"
+                  style={{ background: "linear-gradient(90deg, var(--accent), var(--accent-2))" }} 
+                />
+              </div>
+              <div className="flex gap-6 mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
+                <span><span style={{ color: "#22c55e" }}>●</span> {stats.applied} applied</span>
+                <span><span style={{ color: "#eab308" }}>●</span> {stats.pending} pending</span>
+                <span><span style={{ color: "#ef4444" }}>●</span> {stats.failed} failed</span>
+                <span><span style={{ color: "#8888aa" }}>●</span> {stats.skipped} skipped</span>
+              </div>
+            </motion.div>
 
-        {/* Main Content: Jobs Table and Activity Feed */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <JobsTable jobs={jobs} onDelete={handleDelete} />
-          </div>
-          <div className="lg:col-span-1">
-            <ActivityFeed jobs={jobs} />
-          </div>
-        </div>
+            {/* Main Content: Jobs Table and Activity Feed */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <JobsTable jobs={jobs} onDelete={handleDelete} />
+              </div>
+              <div className="lg:col-span-1">
+                <ActivityFeed jobs={jobs} />
+              </div>
+            </div>
+          </>
+        )}
+
+        {activeTab === "resume" && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <ResumeSection 
+              initialData={resumeData} 
+              onUpdate={(data) => {
+                setResumeData(data);
+                showToast("Resume profile updated");
+              }} 
+            />
+          </motion.div>
+        )}
+
+        {activeTab === "automation" && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            {/* Automation Section Placeholder */}
+            <div className="p-12 rounded-2xl border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center text-center">
+              <div className="w-20 h-20 rounded-3xl bg-accent/20 flex items-center justify-center mb-6">
+                <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Automation Interface Initializing</h3>
+              <p className="text-text-muted max-w-md">
+                Connecting to Playwright core and neural engine. Ready to process your pending applications.
+              </p>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Add Job Modal Dialog */}
