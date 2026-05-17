@@ -65,6 +65,8 @@ async function findElement(
 export interface FillResult {
   action: "submitted" | "skipped" | "aborted";
   screenshotPath?: string;
+  message?: string;
+  subject?: string;
 }
 
 /**
@@ -127,6 +129,8 @@ export async function fillAndReviewApplication(
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     logger.info(`📋 APPLICATION READY FOR REVIEW: ${job.company}`);
+    logger.info(`Subject: ${message.subject}`);
+    logger.info(`Body: ${message.body.slice(0, 100)}...`);
 
     if (!autoSubmit) {
       // For now, in LoopHire dashboard, we'll assume we want to submit if we reached this point
@@ -150,7 +154,12 @@ export async function fillAndReviewApplication(
     await page.screenshot({ path: finalScreenshot, fullPage: false });
     logger.info(`Application submitted! Screenshot: ${finalScreenshot}`);
 
-    return { action: "submitted", screenshotPath: finalScreenshot };
+    return { 
+      action: "submitted", 
+      screenshotPath: finalScreenshot,
+      message: message.body,
+      subject: message.subject
+    };
   } finally {
     await page.close();
   }

@@ -137,7 +137,11 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
             <div className="flex flex-col gap-3">
               {!isRunning ? (
                 <button
-                  onClick={startAutomation}
+                  onClick={() => {
+                    if (window.confirm("Ready to start applying? This will open Chrome and begin the automation flow for all pending jobs.")) {
+                      startAutomation();
+                    }
+                  }}
                   className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-accent text-white font-bold uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-accent/20"
                 >
                   <Play className="w-4 h-4 fill-current" />

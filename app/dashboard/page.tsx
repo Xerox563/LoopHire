@@ -11,30 +11,53 @@ import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import AddJobModal from "@/components/dashboard/AddJobModal";
 import ResumeSection, { ResumeData } from "@/components/dashboard/ResumeSection";
 import AutomationSection from "@/components/dashboard/AutomationSection";
-
-// Initial demo data to show the dashboard in action
-const DEMO_JOBS: JobRecord[] = [
-  { id: "job_001", url: "https://company1.com/careers/1", company: "TechFlow", role: "Senior Frontend Developer", status: "applied", appliedAt: new Date(Date.now() - 3600000).toISOString(), notes: "Referral application" },
-  { id: "job_002", url: "https://company2.com/careers/2", company: "DataSphere", role: "Full Stack Engineer", status: "applied", appliedAt: new Date(Date.now() - 7200000).toISOString() },
-  { id: "job_003", url: "https://company3.com/careers/3", company: "CloudNet", role: "Backend Architect", status: "pending" },
-  { id: "job_004", url: "https://company4.com/careers/4", company: "MobileFirst", role: "iOS Developer", status: "pending" },
-  { id: "job_005", url: "https://company5.com/careers/5", company: "SecureOps", role: "DevOps Engineer", status: "failed", appliedAt: new Date(Date.now() - 86400000).toISOString(), failureReason: "Technical interview feedback" },
-  { id: "job_006", url: "https://company6.com/careers/6", company: "AI Vision", role: "ML Engineer", status: "skipped", appliedAt: new Date(Date.now() - 172800000).toISOString() },
-  { id: "job_007", url: "https://company7.com/careers/7", company: "FinEdge", role: "Staff Engineer", status: "applied", appliedAt: new Date(Date.now() - 259200000).toISOString() },
-  { id: "job_008", url: "https://company8.com/careers/8", company: "HealthTech", role: "React Native Developer", status: "pending" },
-];
-
-let idCounter = 100;
+import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 /**
  * Main dashboard page for managing and tracking job applications
  */
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "resume" | "automation">("overview");
-  const [jobs, setJobs] = useState<JobRecord[]>(DEMO_JOBS);
+  const [jobs, setJobs] = useState<JobRecord[]>([]);
   const [resumeData, setResumeData] = useState<ResumeData | undefined>();
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load jobs from Supabase on mount
+  useEffect(() => {
+    async function loadJobs() {
+      try {
+        const { data, error } = await supabase
+          .from("jobs")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (data) {
+          const formattedJobs: JobRecord[] = data.map(j => ({
+            id: j.id,
+            url: j.url,
+            company: j.company,
+            role: j.role,
+            status: j.status,
+            appliedAt: j.applied_at,
+            failureReason: j.failure_reason,
+            notes: j.notes,
+            outreachMessage: j.outreach_message,
+            outreachSubject: j.outreach_subject,
+          }));
+          setJobs(formattedJobs);
+        }
+      } catch (err) {
+        console.error("Failed to load jobs:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadJobs();
+  }, []);
 
   // Derive statistics from current job list
   const stats = computeStats(jobs);
@@ -46,21 +69,47 @@ export default function DashboardPage() {
   }
 
   // Handle adding a new job manually
-  const handleAdd = useCallback((url: string, company: string, role: string, notes: string) => {
+  const handleAdd = useCallback(async (url: string, company: string, role: string, notes: string) => {
+    const id = `job_${Date.now()}`;
     const newJob: JobRecord = {
-      id: `job_${++idCounter}`,
+      id,
       url, 
       company, 
       role, 
       notes: notes || undefined,
       status: "pending",
     };
+
+    // Save to Supabase
+    const { error } = await supabase.from("jobs").insert({
+      id,
+      url,
+      company,
+      role,
+      notes: notes || null,
+      status: "pending",
+    });
+
+    if (error) {
+      console.error("Supabase error:", error);
+      showToast("Failed to save job to database");
+      return;
+    }
+
     setJobs(prev => [newJob, ...prev]);
     showToast(`Successfully added: ${company || "New Job"}`);
   }, []);
 
   // Handle removing a job from the list
-  const handleDelete = useCallback((id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
+    const { error } = await supabase.from("jobs").delete().eq("id", id);
+    
+    if (error) {
+      console.error("Supabase error:", error);
+      showToast("Failed to remove job from database");
+      return;
+    }
+
     setJobs(prev => prev.filter((j: JobRecord) => j.id !== id));
     showToast("Application removed from tracker");
   }, []);
@@ -126,9 +175,15 @@ export default function DashboardPage() {
         {activeTab === "overview" && (
           <>
             {/* Overview Stats Cards */}
-            <div className="mb-8">
-              <StatsCards stats={stats} />
+        <div className="mb-8">
+          {isLoading ? (
+            <div className="h-32 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-accent animate-spin" />
             </div>
+          ) : (
+            <StatsCards stats={stats} />
+          )}
+        </div>
 
             {/* Application Success Progress Visualization */}
             <motion.div 
@@ -166,10 +221,22 @@ export default function DashboardPage() {
             {/* Main Content: Jobs Table and Activity Feed */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <JobsTable jobs={jobs} onDelete={handleDelete} />
+                {isLoading ? (
+                  <div className="h-64 flex items-center justify-center bg-white/[0.02] rounded-2xl border border-white/5">
+                    <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                  </div>
+                ) : (
+                  <JobsTable jobs={jobs} onDelete={handleDelete} />
+                )}
               </div>
               <div className="lg:col-span-1">
-                <ActivityFeed jobs={jobs} />
+                {isLoading ? (
+                  <div className="h-64 flex items-center justify-center bg-white/[0.02] rounded-2xl border border-white/5">
+                    <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                  </div>
+                ) : (
+                  <ActivityFeed jobs={jobs} />
+                )}
               </div>
             </div>
           </>

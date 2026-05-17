@@ -7,6 +7,7 @@ import { createOpenRouterClient, generateOutreachMessage } from "./ai/openrouter
 import { launchBrowser, closeBrowser, saveSession } from "./playwright/browser";
 import { scrapeJobDetail } from "./playwright/jobScraper";
 import { fillAndReviewApplication } from "./playwright/applicationFiller";
+import { supabase } from "@/lib/supabase";
 
 export async function runJobApplications(
   config: AppConfig, 
@@ -32,6 +33,24 @@ export async function runJobApplications(
       logger.info(`\nProcessing job: ${job.id} — ${job.url}`);
       const result = await processJob(job, resume, config, aiClient, session.context);
       results.push(result);
+
+      // Sync result to Supabase
+      const { error: dbError } = await supabase
+        .from("jobs")
+        .update({
+          status: result.status,
+          applied_at: result.status === "applied" ? new Date().toISOString() : null,
+          failure_reason: result.error || null,
+          outreach_message: (result as any).outreachMessage || null,
+          outreach_subject: (result as any).outreachSubject || null,
+        })
+        .eq("id", job.id);
+
+      if (dbError) {
+        logger.error(`Failed to update job ${job.id} in Supabase: ${dbError.message}`);
+      } else {
+        logger.info(`Job ${job.id} status synced to Supabase.`);
+      }
 
       // Save browser session after each job
       await saveSession(session.context);
@@ -105,7 +124,9 @@ async function processJob(
         success: true,
         status: "applied",
         message: `${jobDetail.company}|${jobDetail.role}`,
-      };
+        outreachMessage: fillResult.message,
+        outreachSubject: fillResult.subject,
+      } as any;
     }
 
     if (fillResult.action === "skipped") {
