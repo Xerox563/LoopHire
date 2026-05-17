@@ -50,9 +50,14 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
       } else {
         try {
           const err = await response.json();
-          console.error("Server error:", err.error || "Unknown server error");
+          const errorMsg = err.details 
+            ? `${err.error}: ${err.details}` 
+            : (err.error || "Unknown server error");
+          console.error("Server error:", errorMsg);
+          alert(`Error: ${errorMsg}`); // Show alert for immediate feedback
         } catch (e) {
           console.error("Server returned non-JSON error:", response.status, response.statusText);
+          alert(`Server Error (${response.status}): ${response.statusText}`);
         }
       }
     } catch (error) {

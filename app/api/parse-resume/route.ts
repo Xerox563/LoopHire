@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import pdf from "pdf-parse";
+
+// More robust import for pdf-parse
+const pdf = require("pdf-parse");
 
 const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -25,11 +27,21 @@ Respond ONLY with the JSON object.`;
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.OPENROUTER_API_KEY) {
-      throw new Error("OPENROUTER_API_KEY is not configured");
+    const key = process.env.OPENROUTER_API_KEY;
+    console.log("API Key present:", !!key, key ? `${key.slice(0, 10)}...` : "NONE");
+
+    if (!key) {
+      return NextResponse.json({ error: "OPENROUTER_API_KEY is missing from environment variables" }, { status: 500 });
     }
-    console.log("Starting resume parsing...");
-    const formData = await req.formData();
+    
+    console.log("Parsing form data...");
+    let formData;
+    try {
+      formData = await req.formData();
+    } catch (e) {
+      console.error("Form data error:", e);
+      return NextResponse.json({ error: "Failed to parse form data" }, { status: 400 });
+    }
     const file = formData.get("file") as File;
 
     if (!file) {
@@ -41,15 +53,25 @@ export async function POST(req: Request) {
 
     let text = "";
     if (file.type === "application/pdf") {
-      console.log("Parsing PDF...");
+      console.log("PDF detected, starting extraction...");
       try {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const data = await pdf(buffer);
-        text = data.text;
-        console.log("PDF parsed successfully, text length:", text.length);
-      } catch (pdfError) {
-        console.error("PDF parsing error:", pdfError);
-        throw new Error(`PDF extraction failed: ${pdfError instanceof Error ? pdfError.message : String(pdfError)}`);
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        
+        // Use a safer way to call pdf-parse
+        const data = await pdf(buffer).catch((err: any) => {
+          console.error("Internal pdf-parse error:", err);
+          throw err;
+        });
+        
+        text = data.text || "";
+        console.log(`PDF extracted. Text length: ${text.length}`);
+      } catch (pdfError: any) {
+        console.error("Detailed PDF Error:", pdfError);
+        return NextResponse.json({ 
+          error: "PDF extraction failed", 
+          details: pdfError?.message || String(pdfError) 
+        }, { status: 500 });
       }
     } else {
       console.log("Parsing as text...");
