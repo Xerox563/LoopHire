@@ -1,0 +1,136 @@
+// lib/automation/runner.ts
+
+import { AppConfig, JobRecord, RunResult } from "@/types";
+import { logger } from "./utils/logger";
+import { withRetry, humanDelay } from "./utils/retry";
+import { createOpenRouterClient, generateOutreachMessage } from "./ai/openrouter";
+import { launchBrowser, closeBrowser, saveSession } from "./playwright/browser";
+import { scrapeJobDetail } from "./playwright/jobScraper";
+import { fillAndReviewApplication } from "./playwright/applicationFiller";
+
+export async function runJobApplications(
+  config: AppConfig, 
+  jobs: JobRecord[],
+  resume: string
+): Promise<RunResult[]> {
+  const results: RunResult[] = [];
+  const aiClient = createOpenRouterClient(config);
+
+  const pending = jobs.filter(j => j.status === "pending");
+
+  if (pending.length === 0) {
+    logger.info("No pending jobs found to process");
+    return results;
+  }
+
+  logger.info(`Found ${pending.length} pending job(s) to process`);
+
+  const session = await launchBrowser(config.headless);
+
+  try {
+    for (const job of pending) {
+      logger.info(`\nProcessing job: ${job.id} — ${job.url}`);
+      const result = await processJob(job, resume, config, aiClient, session.context);
+      results.push(result);
+
+      // Save browser session after each job
+      await saveSession(session.context);
+
+      // Human-like delay between jobs
+      if (pending.indexOf(job) < pending.length - 1) {
+        const waitMs = 5000 + Math.random() * 5000;
+        logger.info(`Waiting ${Math.round(waitMs / 1000)}s before next job...`);
+        await humanDelay(waitMs);
+      }
+    }
+  } finally {
+    await closeBrowser(session);
+  }
+
+  const applied = results.filter((r) => r.status === "applied").length;
+  const failed = results.filter((r) => r.status === "failed").length;
+  const skipped = results.filter((r) => r.status === "skipped").length;
+
+  logger.info(
+    `\nRun complete. Applied: ${applied} | Skipped: ${skipped} | Failed: ${failed}`
+  );
+
+  return results;
+}
+
+async function processJob(
+  job: JobRecord,
+  resume: string,
+  config: AppConfig,
+  aiClient: ReturnType<typeof createOpenRouterClient>,
+  context: import("playwright").BrowserContext
+): Promise<RunResult> {
+  try {
+    // Step 1: Scrape job details
+    const jobDetail = await withRetry(
+      () => scrapeJobDetail(context, job, config.actionDelayMs),
+      {
+        maxAttempts: config.maxRetries,
+        delayMs: 2000,
+        onRetry: (n, err) => logger.warn(`Scrape retry ${n}: ${err.message}`),
+      }
+    );
+
+    await humanDelay(config.actionDelayMs);
+
+    // Step 2: Generate AI message
+    const message = await generateOutreachMessage(
+      aiClient,
+      jobDetail,
+      resume,
+      config.openRouterModel,
+      config.maxRetries
+    );
+
+    logger.info(`Generated subject: "${message.subject}"`);
+    await humanDelay(config.actionDelayMs);
+
+    // Step 3: Fill and review application
+    const fillResult = await fillAndReviewApplication(
+      context,
+      jobDetail,
+      message,
+      config.actionDelayMs,
+      true // autoSubmit for now in LoopHire
+    );
+
+    if (fillResult.action === "submitted") {
+      return {
+        jobId: job.id,
+        success: true,
+        status: "applied",
+        message: `${jobDetail.company}|${jobDetail.role}`,
+      };
+    }
+
+    if (fillResult.action === "skipped") {
+      return {
+        jobId: job.id,
+        success: true,
+        status: "skipped",
+        message: "User chose to skip",
+      };
+    }
+
+    return {
+      jobId: job.id,
+      success: false,
+      status: "pending",
+      message: "User aborted",
+    };
+  } catch (err) {
+    const error = err instanceof Error ? err.message : String(err);
+    logger.error(`Job ${job.id} failed: ${error}`);
+    return {
+      jobId: job.id,
+      success: false,
+      status: "failed",
+      error,
+    };
+  }
+}
