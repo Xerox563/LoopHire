@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { PDFParse } from "pdf-parse";
+import pdf from "pdf-parse";
 
 const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -25,6 +25,9 @@ Respond ONLY with the JSON object.`;
 
 export async function POST(req: Request) {
   try {
+    if (!process.env.OPENROUTER_API_KEY) {
+      throw new Error("OPENROUTER_API_KEY is not configured");
+    }
     console.log("Starting resume parsing...");
     const formData = await req.formData();
     const file = formData.get("file") as File;
@@ -39,11 +42,15 @@ export async function POST(req: Request) {
     let text = "";
     if (file.type === "application/pdf") {
       console.log("Parsing PDF...");
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const parser = new PDFParse({ data: buffer });
-      const data = await parser.getText();
-      text = data.text;
-      console.log("PDF parsed successfully, text length:", text.length);
+      try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const data = await pdf(buffer);
+        text = data.text;
+        console.log("PDF parsed successfully, text length:", text.length);
+      } catch (pdfError) {
+        console.error("PDF parsing error:", pdfError);
+        throw new Error(`PDF extraction failed: ${pdfError instanceof Error ? pdfError.message : String(pdfError)}`);
+      }
     } else {
       console.log("Parsing as text...");
       text = await file.text();
@@ -72,7 +79,9 @@ export async function POST(req: Request) {
       throw new Error("Failed to get content from AI");
     }
 
-    const parsedData = JSON.parse(content);
+    // Clean markdown code blocks if present
+    const cleanedContent = content.replace(/```json\n?|```/g, "").trim();
+    const parsedData = JSON.parse(cleanedContent);
     return NextResponse.json(parsedData);
   } catch (error) {
     console.error("Resume parsing error:", error);

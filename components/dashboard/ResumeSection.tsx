@@ -48,8 +48,12 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
         setTempData(parsed);
         onUpdate(parsed);
       } else {
-        const err = await response.json();
-        console.error("Server error:", err.error);
+        try {
+          const err = await response.json();
+          console.error("Server error:", err.error || "Unknown server error");
+        } catch (e) {
+          console.error("Server returned non-JSON error:", response.status, response.statusText);
+        }
       }
     } catch (error) {
       console.error("Error parsing resume:", error);
