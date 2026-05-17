@@ -28,13 +28,17 @@ Respond ONLY with the JSON object.`;
 export async function POST(req: Request) {
   try {
     const key = process.env.OPENROUTER_API_KEY;
-    console.log("API Key present:", !!key, key ? `${key.slice(0, 10)}...` : "NONE");
-
     if (!key) {
+      console.log("API Key missing");
       return NextResponse.json({ error: "OPENROUTER_API_KEY is missing from environment variables" }, { status: 500 });
     }
     
-    console.log("Parsing form data...");
+    if (!key.startsWith("sk-or-v1-")) {
+      console.log("API Key format invalid");
+      return NextResponse.json({ error: "OPENROUTER_API_KEY format is invalid (should start with sk-or-v1-)" }, { status: 500 });
+    }
+
+    console.log("API Key present and formatted correctly");
     let formData;
     try {
       formData = await req.formData();
