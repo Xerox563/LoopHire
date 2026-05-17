@@ -16,8 +16,10 @@ export interface BrowserSession {
 export async function launchBrowser(headless: boolean): Promise<BrowserSession> {
   logger.info(`Launching browser (headless: ${headless})`);
 
+  // Use 'chrome' channel to use the system's Google Chrome instead of Chromium
   const browser = await chromium.launch({
     headless,
+    channel: "chrome",
     args: [
       "--no-sandbox",
       "--disable-blink-features=AutomationControlled",
