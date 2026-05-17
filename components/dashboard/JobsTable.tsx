@@ -64,7 +64,7 @@ export default function JobsTable({ jobs, onDelete }: { jobs: JobRecord[]; onDel
           {/* Company/Role Search Input */}
           <input 
             value={search} 
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             placeholder="Search company or role…"
             className="text-sm px-4 py-2 rounded-xl outline-none"
             style={{ 

@@ -57,7 +57,7 @@ export default function DashboardPage() {
 
   // Handle removing a job from the list
   const handleDelete = useCallback((id: string) => {
-    setJobs(prev => prev.filter(j => j.id !== id));
+    setJobs(prev => prev.filter((j: JobRecord) => j.id !== id));
     showToast("Application removed from tracker");
   }, []);
 
