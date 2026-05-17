@@ -33,28 +33,24 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
 
     setIsUploading(true);
     
-    // Simulate parsing for now - in real implementation, this would call an API
-    // that uses AI to extract sections from the resume file
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const text = event.target?.result as string;
-        
-        // Call parsing API
-        const response = await fetch("/api/parse-resume", {
-          method: "POST",
-          body: JSON.stringify({ text }),
-          headers: { "Content-Type": "application/json" },
-        });
-        
-        if (response.ok) {
-          const parsed = await response.json();
-          setData(parsed);
-          setTempData(parsed);
-          onUpdate(parsed);
-        }
-      };
-      reader.readAsText(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const response = await fetch("/api/parse-resume", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (response.ok) {
+        const parsed = await response.json();
+        setData(parsed);
+        setTempData(parsed);
+        onUpdate(parsed);
+      } else {
+        const err = await response.json();
+        console.error("Server error:", err.error);
+      }
     } catch (error) {
       console.error("Error parsing resume:", error);
     } finally {

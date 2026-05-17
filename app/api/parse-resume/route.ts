@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { PDFParse } from "pdf-parse";
 
 const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -24,10 +25,25 @@ Respond ONLY with the JSON object.`;
 
 export async function POST(req: Request) {
   try {
-    const { text } = await req.json();
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
+
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    let text = "";
+    if (file.type === "application/pdf") {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const parser = new PDFParse({ data: buffer });
+      const data = await parser.getText();
+      text = data.text;
+    } else {
+      text = await file.text();
+    }
 
     if (!text) {
-      return NextResponse.json({ error: "No text provided" }, { status: 400 });
+      return NextResponse.json({ error: "Could not extract text from file" }, { status: 400 });
     }
 
     const response = await client.chat.completions.create({
