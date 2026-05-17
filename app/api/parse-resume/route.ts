@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-// More robust import for pdf-parse
-const pdf = require("pdf-parse");
+// Import the core logic directly to avoid the buggy index.js
+const pdf = require("pdf-parse/lib/pdf-parse.js");
 
 const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
