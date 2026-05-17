@@ -10,6 +10,7 @@ import JobsTable from "@/components/dashboard/JobsTable";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import AddJobModal from "@/components/dashboard/AddJobModal";
 import ResumeSection, { ResumeData } from "@/components/dashboard/ResumeSection";
+import AutomationSection from "@/components/dashboard/AutomationSection";
 
 // Initial demo data to show the dashboard in action
 const DEMO_JOBS: JobRecord[] = [
@@ -194,16 +195,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            {/* Automation Section Placeholder */}
-            <div className="p-12 rounded-2xl border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center text-center">
-              <div className="w-20 h-20 rounded-3xl bg-accent/20 flex items-center justify-center mb-6">
-                <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Automation Interface Initializing</h3>
-              <p className="text-text-muted max-w-md">
-                Connecting to Playwright core and neural engine. Ready to process your pending applications.
-              </p>
-            </div>
+            <AutomationSection />
           </motion.div>
         )}
       </div>
