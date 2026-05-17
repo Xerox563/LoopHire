@@ -1,52 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: #0a0a0f;
-  --surface: #111118;
-  --surface-2: #16161f;
-  --border: #1e1e2e;
-  --border-bright: #2a2a3e;
-  --text-primary: #f0f0f8;
-  --text-secondary: #8888aa;
-  --text-muted: #44445a;
-  --accent: #ff6640;
-  --accent-2: #ff9060;
-  --accent-glow: rgba(255, 102, 64, 0.15);
-  --green: #22c55e;
-  --yellow: #eab308;
-  --red: #ef4444;
-  --blue: #3b82f6;
+@theme {
+  --color-background: #0a0a0f;
+  --color-surface: #111118;
+  --color-surface-2: #16161f;
+  --color-border: #1e1e2e;
+  --color-border-bright: #2a2a3e;
+  --color-text-primary: #f0f0f8;
+  --color-text-secondary: #8888aa;
+  --color-text-muted: #44445a;
+  --color-accent: #ff6640;
+  --color-accent-2: #ff9060;
+  --color-accent-glow: rgba(255, 102, 64, 0.15);
+  --color-green: #22c55e;
+  --color-yellow: #eab308;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--background);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+@layer base {
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  html { 
+    scroll-behavior: smooth; 
+  }
+  
+  body {
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 }
-::selection { background: var(--accent); color: white; }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--surface); }
-::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-.font-display { font-family: var(--font-display); }
-.gradient-text {
-  background: linear-gradient(135deg, #ff6640 0%, #ff9060 50%, #ffb480 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+@layer components {
+  .btn-primary {
+    background: var(--color-accent);
+    color: white;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-primary:hover {
+    background: var(--color-accent-2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px var(--color-accent-glow);
+  }
+
+  .card-glass {
+    background: rgba(17,17,24,0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--color-border);
+  }
 }
-.glow-orange { box-shadow: 0 0 40px rgba(255,102,64,0.2), 0 0 80px rgba(255,102,64,0.05); }
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #ff6640 0%, #ff9060 50%, #ffb480 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glow-orange { 
+    box-shadow: 0 0 40px rgba(255,102,64,0.2), 0 0 80px rgba(255,102,64,0.05); 
+  }
+}
 
 @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 @keyframes pulse-glow { 0%,100%{opacity:.4} 50%{opacity:.8} }
@@ -60,12 +93,8 @@ body {
 .animate-marquee { animation: marquee 30s linear infinite; }
 .animate-spin-slow { animation: spin-slow 20s linear infinite; }
 
-.card-glass {
-  background: rgba(17,17,24,0.8);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-}
-.status-pending { color: var(--yellow); }
-.status-applied { color: var(--green); }
-.status-failed { color: var(--red); }
-.status-skipped { color: var(--text-secondary); }
+.status-pending { color: var(--color-yellow); }
+.status-applied { color: var(--color-green); }
+.status-failed { color: var(--color-red); }
+.status-skipped { color: var(--color-text-secondary); }
+
