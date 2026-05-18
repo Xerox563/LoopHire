@@ -1,7 +1,7 @@
 // lib/automation/playwright/applicationFiller.ts
 
 import { BrowserContext, Page, Locator } from "playwright";
-import { JobDetail, GeneratedMessage } from "@/types";
+import { JobDetail, GeneratedMessage, AppConfig } from "@/types";
 import { logger } from "../utils/logger";
 import {
   navigateTo,
@@ -17,11 +17,18 @@ const APPLY_SELECTORS = {
   applyButton: [
     'button:has-text("Apply")',
     'a:has-text("Apply")',
+    'button:has-text("Apply to role")',
     "button.apply-button",
     '[data-test="apply-button"]',
     'button[class*="apply"]',
     'a[class*="apply"]',
   ],
+  firstName: ['input[name*="first_name"]', 'input[placeholder*="First Name"]', 'input[id*="first_name"]'],
+  lastName: ['input[name*="last_name"]', 'input[placeholder*="Last Name"]', 'input[id*="last_name"]'],
+  email: ['input[type="email"]', 'input[name*="email"]', 'input[placeholder*="Email"]'],
+  phone: ['input[type="tel"]', 'input[name*="phone"]', 'input[placeholder*="Phone"]'],
+  linkedin: ['input[name*="linkedin"]', 'input[placeholder*="LinkedIn"]'],
+  location: ['input[name*="location"]', 'input[placeholder*="location"]', 'input[placeholder*="City"]'],
   messageTextarea: [
     'textarea[name="message"]',
     'textarea[name="intro"]',
@@ -29,6 +36,7 @@ const APPLY_SELECTORS = {
     'textarea[placeholder*="introduce"]',
     'textarea[placeholder*="tell"]',
     'textarea[placeholder*="why"]',
+    'textarea[placeholder*="interests you"]',
     'textarea[data-test="message"]',
     "textarea",
   ],
@@ -62,6 +70,19 @@ async function findElement(
   return null;
 }
 
+async function fillField(page: Page, selectors: string[], value?: string) {
+  if (!value) return;
+  for (const sel of selectors) {
+    try {
+      const el = await page.locator(sel).first();
+      if (await el.isVisible()) {
+        await el.fill(value);
+        return;
+      }
+    } catch {}
+  }
+}
+
 export interface FillResult {
   action: "submitted" | "skipped" | "aborted";
   screenshotPath?: string;
@@ -79,6 +100,7 @@ export async function fillAndReviewApplication(
   job: JobDetail,
   message: GeneratedMessage,
   delayMs: number,
+  config: AppConfig,
   autoSubmit = false
 ): Promise<FillResult> {
   const page = await context.newPage();
@@ -104,6 +126,18 @@ export async function fillAndReviewApplication(
     await applyBtn.click();
     await humanDelay(delayMs, 600);
     await scrollPage(page, 300);
+
+    // FILL PERSONAL INFO IF PROFILE EXISTS
+    if (config.userProfile) {
+      const p = config.userProfile;
+      logger.info("Auto-filling personal information...");
+      await fillField(page, APPLY_SELECTORS.firstName, p.firstName);
+      await fillField(page, APPLY_SELECTORS.lastName, p.lastName);
+      await fillField(page, APPLY_SELECTORS.email, p.email);
+      await fillField(page, APPLY_SELECTORS.phone, p.phone);
+      await fillField(page, APPLY_SELECTORS.linkedin, p.linkedinUrl);
+      await fillField(page, APPLY_SELECTORS.location, p.currentLocation);
+    }
 
     // Find message textarea
     let textareaSelector: string | null = null;

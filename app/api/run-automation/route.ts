@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { runJobApplications } from "@/lib/automation/runner";
 import { setLogger } from "@/lib/automation/utils/logger";
 import { AppConfig, JobRecord } from "@/types";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   const { jobs, resumeData } = await req.json();
@@ -35,12 +36,32 @@ export async function POST(req: NextRequest) {
         send({ type: "log", message: "Starting unified automation engine...", level: "system" });
         send({ type: "progress", value: 5 });
 
+        // Fetch User Profile from Supabase
+        const { data: profile } = await supabase
+          .from("user_profile")
+          .select("*")
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .single();
+
+        const userProfile = profile ? {
+          firstName: profile.first_name,
+          lastName: profile.last_name,
+          email: profile.email,
+          phone: profile.phone,
+          linkedinUrl: profile.linkedin_url,
+          currentLocation: profile.current_location,
+          portfolioUrl: profile.portfolio_url,
+          githubUrl: profile.github_url,
+        } : undefined;
+
         const config: AppConfig = {
           openRouterApiKey: process.env.OPENROUTER_API_KEY || "",
           openRouterModel: process.env.OPENROUTER_MODEL || "deepseek/deepseek-chat",
           headless: process.env.HEADLESS === "true",
           actionDelayMs: parseInt(process.env.ACTION_DELAY_MS || "1200", 10),
           maxRetries: parseInt(process.env.MAX_RETRIES || "3", 10),
+          userProfile,
         };
 
         const resumeText = `EXPERIENCE:\n${resumeData.experience}\n\nTECHNICAL SKILLS:\n${resumeData.technicalSkills}\n\nEDUCATION:\n${resumeData.education}\n\nPROJECTS:\n${resumeData.projects}`;

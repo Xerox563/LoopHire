@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Upload, FileText, Check, Edit2, Save, X, Loader2 } from "lucide-react";
+import PersonalInfoSection from "@/components/dashboard/PersonalInfoSection";
 import { supabase } from "@/lib/supabase";
 import { useEffect } from "react";
 
@@ -147,8 +148,14 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-12">
+      {/* Personal Info Section */}
+      <PersonalInfoSection />
+
+      <div className="h-px bg-white/5" />
+
+      {/* Resume Management Section */}
+      <div className="space-y-6">
         <h2 className="text-2xl font-display font-bold text-white flex items-center gap-2">
           <FileText className="w-6 h-6 text-accent" />
           Resume Management

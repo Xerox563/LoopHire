@@ -115,6 +115,7 @@ async function processJob(
       jobDetail,
       message,
       config.actionDelayMs,
+      config,
       true // autoSubmit for now in LoopHire
     );
 

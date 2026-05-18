@@ -39,12 +39,24 @@ export interface GeneratedMessage {
   body: string;
 }
 
+export interface UserProfile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  linkedinUrl: string;
+  currentLocation: string;
+  portfolioUrl: string;
+  githubUrl: string;
+}
+
 export interface AppConfig {
   openRouterApiKey: string;
   openRouterModel: string;
   headless: boolean;
   actionDelayMs: number;
   maxRetries: number;
+  userProfile?: UserProfile;
 }
 
 export interface RunResult {

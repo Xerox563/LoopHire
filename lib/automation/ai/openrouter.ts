@@ -16,14 +16,14 @@ export function createOpenRouterClient(config: AppConfig): OpenAI {
   });
 }
 
-const SYSTEM_PROMPT = `You are writing a brief intro message for a job application on YC Work at a Startup.
+const SYSTEM_PROMPT = `You are writing a brief intro message for a job application.
 
 Rules:
 - 80-100 words MAX for the body. Be concise.
-- Sound human, not like a cover letter
-- 2-3 short paragraphs: hook → 1 relevant achievement → ask
-- Reference one specific thing from the job description
-- No buzzwords, no fluff, no "I am passionate about"
+- Sound human, not like a cover letter.
+- 2-3 short paragraphs: hook → 1 relevant achievement → why you are interested in this specific role/company → ask.
+- Reference one specific thing from the job description to show genuine interest.
+- No buzzwords, no fluff, no "I am passionate about".
 - End with a simple question like "Open to a quick chat?"
 
 Respond ONLY with valid JSON:
