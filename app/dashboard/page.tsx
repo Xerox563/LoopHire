@@ -26,38 +26,50 @@ export default function DashboardPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load jobs from Supabase on mount
-  useEffect(() => {
-    async function loadJobs() {
-      try {
-        const { data, error } = await supabase
-          .from("jobs")
-          .select("*")
-          .order("created_at", { ascending: false });
+  const loadJobs = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from("jobs")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-        if (data) {
-          const formattedJobs: JobRecord[] = data.map(j => ({
-            id: j.id,
-            url: j.url,
-            company: j.company,
-            role: j.role,
-            status: j.status,
-            appliedAt: j.applied_at,
-            failureReason: j.failure_reason,
-            notes: j.notes,
-            outreachMessage: j.outreach_message,
-            outreachSubject: j.outreach_subject,
-          }));
-          setJobs(formattedJobs);
-        }
-      } catch (err) {
-        console.error("Failed to load jobs:", err);
-      } finally {
-        setIsLoading(false);
+      if (data) {
+        const formattedJobs: JobRecord[] = data.map(j => ({
+          id: j.id,
+          url: j.url,
+          company: j.company,
+          role: j.role,
+          status: j.status,
+          appliedAt: j.applied_at,
+          failureReason: j.failure_reason,
+          notes: j.notes,
+          outreachMessage: j.outreach_message,
+          outreachSubject: j.outreach_subject,
+        }));
+        setJobs(formattedJobs);
       }
+    } catch (err) {
+      console.error("Failed to load jobs:", err);
+    } finally {
+      setIsLoading(false);
     }
-    loadJobs();
   }, []);
+
+  // Load jobs on mount
+  useEffect(() => {
+    loadJobs();
+  }, [loadJobs]);
+
+  // Poll for updates while in Automation tab to catch 'reviewing' status changes
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (activeTab === "automation") {
+      interval = setInterval(() => {
+        loadJobs();
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [activeTab, loadJobs]);
 
   // Derive statistics from current job list
   const stats = computeStats(jobs);
