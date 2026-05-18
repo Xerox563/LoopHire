@@ -231,26 +231,6 @@
       "sameSite": "Lax"
     },
     {
-      "name": "XSRF-TOKEN",
-      "value": "77LQ4qMbXDc1JCNgZu3RjvOqHI3FnJTSbz4AAlTPSqBuLw-l8LKcIpn9S7DlJESVXkmqQMhkMy0PiS_nO6NG2w",
-      "domain": "account.ycombinator.com",
-      "path": "/",
-      "expires": -1,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "_bf_session_key",
-      "value": "gHJo93Ve7%2BKCQrhZhAkCK8%2Bz1AnjeCswbevRoQExOCtj%2Fttyk%2FhBrGw%2B8zf4HPlAxLajo35fKSdbLRvomQ%2F34qyQx0HRu4o1GYHeMNnsaAL3CqnxVVM88V1J%2Fk5BGoTBnY4hGKzTdPwGNB%2BnJYoabvvKltjT7nPnSqh0SiMQ4tx9Uz8oazTh5em9NXUacraWX5dSr6O3UYXBjbIZB%2FKBsXFl6zMeyzPvC8ujJhJH5O3U34mxW%2Fz6Bc376z1u2WJi1WVUZGjIjw0tNbAw3YLEmvdQS%2BzJuhQ%3D--7aKoxjpXNp0LQWTy--aD9YpSrkINwSJippcAJmKw%3D%3D",
-      "domain": "account.ycombinator.com",
-      "path": "/",
-      "expires": -1,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
       "name": "_bf_session_exists",
       "value": "eyJfcmFpbHMiOnsibWVzc2FnZSI6ImRISjFaUT09IiwiZXhwIjpudWxsLCJwdXIiOiJjb29raWUuX2JmX3Nlc3Npb25fZXhpc3RzIn19--c09bf3da17accf4c53e92f910eef613c6f99527b",
       "domain": "sso-auth.workatastartup.com",
@@ -265,47 +245,7 @@
       "value": "P45sRwPb2AHsw2NRe6qhmPjHlgBJ4JDF",
       "domain": ".workatastartup.com",
       "path": "/",
-      "expires": 1810550885.010978,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "XSRF-TOKEN",
-      "value": "MIuhJhuQ52GFsTKfbXUBcyfRycQGH8IADqhGWaxERph5ItLgxcExV9h0dj0FDRhlgs9YDx7ZWI7W9IUSLxuSIQ",
-      "domain": "sso-auth.workatastartup.com",
-      "path": "/",
-      "expires": -1,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "_bf_session_key",
-      "value": "LGsRJUgvHZ2Pa9uo9kQ7wdNK2rwGxf5R4nJ9WYmD1Gc0RJtSndqyL4b0%2FhiS3uKvp2esK6IiL8p95%2FqlpS1A2DSv%2FUoMtE1bDDyK21cflRDnJY%2BUccN8TpFAiP4OfWioOc8at815gnxZ4HFxMFWv0lscV1siLDy4eanIy%2B2PZjfTu32ePwyrrYwERgKfgdYKqmnPbA6MUcCwdwUZLO%2Feex%2FTGEgSWPROUfwwm%2FMcu%2FiYKCv7c7TpIzFdzNLKpx4mfB84UMDdsjrCyae%2F4oj3avurV%2Fp4Xvw%3D--4QAxJG0IW25m5Pgk--%2BgoqPpgaJ2VvJQPDIcBljg%3D%3D",
-      "domain": "sso-auth.workatastartup.com",
-      "path": "/",
-      "expires": -1,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "XSRF-TOKEN",
-      "value": "EuHbRJ7OzaWD_5WJtOqjE3jAwlVFDXb9e2fp2qzUP4g2djKdbEg_zRBJN2WCPfEMTVlIoCcCoBxtPnQ4ln8uXQ",
-      "domain": "www.workatastartup.com",
-      "path": "/",
-      "expires": -1,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "_bf_session_key",
-      "value": "tBYr9odL1YUoFYo05f33ZI%2BY9MjV4SbJOBH%2BXtQCO4Zz0wrIATGboNmvLH010aUM7aUI3j3ElNZLuosU52SdHjhhzIPxGaGML4eXLUbE%2B0NyyK4Wi0ktNtQ1WloytQpHQFL8%2FnANW9cKLMGZuUHapJW0t%2F9%2BOSP5LZx4Vn6fuJrx0KsLdxcGwPLozL5AWRTzn2xphpN%2FzRCPL5Z305j%2B8uXuIP0Ob3LRNTOVCNDICUOuREdQCcUVFBESjvN63o9eVRZSgMcDSdyUf55J%2BkWsQkq7AnfYcKdVAOuoutoeJODZJuqwX8iGonye2ll8389JJe1F--U%2F12wFVPtYPn%2BEqQ--hGXK0%2FT4AI%2BU35%2Fl0iEmRw%3D%3D",
-      "domain": "www.workatastartup.com",
-      "path": "/",
-      "expires": -1,
+      "expires": 1810550884.937072,
       "httpOnly": true,
       "secure": true,
       "sameSite": "Lax"
@@ -325,7 +265,7 @@
       "value": "GA1.2.1091175169.1779082671",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1813643595.663726,
+      "expires": 1813643765.176032,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -335,7 +275,7 @@
       "value": "GA1.2.1183715551.1779082671",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1779169995,
+      "expires": 1779170165,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -362,17 +302,17 @@
     },
     {
       "name": "_ga_CHJJ1RJL5K",
-      "value": "GS2.2.s1779082672$o1$g1$t1779083597$j3$l0$h0",
+      "value": "GS2.2.s1779082672$o1$g1$t1779083765$j13$l0$h0",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1813643597.248993,
+      "expires": 1813643766.005056,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "XSRF-TOKEN",
-      "value": "8IQedheYVOwLWotVcjrV3K4yuoPjeh7DcWLxStZFkeLvHGRugGGRK-6Z378VIr70g7eFH4Dyq3iYW8XrJ8cGwA",
+      "value": "O4Cw3zMQdfVXPaahcUjMDyU4c-E7AXXoMZ23CEWXrU4kGMrHpOmwMrL-8ksWUKcnCL1MfViJwFPYpIOptBU6bA",
       "domain": "www.ycombinator.com",
       "path": "/",
       "expires": -1,
@@ -382,7 +322,7 @@
     },
     {
       "name": "_bf_session_key",
-      "value": "x87DYK160DUgDYmsbHGGJSwFAyllUuZsiIG3ydca3PxjpcxQaYTPF6VcRNE5Iz3wDzVZxDSJMY4I%2Bp14wzjdwz4LwreDnqynaeyh6qfHs4fy%2Fz11EWIbK2ylNLjR2a%2BFUmY93Cb71TXBy2J93s16J311U9k4BD7a9I0iuuQGaFwbvdJYRrl%2F73BeG78Qms4oXoZTPJQxzcuyw2zomHVQvmg%2FrTL0Q9nv4dW7QjeDTt0q%2F5BkWABHCWMoOdBkHCu9hyyb07YA1CYrrAjox7fqYVUm5VOaFcw%3D--V5fmY9J0GNKREIYC--gI9aq%2Fkv5JK8Ab%2Fmx27zGg%3D%3D",
+      "value": "LySJcoJIXAVUd5v5NEECMUDGjkTB81O3tIxMj61gtDOoax%2FxJJqcyzT1v3DGAiw4rCG6MK4cxlmdT9KJEnMrCeQGr7m9sHBTNvZ0iAPRRZ0x3ReAdJVfdyJRecMHnafkIo7qp3WqrIM60yv5oB2FgmB8HPZhGcQEp0T%2Bd9W9iSa%2FhtoV58o4rO1qR1c2ZroIODxh1sax%2FvGxo056nzYVmNpQAS%2BdTfFiN1K5nA1Plr2MMYd5BaEZnX7s32PetURfg0pNYJuymCU%2F300fqfdNXspVnFVKXCs%3D--h3JvFQIEy7L%2Fcqhg--2heeQVnNImZgiSWVZteB0w%3D%3D",
       "domain": "www.ycombinator.com",
       "path": "/",
       "expires": -1,
@@ -391,11 +331,71 @@
       "sameSite": "Lax"
     },
     {
+      "name": "XSRF-TOKEN",
+      "value": "8RcB0kAroepfdEWx5yS7IPzwPYUKju7Jn8QdgQ1nYeZwit6VE4Jh__OtLWFk7S47UROLSAd2STb_czJkYgttnQ",
+      "domain": "account.ycombinator.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_bf_session_key",
+      "value": "gYYadjzWtGC1as%2Bh7qU9UwSOFTngZa81E4L1cpg05mIR98uInYrfmJ%2BmgvSX6HRcteKPK%2F8r45R%2FMeZ%2F2XH6t48BEogH03a5mqtp5XmNOzMtEeNNAvNSTC%2FqL66qfQjPQzr%2BSd1kPT1%2FKJ1ukF2H1fy9UyE2OvlWzw04W6ib7fSRI2Oi9TKlfx6GGmwxyO7d%2F827ZD1F3keau%2F9sCxoa%2BpOKXFAty60HD0h3E1tB7RURIE7s1R6jHI0EHsj5%2BfbUHzcMqzQF1B%2BnueUZVTmLRHrHWfRYblk%3D--3QsPMP1uWbAoZiLp--PSRsbgxs0ROGJnHh2OYcYw%3D%3D",
+      "domain": "account.ycombinator.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "XSRF-TOKEN",
+      "value": "ZhkHR0ANJTbkiMy3SGdrO6xWKI8qHA8thZoO0bi8dL4vsHSBnlzzALlNiBUgH3ItCUi5RDLalaNdxs2aO-OgBw",
+      "domain": "sso-auth.workatastartup.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_bf_session_key",
+      "value": "oKTlK6b4V40i6ErxmSGUVsJjDdLg2b3m2vgC7NkGguui8jw2Ppep%2FZG0jEyIqyONjNLDFLZ2HVxp3B6ELHaKT1zkpdfIgqJh7T9WJbjjSQVxNxLZK4QwgANLSaXNDBHQRNldM3KRzaih3hFBlKzwUThmXmbGXXAPlH0Jn03SnvQZVaZTXKQ1TztCgtprJHbIiuyIC3zKaSYKK6hxw%2BAE7bdMSaGAY170h5W14Vdkj3GckWaHVNZmXXNsVB6voc4pGQ4hyvMBi78J3ldOJchppUQAnfoNTFs%3D--ERwiCsMBlmHIT5u1--e6ORnoGHGJb%2B8gP58gaTtQ%3D%3D",
+      "domain": "sso-auth.workatastartup.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "XSRF-TOKEN",
+      "value": "LrJebaiy2xUENl2uceHiQmPNTCge3-zRSEHUf4gCpFIKJbe0WjQpfZeA_0JHNrBdVlTG3XzQOjBeGEmdsqm1hw",
+      "domain": "www.workatastartup.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_bf_session_key",
+      "value": "plZskmCasH6QGIoNhsr1Zfp9b08ubbcMXssfoad4HJ20O%2F8enPo4InDuzdF7WS4vLDccd7qM%2BBkeG0Afema14G1elpr0YrY3tnLHVH0989IiBP8gQAM72Mq5RiLpvNF%2FY77wBXDnBj4WLL64Oh36kH1Lne9cQLxkxOEJNwHRJ1tyvto1N8SQV1HqwfW69aqRsZ%2FdRcyUyxiJ8KX9iF5lZtrEdUJFdaGr6He7Z5G2iokCJVBPt47QAJHLHpQDvL8oMflEw4AJzs5c2Dlg6%2FM7R3D2%2BVbVtvI%3D--fJqOh9bvnVQ7152L--kLOREaw0FnWMhBOkFgdgZQ%3D%3D",
+      "domain": "www.workatastartup.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
       "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-      "value": "%7B%22%24device_id%22%3A%22019e3997-52c2-7592-a86a-91b1c1800ba2%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779083599058%2C%22019e3997-52cd-75ff-beb4-e460bb6518a8%22%2C1779082678985%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.ycombinator.com%2Fcompanies%2Fsubstack%2Fjobs%2FgD334As-systems-engineer%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
+      "value": "%7B%22%24device_id%22%3A%22019e3997-52c2-7592-a86a-91b1c1800ba2%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779083779360%2C%22019e3997-52cd-75ff-beb4-e460bb6518a8%22%2C1779082678985%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.ycombinator.com%2Fcompanies%2Fsubstack%2Fjobs%2FgD334As-systems-engineer%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1810619599,
+      "expires": 1810619779,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"
@@ -415,7 +415,7 @@
         },
         {
           "name": "algoliasearch-client-js",
-          "value": "{\"45BWZJ1SGC\":{\"hostIndexes\":{\"read\":0,\"write\":0},\"timeoutMultiplier\":1,\"shuffleResult\":[3,2,1],\"lastChange\":1779014853282}}"
+          "value": "{\"45BWZJ1SGC\":{\"hostIndexes\":{\"read\":0,\"write\":0},\"timeoutMultiplier\":1,\"shuffleResult\":[3,2,1],\"lastChange\":1779083782772}}"
         },
         {
           "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
@@ -495,7 +495,7 @@
         },
         {
           "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-          "value": "{\"$device_id\":\"019e3997-52c2-7592-a86a-91b1c1800ba2\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779083599058,\"019e3997-52cd-75ff-beb4-e460bb6518a8\",1779082678985],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T05:53:16.538Z\",\"$configured_session_timeout_ms\":1800000,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779083599056},\"$client_session_props\":{\"sessionId\":\"019e3997-52cd-75ff-beb4-e460bb6518a8\",\"props\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"}},\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"landing_page_2\",\"landing_page\",\"waas-jobs-application-async\",\"landing_page_4\"],\"$enabled_feature_flags\":{\"landing_page_2\":\"test\",\"landing_page\":\"control\",\"landing_page_3\":false,\"waas-jobs-application-async\":true,\"landing_page_4\":true},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"f66ec182-c91b-4167-b673-80bf44299122\",\"$feature_flag_evaluated_at\":1779083596991,\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779083596609,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false}"
+          "value": "{\"$device_id\":\"019e3997-52c2-7592-a86a-91b1c1800ba2\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779083779360,\"019e3997-52cd-75ff-beb4-e460bb6518a8\",1779082678985],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T05:56:05.441Z\",\"$configured_session_timeout_ms\":1800000,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779083779359},\"$client_session_props\":{\"sessionId\":\"019e3997-52cd-75ff-beb4-e460bb6518a8\",\"props\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"}},\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"waas-jobs-application-async\",\"landing_page_2\",\"landing_page\",\"landing_page_4\"],\"$enabled_feature_flags\":{\"waas-jobs-application-async\":true,\"landing_page_3\":false,\"landing_page_2\":\"test\",\"landing_page\":\"control\",\"landing_page_4\":true},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"2d56d20a-e742-4153-b540-1a1d7fa3ca74\",\"$feature_flag_evaluated_at\":1779083767131,\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779083766772,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false}"
         }
       ]
     }
