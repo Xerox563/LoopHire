@@ -108,30 +108,46 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
   };
 
   const handleConfirm = async (id: string) => {
-    const { error } = await supabase
-      .from("jobs")
-      .update({ status: "confirmed" })
-      .eq("id", id);
-    
-    if (error) {
-      console.error("Supabase error:", error);
-      addLog(`Error confirming: ${error.message}`, "error");
-    } else {
+    try {
+      addLog(`Confirming application for job ${id} via server...`, "info");
+      
+      const response = await fetch("/api/confirm-job", {
+        method: "POST",
+        body: JSON.stringify({ id, action: "confirm" }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Server failed to update status");
+      }
+      
       addLog("Application confirmed. Proceeding with submission...", "system");
+    } catch (err: any) {
+      console.error("Confirmation error:", err);
+      addLog(`Critical error: ${err.message || String(err)}`, "error");
     }
   };
 
   const handleSkipReview = async (id: string) => {
-    const { error } = await supabase
-      .from("jobs")
-      .update({ status: "skipped" })
-      .eq("id", id);
-    
-    if (error) {
-      console.error("Supabase error:", error);
-      addLog(`Error skipping: ${error.message}`, "error");
-    } else {
+    try {
+      addLog(`Skipping job ${id} via server...`, "info");
+      
+      const response = await fetch("/api/confirm-job", {
+        method: "POST",
+        body: JSON.stringify({ id, action: "skip" }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Server failed to update status");
+      }
+
       addLog("Application skipped by user.", "warn");
+    } catch (err: any) {
+      console.error("Skip error:", err);
+      addLog(`Critical error: ${err.message || String(err)}`, "error");
     }
   };
 
