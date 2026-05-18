@@ -325,7 +325,7 @@
       "value": "GA1.2.1091175169.1779082671",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1813642719.747388,
+      "expires": 1813643595.663726,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -335,17 +335,7 @@
       "value": "GA1.2.1183715551.1779082671",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1779169119,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
-    },
-    {
-      "name": "_gat",
-      "value": "1",
-      "domain": ".ycombinator.com",
-      "path": "/",
-      "expires": 1779082730,
+      "expires": 1779169995,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -371,8 +361,18 @@
       "sameSite": "None"
     },
     {
+      "name": "_ga_CHJJ1RJL5K",
+      "value": "GS2.2.s1779082672$o1$g1$t1779083597$j3$l0$h0",
+      "domain": ".ycombinator.com",
+      "path": "/",
+      "expires": 1813643597.248993,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
       "name": "XSRF-TOKEN",
-      "value": "ICKketyB-Gd4j0oKaxFWoRLKvNO5dUhEL1SuaR85UtM_ut5iS3g9oJ1MHuAMCT2JP0-DT9r9_f_GbZrI7rvF8Q",
+      "value": "8IQedheYVOwLWotVcjrV3K4yuoPjeh7DcWLxStZFkeLvHGRugGGRK-6Z378VIr70g7eFH4Dyq3iYW8XrJ8cGwA",
       "domain": "www.ycombinator.com",
       "path": "/",
       "expires": -1,
@@ -382,7 +382,7 @@
     },
     {
       "name": "_bf_session_key",
-      "value": "QYHwnfOqn%2FXAMV9btmMLZ8hXQSYYiz3GcH8e23AZLyYNkcXrlzfEbcQJr004gSJmjXzdXcDDTnytrm6tARN%2FU0bfbIY2z6FrFidc%2FonDbUEa8Oqg3xbMuJAQ%2F4QRiWyK0t3QSyCiuDU8r4vfC%2BsytO5MeVDiesaTC3P9M%2FLDEmtAJRGK7SYWWkAOQt0vwjFN%2FPCoNI2uJ5HUtpCYasig44m9ckAQV3yXxb2L7cAwHuYiVUcjX0fQ%2B6GP8ra7GbFTm3pqO2BgX0gtg5IJKvTbg16Gw4O1L1A%3D--wrjpxzdnJw19YqW3--st5CiqHg%2FfxtMWhlyq3Kbw%3D%3D",
+      "value": "x87DYK160DUgDYmsbHGGJSwFAyllUuZsiIG3ydca3PxjpcxQaYTPF6VcRNE5Iz3wDzVZxDSJMY4I%2Bp14wzjdwz4LwreDnqynaeyh6qfHs4fy%2Fz11EWIbK2ylNLjR2a%2BFUmY93Cb71TXBy2J93s16J311U9k4BD7a9I0iuuQGaFwbvdJYRrl%2F73BeG78Qms4oXoZTPJQxzcuyw2zomHVQvmg%2FrTL0Q9nv4dW7QjeDTt0q%2F5BkWABHCWMoOdBkHCu9hyyb07YA1CYrrAjox7fqYVUm5VOaFcw%3D--V5fmY9J0GNKREIYC--gI9aq%2Fkv5JK8Ab%2Fmx27zGg%3D%3D",
       "domain": "www.ycombinator.com",
       "path": "/",
       "expires": -1,
@@ -391,21 +391,11 @@
       "sameSite": "Lax"
     },
     {
-      "name": "_ga_CHJJ1RJL5K",
-      "value": "GS2.2.s1779082672$o1$g1$t1779082721$j11$l0$h0",
-      "domain": ".ycombinator.com",
-      "path": "/",
-      "expires": 1813642721.502813,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
-    },
-    {
       "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-      "value": "%7B%22%24device_id%22%3A%22019e3997-52c2-7592-a86a-91b1c1800ba2%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779082722326%2C%22019e3997-52cd-75ff-beb4-e460bb6518a8%22%2C1779082678985%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.ycombinator.com%2Fcompanies%2Fsubstack%2Fjobs%2FgD334As-systems-engineer%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
+      "value": "%7B%22%24device_id%22%3A%22019e3997-52c2-7592-a86a-91b1c1800ba2%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779083599058%2C%22019e3997-52cd-75ff-beb4-e460bb6518a8%22%2C1779082678985%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.ycombinator.com%2Fcompanies%2Fsubstack%2Fjobs%2FgD334As-systems-engineer%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
       "domain": ".ycombinator.com",
       "path": "/",
-      "expires": 1810618722,
+      "expires": 1810619599,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"
@@ -505,7 +495,7 @@
         },
         {
           "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-          "value": "{\"$device_id\":\"019e3997-52c2-7592-a86a-91b1c1800ba2\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779082722326,\"019e3997-52cd-75ff-beb4-e460bb6518a8\",1779082678985],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T05:38:39.970Z\",\"$configured_session_timeout_ms\":1800000,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779082722325},\"$client_session_props\":{\"sessionId\":\"019e3997-52cd-75ff-beb4-e460bb6518a8\",\"props\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"}},\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"landing_page\",\"landing_page_2\",\"waas-jobs-application-async\",\"landing_page_4\"],\"$enabled_feature_flags\":{\"landing_page\":\"control\",\"landing_page_2\":\"test\",\"landing_page_3\":false,\"waas-jobs-application-async\":true,\"landing_page_4\":true},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"ed17e098-ac60-4b2d-bd89-718b6a5b8d7b\",\"$feature_flag_evaluated_at\":1779082721251,\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779082721054,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false}"
+          "value": "{\"$device_id\":\"019e3997-52c2-7592-a86a-91b1c1800ba2\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779083599058,\"019e3997-52cd-75ff-beb4-e460bb6518a8\",1779082678985],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T05:53:16.538Z\",\"$configured_session_timeout_ms\":1800000,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779083599056},\"$client_session_props\":{\"sessionId\":\"019e3997-52cd-75ff-beb4-e460bb6518a8\",\"props\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"}},\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"landing_page_2\",\"landing_page\",\"waas-jobs-application-async\",\"landing_page_4\"],\"$enabled_feature_flags\":{\"landing_page_2\":\"test\",\"landing_page\":\"control\",\"landing_page_3\":false,\"waas-jobs-application-async\":true,\"landing_page_4\":true},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"f66ec182-c91b-4167-b673-80bf44299122\",\"$feature_flag_evaluated_at\":1779083596991,\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779083596609,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false}"
         }
       ]
     }

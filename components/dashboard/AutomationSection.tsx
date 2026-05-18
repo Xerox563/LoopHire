@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Terminal as TerminalIcon, Cpu, AlertCircle, CheckCircle2, Loader2, Save } from "lucide-react";
+import { Play, Square, Terminal as TerminalIcon, Cpu, AlertCircle, CheckCircle2, Loader2, Save, Send, XCircle } from "lucide-react";
 import { JobRecord } from "@/types";
 import { ResumeData } from "./ResumeSection";
+import { supabase } from "@/lib/supabase";
 
 interface LogEntry {
   id: string;
@@ -23,6 +24,9 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [progress, setProgress] = useState(0);
   const logContainerRef = useRef<HTMLDivElement>(null);
+
+  // Filter jobs to find if any are currently 'reviewing'
+  const reviewingJob = jobs.find(j => j.status === "reviewing");
 
   const addLog = (message: string, type: LogEntry["type"] = "info") => {
     const newLog: LogEntry = {
@@ -103,6 +107,34 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
     setIsRunning(false);
   };
 
+  const handleConfirm = async (id: string) => {
+    const { error } = await supabase
+      .from("jobs")
+      .update({ status: "confirmed" })
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Supabase error:", error);
+      addLog(`Error confirming: ${error.message}`, "error");
+    } else {
+      addLog("Application confirmed. Proceeding with submission...", "system");
+    }
+  };
+
+  const handleSkipReview = async (id: string) => {
+    const { error } = await supabase
+      .from("jobs")
+      .update({ status: "skipped" })
+      .eq("id", id);
+    
+    if (error) {
+      console.error("Supabase error:", error);
+      addLog(`Error skipping: ${error.message}`, "error");
+    } else {
+      addLog("Application skipped by user.", "warn");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -135,6 +167,41 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
             </div>
 
             <div className="flex flex-col gap-3">
+              <AnimatePresence>
+                {reviewingJob && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="p-4 rounded-xl bg-accent/10 border border-accent/20 space-y-4 mb-3"
+                  >
+                    <div className="text-xs font-bold text-accent uppercase tracking-widest flex items-center gap-2">
+                      <AlertCircle className="w-3 h-3" />
+                      Review Required
+                    </div>
+                    <p className="text-[10px] text-text-secondary leading-relaxed">
+                      AI has drafted a message for <strong>{reviewingJob.company}</strong>. Please verify in Chrome and confirm.
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleConfirm(reviewingJob.id)}
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-white text-[10px] font-bold uppercase tracking-widest hover:scale-[1.02] transition-all"
+                      >
+                        <Send className="w-3 h-3" />
+                        Confirm Send
+                      </button>
+                      <button
+                        onClick={() => handleSkipReview(reviewingJob.id)}
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-secondary text-[10px] font-bold uppercase tracking-widest hover:text-white transition-all"
+                      >
+                        <XCircle className="w-3 h-3" />
+                        Skip
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {!isRunning ? (
                 <button
                   onClick={() => {

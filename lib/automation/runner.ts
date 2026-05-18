@@ -112,6 +112,7 @@ async function processJob(
     // Step 3: Fill and review application
     const fillResult = await fillAndReviewApplication(
       context,
+      job.id,
       jobDetail,
       message,
       config.actionDelayMs,

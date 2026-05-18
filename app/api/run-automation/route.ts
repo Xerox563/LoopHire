@@ -21,13 +21,7 @@ export async function POST(req: NextRequest) {
         error: (msg) => send({ type: "log", message: msg, level: "error" }),
         prompt: async (msg) => {
           send({ type: "prompt", message: msg });
-          
-          // Wait for a few seconds to let the user see the message in the browser
-          // and decide if they want to let it proceed. 
-          // Since we can't do a real two-way confirm in a simple stream easily,
-          // we'll implement a "pause" by waiting.
-          await new Promise(resolve => setTimeout(resolve, 5000));
-          
+          // The Runner now handles polling Supabase for confirmation
           return true;
         }
       });

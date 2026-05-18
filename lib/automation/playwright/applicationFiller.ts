@@ -1,7 +1,7 @@
 // lib/automation/playwright/applicationFiller.ts
 
 import { BrowserContext, Page, Locator } from "playwright";
-import { JobDetail, GeneratedMessage, AppConfig } from "@/types";
+import { JobDetail, GeneratedMessage, AppConfig, JobRecord } from "@/types";
 import { logger } from "../utils/logger";
 import {
   navigateTo,
@@ -11,17 +11,24 @@ import {
   isLoggedIn,
 } from "./pageUtils";
 import { humanDelay, sleep } from "../utils/retry";
+import { supabase } from "@/lib/supabase";
 
 // Common selectors for YC Work at a Startup apply forms
 const APPLY_SELECTORS = {
   applyButton: [
-    'button:has-text("Apply")',
-    'a:has-text("Apply")',
+    'a:has-text("Apply to role")',
     'button:has-text("Apply to role")',
+    'a:has-text("Apply")',
+    'button:has-text("Apply")',
+    'a:has-text("Apply Now")',
+    'button:has-text("Apply Now")',
     "button.apply-button",
+    "a.apply-button",
     '[data-test="apply-button"]',
     'button[class*="apply"]',
     'a[class*="apply"]',
+    'button[class*="Apply"]',
+    'a[class*="Apply"]',
   ],
   firstName: ['input[name*="first_name"]', 'input[placeholder*="First Name"]', 'input[id*="first_name"]'],
   lastName: ['input[name*="last_name"]', 'input[placeholder*="Last Name"]', 'input[id*="last_name"]'],
@@ -97,6 +104,7 @@ export interface FillResult {
  */
 export async function fillAndReviewApplication(
   context: BrowserContext,
+  jobId: string,
   job: JobDetail,
   message: GeneratedMessage,
   delayMs: number,
@@ -114,6 +122,10 @@ export async function fillAndReviewApplication(
     if (!loggedIn) {
        throw new Error("Not logged in. Please log in to YC Work at a Startup in the browser first.");
     }
+
+    // Scroll to find the apply button
+    await scrollPage(page, 500);
+    await sleep(1000);
 
     // Find and click apply button
     const applyBtn = await findElement(page, APPLY_SELECTORS.applyButton);
@@ -166,13 +178,48 @@ export async function fillAndReviewApplication(
     logger.info(`Subject: ${message.subject}`);
     logger.info(`Body: ${message.body}`);
 
-    // ASK FOR CONFIRMATION
-    const confirmed = await logger.prompt(`Submit application for ${job.company}?`);
-    
-    if (!confirmed) {
-      logger.warn(`Application for ${job.company} was skipped by user.`);
+    // Update status in Supabase to 'reviewing' so the dashboard shows the Confirm button
+    await supabase
+      .from("jobs")
+      .update({ 
+        status: "reviewing", 
+        outreach_message: message.body,
+        outreach_subject: message.subject 
+      })
+      .eq("id", jobId);
+
+    logger.warn(`Waiting for your confirmation in the dashboard to submit...`);
+
+    // POLLING LOOP: Wait for user to confirm or skip in the dashboard
+    let userAction: "confirmed" | "skipped" | null = null;
+    const timeoutAt = Date.now() + 10 * 60 * 1000; // 10 minute timeout
+
+    while (Date.now() < timeoutAt) {
+      const { data } = await supabase
+        .from("jobs")
+        .select("status")
+        .eq("id", jobId)
+        .single();
+
+      if (data?.status === "confirmed") {
+        userAction = "confirmed";
+        break;
+      }
+      if (data?.status === "skipped") {
+        userAction = "skipped";
+        break;
+      }
+
+      await sleep(2000); // Poll every 2 seconds
+    }
+
+    if (!userAction || userAction === "skipped") {
+      const reason = userAction === "skipped" ? "skipped by user" : "timed out waiting for confirmation";
+      logger.warn(`Application for ${job.company} was ${reason}.`);
       return { action: "skipped", message: message.body, subject: message.subject };
     }
+
+    logger.info(`Confirmation received! Submitting to ${job.company}...`);
 
     // Find and click submit button
     const submitBtn = await findElement(page, APPLY_SELECTORS.submitButton);

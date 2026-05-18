@@ -11,7 +11,8 @@ import {
   MinusCircle,
   MessageSquare,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  AlertCircle
 } from "lucide-react";
 import { useState, Fragment } from "react";
 
@@ -156,6 +157,8 @@ function StatusBadge({ status }: { status: JobRecord["status"] }) {
     pending: "bg-warning/10 text-warning border-warning/20",
     failed: "bg-error/10 text-error border-error/20",
     skipped: "bg-white/5 text-text-muted border-white/10",
+    reviewing: "bg-accent/10 text-accent border-accent/20 animate-pulse",
+    confirmed: "bg-success/20 text-success border-success/30",
   };
 
   const icons = {
@@ -163,6 +166,8 @@ function StatusBadge({ status }: { status: JobRecord["status"] }) {
     pending: <Clock className="w-3 h-3" />,
     failed: <XCircle className="w-3 h-3" />,
     skipped: <MinusCircle className="w-3 h-3" />,
+    reviewing: <AlertCircle className="w-3 h-3" />,
+    confirmed: <CheckCircle2 className="w-3 h-3" />,
   };
 
   return (
