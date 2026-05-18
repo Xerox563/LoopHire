@@ -40,11 +40,15 @@ const APPLY_SELECTORS = {
     'textarea[name="message"]',
     'textarea[name="intro"]',
     'textarea[name*="interest"]',
+    'textarea[id*="interest"]',
+    'textarea[id*="message"]',
+    'textarea[id*="note"]',
     'textarea[placeholder*="message"]',
     'textarea[placeholder*="introduce"]',
     'textarea[placeholder*="tell"]',
     'textarea[placeholder*="why"]',
     'textarea[placeholder*="interests you"]',
+    'textarea[placeholder*="about you"]',
     'textarea[data-test="message"]',
     "textarea",
   ],
@@ -122,7 +126,10 @@ export async function fillAndReviewApplication(
 
     logger.info("Clicking apply button...");
     await applyBtn.click();
-    await humanDelay(delayMs, 600);
+    
+    // Wait for form to appear
+    await page.waitForSelector("textarea", { timeout: 15000 }).catch(() => null);
+    await humanDelay(delayMs, 1000);
     await scrollPage(page, 300);
 
     if (config.userProfile) {
@@ -138,7 +145,8 @@ export async function fillAndReviewApplication(
 
     let textareaSelector: string | null = null;
     for (const sel of APPLY_SELECTORS.messageTextarea) {
-      if (await page.$(sel)) {
+      const locator = page.locator(sel).first();
+      if (await locator.isVisible().catch(() => false)) {
         textareaSelector = sel;
         break;
       }
