@@ -114,6 +114,24 @@ export default function DashboardPage() {
     showToast("Application removed from tracker");
   }, []);
 
+  // Handle clearing all jobs from the database
+  const handleClearAll = async () => {
+    if (!window.confirm("Are you sure you want to clear all job applications? This cannot be undone.")) {
+      return;
+    }
+
+    const { error } = await supabase.from("jobs").delete().neq("id", "0"); // Delete all rows
+    
+    if (error) {
+      console.error("Supabase error:", error);
+      showToast("Failed to clear database");
+      return;
+    }
+
+    setJobs([]);
+    showToast("Database cleared successfully");
+  };
+
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }}>
       {/* Dashboard navigation bar */}
@@ -160,14 +178,24 @@ export default function DashboardPage() {
               </button>
             </div>
             {activeTab === "overview" && (
-              <motion.button 
-                whileHover={{ scale: 1.04, y: -2 }} 
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setModalOpen(true)}
-                className="btn-primary px-6 py-3 rounded-xl text-sm font-medium flex items-center gap-2"
-              >
-                <span>＋</span> Add New Job
-              </motion.button>
+              <div className="flex gap-3">
+                <motion.button 
+                  whileHover={{ scale: 1.04, y: -2 }} 
+                  whileTap={{ scale: 0.96 }}
+                  onClick={handleClearAll}
+                  className="px-6 py-3 rounded-xl text-sm font-medium border border-error/20 bg-error/5 text-error hover:bg-error/10 transition-all flex items-center gap-2"
+                >
+                  Clear All
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.04, y: -2 }} 
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => setModalOpen(true)}
+                  className="btn-primary px-6 py-3 rounded-xl text-sm font-medium flex items-center gap-2"
+                >
+                  <span>＋</span> Add New Job
+                </motion.button>
+              </div>
             )}
           </div>
         </motion.div>
