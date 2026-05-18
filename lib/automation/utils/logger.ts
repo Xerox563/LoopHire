@@ -10,6 +10,7 @@ export interface LogProvider {
   info: (msg: string) => void;
   warn: (msg: string) => void;
   error: (msg: string) => void;
+  prompt?: (msg: string) => Promise<boolean>;
 }
 
 // Default console logger
@@ -17,6 +18,10 @@ export const defaultLogger: LogProvider = {
   info: (msg: string) => console.log(`[INFO] ${msg}`),
   warn: (msg: string) => console.warn(`[WARN] ${msg}`),
   error: (msg: string) => console.error(`[ERROR] ${msg}`),
+  prompt: async (msg: string) => {
+    console.log(`[PROMPT] ${msg}`);
+    return true; // Auto-confirm in console
+  }
 };
 
 let currentLogger = defaultLogger;
@@ -29,4 +34,5 @@ export const logger = {
   info: (msg: string) => currentLogger.info(msg),
   warn: (msg: string) => currentLogger.warn(msg),
   error: (msg: string) => currentLogger.error(msg),
+  prompt: (msg: string) => currentLogger.prompt ? currentLogger.prompt(msg) : Promise.resolve(true),
 };

@@ -130,12 +130,14 @@ export async function fillAndReviewApplication(
 
     logger.info(`📋 APPLICATION READY FOR REVIEW: ${job.company}`);
     logger.info(`Subject: ${message.subject}`);
-    logger.info(`Body: ${message.body.slice(0, 100)}...`);
+    logger.info(`Body: ${message.body}`);
 
-    if (!autoSubmit) {
-      // For now, in LoopHire dashboard, we'll assume we want to submit if we reached this point
-      // or we can implement a 'pause' mechanism later.
-      logger.info("Auto-submit is disabled, but continuing for demo...");
+    // ASK FOR CONFIRMATION
+    const confirmed = await logger.prompt(`Submit application for ${job.company}?`);
+    
+    if (!confirmed) {
+      logger.warn(`Application for ${job.company} was skipped by user.`);
+      return { action: "skipped", message: message.body, subject: message.subject };
     }
 
     // Find and click submit button
