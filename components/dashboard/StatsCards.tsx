@@ -90,10 +90,11 @@ export default function StatsCards({ stats }: { stats: DashboardStats }) {
           </div>
         </div>
         
-        <div className="flex-1 min-h-[180px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={CHART_DATA}>
-              <defs>
+        <div className="flex-1 min-h-[200px] w-full relative">
+          <div className="absolute inset-0">
+            <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+              <AreaChart data={CHART_DATA} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <defs>
                 <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#ff6640" stopOpacity={0.3}/>
                   <stop offset="95%" stopColor="#ff6640" stopOpacity={0}/>
@@ -118,7 +119,8 @@ export default function StatsCards({ stats }: { stats: DashboardStats }) {
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </motion.div>
+      </div>
+    </motion.div>
 
       {/* Bento Stats Grid */}
       <div className="lg:col-span-2 grid grid-cols-2 gap-4">
