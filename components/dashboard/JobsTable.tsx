@@ -13,7 +13,7 @@ import {
   ChevronDown,
   ChevronUp
 } from "lucide-react";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 
 interface Props {
   jobs: JobRecord[];
@@ -54,9 +54,8 @@ export default function JobsTable({ jobs, onDelete }: Props) {
           </thead>
           <tbody className="divide-y divide-white/[0.02]">
             {jobs.map((job) => (
-              <>
+              <Fragment key={job.id}>
                 <motion.tr 
-                  key={job.id}
                   layout
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -142,7 +141,7 @@ export default function JobsTable({ jobs, onDelete }: Props) {
                     </motion.tr>
                   )}
                 </AnimatePresence>
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
