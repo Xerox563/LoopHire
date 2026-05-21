@@ -6,8 +6,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Install ts-node globally to run the worker
-RUN npm install -g ts-node typescript @types/node
+# Install tsx to run the worker
+RUN npm install -g tsx typescript @types/node
 
 # Copy source code
 COPY . .
@@ -21,4 +21,4 @@ ENV HEADLESS=true
 ENV PORT=3001
 
 # Command to run the worker
-CMD ["npm", "run", "worker"]
+CMD ["tsx", "worker/server.ts"]
