@@ -18,7 +18,7 @@ import { supabase } from "@/lib/supabase";
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || "placeholder",
+  apiKey: process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || "",
   baseURL: "https://openrouter.ai/api/v1",
   dangerouslyAllowBrowser: true
 });

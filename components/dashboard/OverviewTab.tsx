@@ -287,8 +287,8 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
                 <option>This Week</option>
               </select>
             </div>
-            <div className="flex-1 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="flex-1 w-full min-h-[240px]">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <AreaChart data={CHART_DATA}>
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -309,9 +309,9 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
           {/* Applications by Status Pie */}
           <div className="glass-card !p-8 h-[350px] flex flex-col">
             <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8">Applications by Status</h3>
-            <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[200px]">
               <div className="h-48 w-full relative">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   <PieChart>
                     <Pie
                       data={PIE_DATA}
