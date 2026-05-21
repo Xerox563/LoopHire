@@ -170,22 +170,24 @@ export default function JobsTable({ jobs, onDelete, isLoading }: Props) {
 }
 
 function StatusBadge({ status }: { status: JobRecord["status"] }) {
-  const styles = {
+  const styles: Record<string, string> = {
     applied: "bg-success/10 text-success border-success/20",
     pending: "bg-warning/10 text-warning border-warning/20",
     failed: "bg-error/10 text-error border-error/20",
     skipped: "bg-white/5 text-text-muted border-white/10",
     reviewing: "bg-accent/15 text-accent border-accent/30 animate-pulse shadow-[0_0_15px_rgba(255,102,64,0.1)]",
     confirmed: "bg-success/20 text-success border-success/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]",
+    invalid: "bg-white/5 text-text-muted border-white/10",
   };
 
-  const icons = {
+  const icons: Record<string, React.ReactNode> = {
     applied: <CheckCircle2 className="w-3.5 h-3.5" />,
     pending: <Clock className="w-3.5 h-3.5" />,
     failed: <XCircle className="w-3.5 h-3.5" />,
     skipped: <MinusCircle className="w-3.5 h-3.5" />,
     reviewing: <AlertCircle className="w-3.5 h-3.5" />,
     confirmed: <CheckCircle2 className="w-3.5 h-3.5" />,
+    invalid: <MinusCircle className="w-3.5 h-3.5" />,
   };
 
   return (
