@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import OverviewTab from "@/components/dashboard/OverviewTab";
 import JobLinksTab from "@/components/dashboard/JobLinksTab";
+import AIMessagesTab from "@/components/dashboard/AIMessagesTab";
 
 /**
  * Main dashboard page for managing and tracking job applications
@@ -70,6 +71,8 @@ export default function DashboardPage() {
         return <OverviewTab jobs={jobs} />;
       case "job-links":
         return <JobLinksTab />;
+      case "ai-messages":
+        return <AIMessagesTab />;
       case "resume":
         return <ResumeSection onUpdate={setResumeData} initialData={resumeData} />;
       case "automation":
