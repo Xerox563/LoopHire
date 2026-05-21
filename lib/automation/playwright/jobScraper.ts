@@ -64,6 +64,21 @@ export async function scrapeJobDetail(
     await navigateTo(page, job.url, delayMs);
     await scrollPage(page, 400);
 
+    // Check for "Not Found" or "404" in page title or content
+    const pageTitle = await page.title();
+    const pageContent = await page.textContent('body');
+    if (
+      pageTitle.toLowerCase().includes("not found") || 
+      pageTitle.toLowerCase().includes("404") ||
+      (pageContent && (
+        pageContent.toLowerCase().includes("page not found") || 
+        pageContent.toLowerCase().includes("this job is no longer available") ||
+        pageContent.toLowerCase().includes("job not found")
+      ))
+    ) {
+      throw new Error("404: Job page not found or no longer available");
+    }
+
     // Extract job title
     let role = job.role;
     if (!role) {

@@ -12,13 +12,16 @@ import {
   Trash2,
   Loader2,
   Edit3,
-  Send
+  Send,
+  Eye,
+  X
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { JobRecord } from "@/types";
 import { supabase } from "@/lib/supabase";
 import * as XLSX from "xlsx";
 import { useAutomation } from "@/components/providers/AutomationProvider";
+import { AnimatePresence } from "framer-motion";
 
 interface Props {
   jobs: JobRecord[];
@@ -31,6 +34,10 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
   const [newUrl, setNewUrl] = useState("");
   const [isImporting, setIsAddingImport] = useState(false);
   const [isSending, setIsSending] = useState<string | null>(null);
+  const [editingJob, setEditingJob] = useState<JobRecord | null>(null);
+  const [editPitch, setEditPitch] = useState("");
+  const [isSavingPitch, setIsSavingPitch] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { startAutomation } = useAutomation();
 
@@ -151,6 +158,60 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
     }
   };
 
+  const handleSavePitch = async () => {
+    if (!editingJob) return;
+    setIsSavingPitch(true);
+    try {
+      const { error } = await supabase
+        .from("jobs")
+        .update({ outreach_message: editPitch })
+        .eq("id", editingJob.id);
+      
+      if (error) throw error;
+      setEditingJob(null);
+      onRefresh();
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Failed to save pitch");
+    } finally {
+      setIsSavingPitch(false);
+    }
+  };
+
+  const handleStatusChange = async (jobId: string, newStatus: string) => {
+    setIsUpdatingStatus(jobId);
+    try {
+      const updateData: any = { status: newStatus };
+      
+      // If changing to applied, set applied_at
+      if (newStatus === "applied") {
+        updateData.applied_at = new Date().toISOString();
+      } else if (newStatus === "pending") {
+        updateData.applied_at = null;
+        updateData.failure_reason = null;
+      }
+
+      const { error } = await supabase
+        .from("jobs")
+        .update(updateData)
+        .eq("id", jobId);
+      
+      if (error) throw error;
+      onRefresh();
+    } catch (err: any) {
+      console.error("Status update error:", err);
+      
+      // Handle specific network errors
+      if (err.message === "Failed to fetch" || err.name === "TypeError") {
+        alert("Network Error: Failed to connect to Supabase. \n\n1. Check your internet connection.\n2. If you are using Brave/AdBlockers, try disabling shields for this site.\n3. Ensure your .env variables are correct.");
+      } else {
+        alert(`Failed to update status: ${err.message || "Check console for details"}`);
+      }
+    } finally {
+      setIsUpdatingStatus(null);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     const { error } = await supabase.from("jobs").delete().eq("id", id);
     if (error) alert("Delete failed");
@@ -204,12 +265,13 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {[
           { label: "Pending", value: jobs.filter(j => j.status === 'pending').length, color: "#f59e0b" },
           { label: "Reviewing", value: jobs.filter(j => j.status === 'reviewing').length, color: "#3b82f6" },
           { label: "Applied", value: jobs.filter(j => j.status === 'applied').length, color: "#10b981" },
           { label: "Failed", value: jobs.filter(j => j.status === 'failed').length, color: "#ef4444" },
+          { label: "Invalid Info", value: jobs.filter(j => j.status === 'invalid').length, color: "#94a3b8" },
         ].map((stat) => (
           <div key={stat.label} className="glass-card !p-6 flex items-center justify-between">
             <div>
@@ -271,31 +333,39 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
                         <span className="text-[10px] text-text-muted">{job.role}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-5 max-w-[300px]">
-                      <div className="relative group/pitch">
-                        <textarea 
-                          value={job.outreachMessage || ""}
-                          onChange={async (e) => {
-                            const newVal = e.target.value;
-                            await supabase.from("jobs").update({ outreach_message: newVal }).eq("id", job.id);
-                            onRefresh();
-                          }}
-                          className="w-full bg-white/[0.02] border border-white/5 rounded-lg p-2 text-[11px] text-text-secondary focus:outline-none focus:border-accent/30 min-h-[60px] resize-none custom-scrollbar transition-all"
-                          placeholder="No pitch generated yet..."
-                        />
-                        <div className="absolute right-2 bottom-2 opacity-0 group-hover/pitch:opacity-100 transition-opacity">
-                          <Edit3 className="w-3 h-3 text-accent/50" />
-                        </div>
-                      </div>
+                    <td className="px-8 py-5">
+                      <button 
+                        onClick={() => {
+                          setEditingJob(job);
+                          setEditPitch(job.outreachMessage || "");
+                        }}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-bold text-text-secondary hover:text-white hover:bg-white/10 transition-all group"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-accent" />
+                        {job.outreachMessage ? "View / Edit Pitch" : "Add Pitch"}
+                        <Edit3 className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
+                      </button>
                     </td>
                     <td className="px-8 py-5">
-                      <div className={`px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-widest inline-block ${
-                        job.status === 'applied' ? 'bg-success/5 border-success/20 text-success' :
-                        job.status === 'reviewing' ? 'bg-accent/5 border-accent/20 text-accent animate-pulse' :
-                        'bg-warning/5 border-warning/20 text-warning'
-                      }`}>
-                        {job.status}
-                      </div>
+                      <select 
+                        value={job.status}
+                        disabled={isUpdatingStatus === job.id}
+                        onChange={(e) => handleStatusChange(job.id, e.target.value)}
+                        className={`px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-widest bg-transparent cursor-pointer focus:outline-none transition-all ${
+                          job.status === 'applied' ? 'bg-success/5 border-success/20 text-success' :
+                          job.status === 'reviewing' ? 'bg-accent/5 border-accent/20 text-accent' :
+                          job.status === 'invalid' ? 'bg-white/5 border-white/10 text-text-muted' :
+                          'bg-warning/5 border-warning/20 text-warning'
+                        }`}
+                      >
+                        <option value="pending" className="bg-background text-warning">Pending</option>
+                        <option value="applied" className="bg-background text-success">Applied</option>
+                        <option value="reviewing" className="bg-background text-accent">Reviewing</option>
+                        <option value="invalid" className="bg-background text-text-muted">Invalid Info</option>
+                        <option value="failed" className="bg-background text-error">Failed</option>
+                        <option value="skipped" className="bg-background text-text-muted">Skipped</option>
+                        <option value="confirmed" className="bg-background text-success">Confirmed</option>
+                      </select>
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -327,6 +397,69 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
           </table>
         </div>
       </div>
+
+      {/* Outreach Pitch Modal */}
+      <AnimatePresence>
+        {editingJob && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/80 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="glass-card w-full max-w-2xl !p-0 overflow-hidden shadow-2xl border-accent/20"
+            >
+              <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+                <div>
+                  <h3 className="text-xl font-display font-bold text-white tracking-tight">Outreach Message</h3>
+                  <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold mt-1">
+                    {editingJob.company} — {editingJob.role}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setEditingJob(null)}
+                  className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-white transition-all"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-8 space-y-6">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">Message Content</label>
+                  <textarea 
+                    value={editPitch}
+                    onChange={(e) => setEditPitch(e.target.value)}
+                    placeholder="Craft your personalized outreach message here..."
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-6 text-sm text-white focus:outline-none focus:border-accent/40 min-h-[300px] resize-none custom-scrollbar transition-all leading-relaxed"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-4 pt-2">
+                  <p className="text-[10px] text-text-muted italic">
+                    Changes will be saved to the database and used for the next automation run.
+                  </p>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setEditingJob(null)}
+                      className="px-6 py-2.5 rounded-xl border border-white/10 text-xs font-bold text-text-secondary hover:bg-white/5 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleSavePitch}
+                      disabled={isSavingPitch}
+                      className="btn-cinematic !py-2.5 !px-8 !rounded-xl flex items-center gap-2 text-xs"
+                    >
+                      {isSavingPitch ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      Save Pitch
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

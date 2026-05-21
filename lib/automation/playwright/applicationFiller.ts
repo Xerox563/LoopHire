@@ -26,6 +26,10 @@ const APPLY_SELECTORS = {
     'button:has-text("Apply Now")',
     'a:has-text("Interested")',
     'button:has-text("Interested")',
+    'a:has-text("Connect to apply")',
+    'button:has-text("Connect to apply")',
+    'a:has-text("Quick Apply")',
+    'button:has-text("Quick Apply")',
     "button.apply-button",
     "a.apply-button",
     '[data-test="apply-button"]',
@@ -33,6 +37,8 @@ const APPLY_SELECTORS = {
     'a[class*="apply"]',
     'button[class*="Apply"]',
     'a[class*="Apply"]',
+    'button[id*="apply"]',
+    'a[id*="apply"]',
   ],
   firstName: ['input[name*="first_name"]', 'input[placeholder*="First Name"]', 'input[id*="first_name"]'],
   lastName: ['input[name*="last_name"]', 'input[placeholder*="Last Name"]', 'input[id*="last_name"]'],
@@ -64,13 +70,17 @@ const APPLY_SELECTORS = {
     "textarea",
   ],
   submitButton: [
+    'button:has-text("Submit application")',
+    'button:has-text("Send application")',
+    'button:has-text("Submit")',
+    'button:has-text("Confirm")',
+    'button:has-text("Send")',
     'button[type="submit"]',
     'input[type="submit"]',
-    'button:has-text("Submit application")',
-    'button:has-text("Submit")',
-    'button:has-text("Send application")',
-    'button:has-text("Send")',
     '[data-test="submit-button"]',
+    'button[class*="submit"]',
+    'button[class*="Submit"]',
+    'button[id*="submit"]',
   ],
 };
 
@@ -199,46 +209,127 @@ export async function fillAndReviewApplication(
     logger.info(`Subject: ${message.subject}`);
     logger.info(`Body: ${message.body}`);
 
-    await supabase
-      .from("jobs")
-      .update({ 
-        status: "reviewing", 
-        outreach_message: message.body,
-        outreach_subject: message.subject 
-      })
-      .eq("id", jobId);
+    if (!autoSubmit) {
+      await supabase
+        .from("jobs")
+        .update({ 
+          status: "reviewing", 
+          outreach_message: message.body,
+          outreach_subject: message.subject 
+        })
+        .eq("id", jobId);
 
-    logger.warn(`Waiting for confirmation in the dashboard...`);
+      logger.warn(`Waiting for confirmation in the dashboard...`);
 
-    let userAction: "confirmed" | "skipped" | null = null;
-    const timeoutAt = Date.now() + 10 * 60 * 1000;
+      let userAction: "confirmed" | "skipped" | null = null;
+      const timeoutAt = Date.now() + 10 * 60 * 1000;
 
-    while (Date.now() < timeoutAt) {
-      const { data } = await supabase.from("jobs").select("status").eq("id", jobId).single();
-      if (data?.status === "confirmed") { userAction = "confirmed"; break; }
-      if (data?.status === "skipped") { userAction = "skipped"; break; }
-      await sleep(2000);
+      while (Date.now() < timeoutAt) {
+        const { data } = await supabase.from("jobs").select("status").eq("id", jobId).single();
+        if (data?.status === "confirmed") { userAction = "confirmed"; break; }
+        if (data?.status === "skipped") { userAction = "skipped"; break; }
+        await sleep(2000);
+      }
+
+      if (!userAction || userAction === "skipped") {
+        const reason = userAction === "skipped" ? "skipped by user" : "timed out";
+        logger.warn(`Application for ${job.company} was ${reason}.`);
+        return { action: "skipped", message: message.body, subject: message.subject };
+      }
+
+      logger.info(`Confirmation received! Submitting to ${job.company}...`);
+    } else {
+      logger.info(`Auto-submitting application for ${job.company}...`);
     }
-
-    if (!userAction || userAction === "skipped") {
-      const reason = userAction === "skipped" ? "skipped by user" : "timed out";
-      logger.warn(`Application for ${job.company} was ${reason}.`);
-      return { action: "skipped", message: message.body, subject: message.subject };
-    }
-
-    logger.info(`Confirmation received! Submitting to ${job.company}...`);
 
     const submitBtn = await findElement(page, APPLY_SELECTORS.submitButton);
     if (!submitBtn) throw new Error("Submit button not found");
 
     logger.info("Submitting application...");
     await submitBtn.click();
-    await humanDelay(delayMs * 2, 800);
+    
+    // Wait for submission to complete and verify
+    logger.info("Verifying submission...");
+    let submitted = false;
+    let errorDetected = false;
+    let errorMessage = "";
+    const startTime = Date.now();
+    
+    // Check for success or error indicators for up to 15 seconds
+    while (Date.now() - startTime < 15000) {
+      const pageContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
+      
+      // 1. Check for explicit error messages
+      const errorIndicators = [
+        "is required",
+        "cannot be blank",
+        "please fix",
+        "invalid email",
+        "error occurred",
+        "try again",
+        "must be",
+        "missing information",
+        "already applied",
+        "invalid format",
+        "check the form"
+      ];
 
-    await sleep(3000);
+      if (errorIndicators.some(indicator => pageContent.includes(indicator))) {
+        errorDetected = true;
+        errorMessage = `Form error detected: ${errorIndicators.find(i => pageContent.includes(i))}`;
+        break;
+      }
+
+      // 2. Check for success indicators
+      const successIndicators = [
+        "applied", 
+        "application sent", 
+        "thank you", 
+        "success", 
+        "received", 
+        "we've received your application",
+        "interested",
+        "your application was sent",
+        "application submitted"
+      ];
+      
+      if (successIndicators.some(indicator => pageContent.includes(indicator))) {
+        logger.info(`Found success indicator: ${successIndicators.find(i => pageContent.includes(i))}`);
+        submitted = true;
+        break;
+      }
+      
+      // 3. Check if the modal/form is gone (specifically for YC)
+      // We only consider this success if no error was detected
+      const isFormVisible = await page.locator('textarea, button[type="submit"]').first().isVisible().catch(() => false);
+      if (!isFormVisible) {
+        // Wait a small bit more to see if an error appears
+        await sleep(1000);
+        const finalContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
+        if (!errorIndicators.some(indicator => finalContent.includes(indicator))) {
+          logger.info("Form/Textarea is no longer visible and no error detected, assuming success.");
+          submitted = true;
+          break;
+        }
+      }
+      
+      await sleep(1500);
+    }
+
+    if (errorDetected) {
+      await takeScreenshot(page, `submission_error_${Date.now()}.png`);
+      throw new Error(errorMessage);
+    }
+
+    if (!submitted) {
+      await takeScreenshot(page, `unverified_submission_${Date.now()}.png`);
+      throw new Error("Could not verify submission success after 15 seconds.");
+    }
+
+    await humanDelay(delayMs * 2, 800);
     const finalScreenshot = `logs/submitted_${Date.now()}.png`;
     await page.screenshot({ path: finalScreenshot, fullPage: false });
-    logger.info(`Application submitted! Screenshot: ${finalScreenshot}`);
+    logger.info(`Application process finished successfully. Screenshot: ${finalScreenshot}`);
 
     return { 
       action: "submitted", 

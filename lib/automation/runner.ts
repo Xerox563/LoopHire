@@ -31,6 +31,13 @@ export async function runJobApplications(
   try {
     for (const job of pending) {
       logger.info(`\nProcessing job: ${job.id} — ${job.url}`);
+      
+      // Update status to 'reviewing' immediately to show progress in UI
+      await supabase
+        .from("jobs")
+        .update({ status: "reviewing" })
+        .eq("id", job.id);
+
       const result = await processJob(job, resume, config, aiClient, session.context);
       results.push(result);
 
@@ -85,24 +92,52 @@ async function processJob(
   context: import("playwright").BrowserContext
 ): Promise<RunResult> {
   try {
+    // Step 0: Validate URL
+    if (!job.url || !job.url.startsWith("http")) {
+      logger.error(`Invalid URL for job ${job.id}: ${job.url}`);
+      return {
+        jobId: job.id,
+        success: false,
+        status: "invalid",
+        error: "Invalid job link provided",
+      };
+    }
+
     // Step 1: Scrape job details
-    const jobDetail = await withRetry(
-      () => scrapeJobDetail(context, job, config.actionDelayMs),
-      {
-        maxAttempts: config.maxRetries,
-        delayMs: 2000,
-        onRetry: (n, err) => logger.warn(`Scrape retry ${n}: ${err.message}`),
+    let jobDetail;
+    try {
+      jobDetail = await withRetry(
+        () => scrapeJobDetail(context, job, config.actionDelayMs),
+        {
+          maxAttempts: config.maxRetries,
+          delayMs: 2000,
+          onRetry: (n, err) => logger.warn(`Scrape retry ${n}: ${err.message}`),
+          // Don't retry if it's a 404/dead link
+          shouldRetry: (err: Error) => !err.message?.includes('404') && !err.message?.includes('not found') && !err.message?.includes('no longer available')
+        }
+      );
+    } catch (err: any) {
+      // If navigation failed (e.g. 404, DNS), mark as invalid info
+      if (err.message?.includes('net::') || err.message?.includes('404') || err.message?.includes('Navigation failed')) {
+        logger.error(`Dead link detected for job ${job.id}: ${err.message}`);
+        return {
+          jobId: job.id,
+          success: false,
+          status: "invalid",
+          error: "Link is unreachable or invalid",
+        };
       }
-    );
+      throw err; // Re-throw other errors for general failure handling
+    }
 
     await humanDelay(config.actionDelayMs);
 
     // Step 2: Use existing outreach message or generate one
     let message: any;
-    if (job.outreachMessage) {
-      logger.info(`Using pre-defined outreach pitch for ${jobDetail.company}`);
+    if (job.outreachMessage && job.outreachMessage.trim().length > 0) {
+      logger.info(`Using your custom outreach message for ${jobDetail.company}`);
       message = {
-        subject: job.outreachSubject || `Applying for ${jobDetail.role} at ${jobDetail.company}`,
+        subject: job.outreachSubject || `Application for ${jobDetail.role} at ${jobDetail.company}`,
         body: job.outreachMessage
       };
     } else {

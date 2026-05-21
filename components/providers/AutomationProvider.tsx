@@ -104,7 +104,13 @@ export function AutomationProvider({ children }: { children: React.ReactNode }) 
       if (error.name === 'AbortError') {
         return;
       }
-      addLog(`Critical Error: ${error.message || String(error)}`, "error");
+      
+      let errorMessage = error.message || String(error);
+      if (errorMessage === "Failed to fetch" || error.name === "TypeError") {
+        errorMessage = "Connection Failed: Engine unreachable. If using Brave, disable shields.";
+      }
+      
+      addLog(`Critical Error: ${errorMessage}`, "error");
       setIsRunning(false);
     }
   }, [isRunning, addLog]);

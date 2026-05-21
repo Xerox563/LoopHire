@@ -2,35 +2,36 @@
 
 import { motion } from "framer-motion";
 import { 
-  FileSearch, 
-  BrainCircuit, 
-  Send, 
-  CheckCircle2 
+  Zap, 
+  Cpu, 
+  Target, 
+  Layout,
+  Briefcase
 } from "lucide-react";
 
 const STEPS = [
   {
-    icon: FileSearch,
-    title: "Upload Profile",
-    desc: "Our neural engine analyzes your career trajectory and technical strengths.",
+    icon: Cpu,
+    title: "Smart Automation",
+    desc: "We fill forms, answer questions, and upload your details.",
     label: "Step 01"
   },
   {
-    icon: BrainCircuit,
-    title: "AI Analysis",
-    desc: "Autonomous agents match your profile against millions of open positions.",
+    icon: Zap,
+    title: "AI Personalization",
+    desc: "Every application is customized for the job and company.",
     label: "Step 02"
   },
   {
-    icon: Send,
-    title: "One-Click Apply",
-    desc: "Automated delivery of high-signal applications tailored for each role.",
+    icon: Layout,
+    title: "Real-time Tracking",
+    desc: "Track progress and get notified at every step.",
     label: "Step 03"
   },
   {
-    icon: CheckCircle2,
-    title: "Track Success",
-    desc: "Experience real-time updates and interview invites on your dashboard.",
+    icon: Briefcase,
+    title: "More Interviews",
+    desc: "Apply to more jobs, save time, and land more interviews.",
     label: "Step 04"
   }
 ];
@@ -50,27 +51,27 @@ export default function HowItWorks() {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-6"
+              className="text-accent text-[10px] font-bold tracking-[0.3em] uppercase mb-6"
             >
-              The Protocol
+              AUTOMATE. PERSONALIZE. SUCCEED.
             </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-gradient font-display text-5xl md:text-7xl font-bold tracking-tight mb-8"
+              className="text-white font-display text-5xl md:text-7xl font-bold tracking-tight mb-8"
             >
-              Four steps to <br /> <span className="italic accent-gradient">career mastery.</span>
+              Four steps to <br /> <span className="accent-gradient">career mastery.</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-text-secondary text-lg max-w-xl mb-12 leading-relaxed"
+              className="text-text-secondary text-base max-w-xl mb-12 leading-relaxed"
             >
-              LoopHire eliminates the friction of manual job searching. 
-              Our autonomous agents handle the complexity, so you can focus on the interviews.
+              LoopHire uses AI agents to handle the entire job application 
+              process — so you can focus on what matters.
             </motion.p>
           </div>
 

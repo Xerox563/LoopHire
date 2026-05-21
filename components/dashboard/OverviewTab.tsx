@@ -43,6 +43,7 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
     { name: "In Progress", value: jobs.filter(j => j.status === 'reviewing').length, color: "#ff6640" },
     { name: "Pending", value: jobs.filter(j => j.status === 'pending').length, color: "#f59e0b" },
     { name: "Failed", value: jobs.filter(j => j.status === 'failed').length, color: "#ef4444" },
+    { name: "Invalid", value: jobs.filter(j => j.status === 'invalid').length, color: "#94a3b8" },
   ];
 
   const CHART_DATA = [

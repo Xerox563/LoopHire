@@ -125,43 +125,6 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
             </div>
 
             <div className="flex flex-col gap-4">
-              <AnimatePresence>
-                {reviewingJob && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="p-6 rounded-2xl bg-accent/5 border border-accent/20 space-y-5 shadow-2xl"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-[11px] font-bold text-accent uppercase tracking-[0.2em] flex items-center gap-2">
-                        <AlertCircle className="w-4 h-4" />
-                        Action Required
-                      </div>
-                    </div>
-                    <p className="text-xs text-text-secondary leading-relaxed">
-                      AI has drafted a message for <span className="text-white font-bold">{reviewingJob.company}</span>. Please verify and confirm submission.
-                    </p>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => handleConfirm(reviewingJob.id)}
-                        className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-accent text-white text-[11px] font-bold uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-accent/20"
-                      >
-                        <Send className="w-3.5 h-3.5" />
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleSkipReview(reviewingJob.id)}
-                        className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/5 border border-white/10 text-text-secondary text-[11px] font-bold uppercase tracking-widest hover:text-white hover:bg-white/10 active:scale-[0.98] transition-all"
-                      >
-                        <XCircle className="w-3.5 h-3.5" />
-                        Skip
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
               {!isRunning ? (
                 <button
                   onClick={() => {

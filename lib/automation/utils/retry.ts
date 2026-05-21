@@ -7,6 +7,7 @@ export interface RetryOptions {
   delayMs?: number;
   backoffFactor?: number;
   onRetry?: (attempt: number, error: Error) => void;
+  shouldRetry?: (error: Error) => boolean;
 }
 
 export async function withRetry<T>(
@@ -22,7 +23,7 @@ export async function withRetry<T>(
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
 
-      if (attempt === maxAttempts) break;
+      if (attempt === maxAttempts || (options.shouldRetry && !options.shouldRetry(lastError))) break;
 
       const waitMs = delayMs * Math.pow(backoffFactor, attempt - 1);
       logger.warn(

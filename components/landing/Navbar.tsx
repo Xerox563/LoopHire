@@ -48,13 +48,15 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {[
               { label: "Features", href: "#features" },
-              { label: "Protocol", href: "#how" },
+              { label: "How it Works", href: "#how" },
+              { label: "Protocol", href: "#demo" },
               { label: "Analytics", href: "/dashboard" },
+              { label: "Pricing", href: "#cta" },
             ].map((link) => (
               <Link 
                 key={link.label} 
                 href={link.href}
-                className="text-xs font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors relative group"
+                className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors relative group"
               >
                 {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-500 group-hover:w-full" />
@@ -64,10 +66,12 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors mr-2">
+              Log in
+            </Link>
             <Link href="/dashboard">
-              <button className="btn-premium !py-2 !px-5 flex items-center gap-2 group">
-                <LayoutDashboard className="w-4 h-4 text-accent" />
-                <span className="text-xs font-bold uppercase tracking-widest">Dashboard</span>
+              <button className="bg-accent hover:bg-accent-2 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-6 py-3 rounded-xl transition-all shadow-lg shadow-accent/20">
+                Get Started
               </button>
             </Link>
 

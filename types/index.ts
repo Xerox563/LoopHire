@@ -1,5 +1,5 @@
 // Job status types for the application
-export type JobStatus = "pending" | "applied" | "failed" | "skipped" | "reviewing" | "confirmed";
+export type JobStatus = "pending" | "applied" | "failed" | "skipped" | "reviewing" | "confirmed" | "invalid";
 
 // Main job record structure
 export interface JobRecord {

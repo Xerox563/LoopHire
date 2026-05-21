@@ -1,5 +1,6 @@
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
+import TrustedBy from "@/components/landing/TrustedBy";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
 import TerminalDemo from "@/components/landing/TerminalDemo";
@@ -19,6 +20,8 @@ export default function Home() {
       <div id="hero">
         <Hero />
       </div>
+      
+      <TrustedBy />
       
       <div id="how">
         <HowItWorks />

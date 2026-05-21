@@ -7,51 +7,52 @@ import {
   Cpu, 
   LineChart, 
   Target, 
-  Layout, 
-  Clock, 
-  Rocket 
+  Rocket,
+  Bell,
+  Calendar,
+  MessageSquare
 } from "lucide-react";
 
 const FEATURES = [
   { 
     icon: Cpu, 
-    title: "Neural Engine", 
-    desc: "Advanced matching algorithms that learn from your preferences and successful applications." 
+    title: "Natural Engine", 
+    desc: "Understands job descriptions like a human." 
   },
   { 
     icon: Rocket, 
     title: "Turbo Apply", 
-    desc: "Scale your reach with one-click multi-platform application automation." 
+    desc: "Applies to hundreds of jobs with perfect accuracy." 
   },
   { 
     icon: LineChart, 
     title: "Deep Analytics", 
-    desc: "Real-time insights into your application performance and matching scores." 
+    desc: "Insights and reports to optimize your job search." 
   },
   { 
     icon: Shield, 
     title: "Privacy First", 
-    desc: "Enterprise-grade encryption for your personal data and application history." 
+    desc: "Your data is secure and never shared." 
   },
   { 
     icon: Target, 
     title: "Precision Matching", 
-    desc: "Identify the high-signal opportunities that actually fit your career trajectory." 
+    desc: "Matches you with the best roles using advanced filters." 
   },
   { 
-    icon: Zap, 
+    icon: Bell, 
     title: "Instant Alerts", 
-    desc: "Be the first to apply with our ultra-low latency job discovery engine." 
+    desc: "Get notified when something important happens." 
   },
   { 
-    icon: Clock, 
-    title: "Auto-Scheduler", 
-    desc: "Optimal timing for application delivery based on historical recruiter activity." 
+    icon: Calendar, 
+    title: "Auto Schedule", 
+    desc: "Automatically schedule interviews on your behalf." 
   },
   { 
-    icon: Layout, 
-    title: "Bento Workflow", 
-    desc: "A beautifully organized workspace designed for clarity and high productivity." 
+    icon: MessageSquare, 
+    title: "Doubt Resolver", 
+    desc: "AI answers job-related doubts and application questions." 
   },
 ];
 
@@ -69,18 +70,18 @@ export default function Features() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-accent text-xs font-bold tracking-[0.2em] uppercase mb-4"
+            className="text-accent text-[10px] font-bold tracking-[0.3em] uppercase mb-4"
           >
-            Engineering Excellence
+            BUILT FOR THE HIGH-GROWTH ELITE.
           </motion.div>
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-gradient font-display text-5xl md:text-7xl font-bold tracking-tight"
+            className="text-white font-display text-5xl md:text-7xl font-bold tracking-tight"
           >
-            Built for the <br /> <span className="italic accent-gradient">high-growth</span> elite.
+            Built for the <br /> <span className="accent-gradient">high-growth</span> elite.
           </motion.h2>
         </div>
 
