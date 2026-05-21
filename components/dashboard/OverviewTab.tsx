@@ -351,32 +351,6 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
               </div>
             </div>
           </div>
-
-          {/* Recent Activity List */}
-          <div className="glass-card !p-8">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-sm font-bold text-white uppercase tracking-widest">Recent Activity</h3>
-              <button className="text-[10px] font-bold text-accent uppercase tracking-widest">View All</button>
-            </div>
-            <div className="space-y-6">
-              {[
-                { event: "Application submitted successfully", time: "2 mins ago", color: "#10b981" },
-                { event: "AI message generated", time: "3 mins ago", color: "#3b82f6" },
-                { event: "Resume uploaded", time: "5 mins ago", color: "#ff6640" },
-                { event: "Review mode enabled", time: "8 mins ago", color: "#f59e0b" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 group">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center border transition-all group-hover:scale-110" style={{ backgroundColor: `${item.color}10`, borderColor: `${item.color}20` }}>
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-white truncate">{item.event}</p>
-                    <p className="text-[10px] text-text-muted mt-0.5">{item.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
