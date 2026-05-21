@@ -248,20 +248,29 @@ export async function fillAndReviewApplication(
     if (!submitBtn) throw new Error("Submit button not found");
 
     // Check if button is disabled
-    const isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
+    let isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
     if (isDisabled) {
       logger.warn("Submit button is disabled, trying to trigger events on textarea...");
-      await page.locator('textarea').first().focus();
+      const textarea = page.locator('textarea').first();
+      await textarea.focus();
       await page.keyboard.press('Space');
       await page.keyboard.press('Backspace');
-      await sleep(1000);
+      await sleep(1500);
+      isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
     }
 
     const initialUrl = page.url();
-    logger.info("Submitting application...");
+    logger.info(`Submitting application (Button disabled: ${isDisabled})...`);
     await submitBtn.scrollIntoViewIfNeeded().catch(() => null);
-    await humanDelay(500);
-    await submitBtn.click({ force: true });
+    await humanDelay(1000);
+    
+    // Use a more robust click strategy
+    try {
+      await submitBtn.click({ timeout: 5000 });
+    } catch (e) {
+      logger.warn("Standard click failed, attempting force click...");
+      await submitBtn.click({ force: true });
+    }
     
     // Wait for submission to complete and verify
     logger.info("Verifying submission...");
@@ -339,7 +348,15 @@ export async function fillAndReviewApplication(
         }
       }
       
-      await sleep(1500);
+      // 4. Specifically for Work at a Startup (YC): Check if the 'Apply' button text changed to 'Applied'
+    const applyBtnText = await applyBtn.textContent().then(t => t?.toLowerCase() || "");
+    if (applyBtnText.includes("applied") || applyBtnText.includes("view application")) {
+      logger.info("Apply button text changed to 'Applied', submission confirmed.");
+      submitted = true;
+      break;
+    }
+    
+    await sleep(2000);
     }
 
     if (errorDetected) {
