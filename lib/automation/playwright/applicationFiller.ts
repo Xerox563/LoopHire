@@ -72,11 +72,11 @@ const APPLY_SELECTORS = {
   submitButton: [
     'button:has-text("Submit application")',
     'button:has-text("Send application")',
+    'button:has-text("Confirm interest")',
+    'button:has-text("Apply now")',
     'button:has-text("Submit")',
     'button:has-text("Confirm")',
     'button:has-text("Send")',
-    'button:has-text("Confirm interest")',
-    'button:has-text("Apply now")',
     'button[type="submit"]',
     'input[type="submit"]',
     '[data-test="submit-button"]',
@@ -266,9 +266,21 @@ export async function fillAndReviewApplication(
     
     // Use a more robust click strategy
     try {
-      await submitBtn.click({ timeout: 5000 });
+      logger.info("Attempting primary submission click...");
+      await submitBtn.click({ timeout: 8000 });
+      
+      // If the button reappears or form doesn't close, try clicking again
+      await sleep(3000);
+      const stillVisible = await submitBtn.isVisible().catch(() => false);
+      const isEnabled = await submitBtn.getAttribute("disabled").then(v => v === null).catch(() => true);
+      
+      if (stillVisible && isEnabled) {
+        logger.warn("Submit button still visible and enabled after 3s, retrying click...");
+        await submitBtn.click({ force: true });
+        await sleep(2000);
+      }
     } catch (e) {
-      logger.warn("Standard click failed, attempting force click...");
+      logger.warn("Primary click failed or timed out, attempting force click...");
       await submitBtn.click({ force: true });
     }
     
