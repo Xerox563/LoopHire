@@ -73,16 +73,18 @@ export default function AIMessagesTab() {
       Company: ${job.company}
       Job Details: ${job.notes || "Not provided"}
 
-      CANDIDATE PROFILE (Use this to fill [X years], [domain], [achievements], etc.):
+      CANDIDATE PROFILE (Use this to fill [X years/months], [domain], [achievements], etc.):
       Full Name: ${profile?.first_name} ${profile?.last_name}
+      Actual Experience Duration: 9 months (STRICTLY use this for [X years/months])
       Experience Summary: ${profile?.experience || "General Software Engineer"}
       Skills: ${profile?.technical_skills || "Not provided"}
 
       INSTRUCTIONS:
       1. Follow the template structure exactly.
-      2. Replace all placeholders (like [Name], [X years], [concrete achievement]) with real data from the candidate profile or the job.
-      3. Keep the tone ${selectedTemplate?.title === 'Founder / Early Stage' ? 'direct and scrappy' : 'professional and high-impact'}.
-      4. DO NOT include any meta-text, just the final message.`;
+      2. Replace all placeholders (like [Name], [X years/months], [concrete achievement]) with real data from the candidate profile or the job.
+      3. CRITICAL: Use "9 months" for the experience duration. Do not use 5 years or any other dummy value.
+      4. Keep the tone ${selectedTemplate?.title === 'Founder / Early Stage' ? 'direct and scrappy' : 'professional and high-impact'}.
+      5. DO NOT include any meta-text, just the final message.`;
 
       const client = getOpenAIClient();
       const response = await client.chat.completions.create({
