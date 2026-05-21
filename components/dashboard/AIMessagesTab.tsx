@@ -16,6 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import OpenAI from "openai";
+import { AlertCircle } from "lucide-react";
 
 const getOpenAIClient = () => {
   const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
@@ -39,8 +40,10 @@ export default function AIMessagesTab() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [targetJob, setTargetJob] = useState("");
   const [jobs, setJobs] = useState<any[]>([]);
+  const [hasApiKey, setHasApiKey] = useState(true);
 
   useEffect(() => {
+    setHasApiKey(!!(process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY));
     async function loadJobs() {
       const { data } = await supabase.from("jobs").select("*").order("created_at", { ascending: false });
       if (data) setJobs(data);
@@ -110,6 +113,15 @@ export default function AIMessagesTab() {
           <p className="text-text-secondary text-sm mt-1">Generate and manage high-conversion outreach content.</p>
         </div>
       </div>
+
+      {!hasApiKey && (
+        <div className="p-4 rounded-xl bg-error/10 border border-error/20 flex items-center gap-3 text-error animate-pulse">
+          <AlertCircle className="w-5 h-5" />
+          <span className="text-xs font-bold uppercase tracking-widest">
+            Missing NEXT_PUBLIC_OPENROUTER_API_KEY. AI generation is disabled.
+          </span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="space-y-2">
