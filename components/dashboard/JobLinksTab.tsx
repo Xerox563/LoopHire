@@ -10,7 +10,8 @@ import {
   Briefcase,
   ExternalLink,
   Trash2,
-  Loader2
+  Loader2,
+  Edit3
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { JobRecord } from "@/types";
@@ -57,15 +58,37 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
     const reader = new FileReader();
     reader.onload = async (event) => {
       const text = event.target?.result as string;
-      const urls = text.split("\n").map(line => line.trim()).filter(line => line.startsWith("http"));
+      const lines = text.split("\n").filter(line => line.trim());
       
-      const newJobs = urls.map(url => ({
-        id: `job_${Math.random().toString(36).substr(2, 9)}`,
-        url,
-        status: "pending",
-        company: "Imported",
-        role: "Bulk Queue"
-      }));
+      // Attempt to parse headers
+      const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+      
+      const companyIdx = headers.findIndex(h => h.includes("company"));
+      const roleIdx = headers.findIndex(h => h.includes("role"));
+      const linkIdx = headers.findIndex(h => h.includes("link") || h.includes("url"));
+      const pitchIdx = headers.findIndex(h => h.includes("pitch") || h.includes("outreach"));
+
+      const newJobs = lines.slice(1).map(line => {
+        const columns = line.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+        const url = columns[linkIdx] || "";
+        
+        if (!url.startsWith("http")) return null;
+
+        return {
+          id: `job_${Math.random().toString(36).substr(2, 9)}`,
+          url,
+          company: columns[companyIdx] || "Imported",
+          role: columns[roleIdx] || "Job",
+          outreach_message: columns[pitchIdx] || "",
+          status: "pending"
+        } as any;
+      }).filter((j): j is any => j !== null);
+
+      if (newJobs.length === 0) {
+        alert("No valid job links found in file.");
+        setIsAddingImport(false);
+        return;
+      }
 
       const { error } = await supabase.from("jobs").insert(newJobs);
       if (error) {
@@ -170,6 +193,7 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
               <tr className="border-b border-white/5 bg-white/[0.01]">
                 <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">Job URL</th>
                 <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">Company</th>
+                <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">Outreach Pitch</th>
                 <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">Status</th>
                 <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted text-right">Actions</th>
               </tr>
@@ -177,7 +201,7 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
             <tbody className="divide-y divide-white/[0.03]">
               {jobs.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-8 py-20 text-center text-text-muted italic text-sm">
+                  <td colSpan={5} className="px-8 py-20 text-center text-text-muted italic text-sm">
                     No jobs in queue. Paste a link above to start.
                   </td>
                 </tr>
@@ -189,11 +213,31 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
                         <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
                           <Briefcase className="w-4 h-4 text-text-secondary" />
                         </div>
-                        <span className="text-xs font-medium text-white truncate max-w-xs">{job.url}</span>
+                        <span className="text-xs font-medium text-white truncate max-w-[150px]">{job.url}</span>
                       </div>
                     </td>
                     <td className="px-8 py-5">
-                      <span className="text-[11px] font-bold text-text-secondary">{job.company || "Pending..."}</span>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-bold text-text-secondary">{job.company || "Pending..."}</span>
+                        <span className="text-[10px] text-text-muted">{job.role}</span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-5 max-w-[300px]">
+                      <div className="relative group/pitch">
+                        <textarea 
+                          value={job.outreachMessage || ""}
+                          onChange={async (e) => {
+                            const newVal = e.target.value;
+                            await supabase.from("jobs").update({ outreach_message: newVal }).eq("id", job.id);
+                            onRefresh();
+                          }}
+                          className="w-full bg-white/[0.02] border border-white/5 rounded-lg p-2 text-[11px] text-text-secondary focus:outline-none focus:border-accent/30 min-h-[60px] resize-none custom-scrollbar transition-all"
+                          placeholder="No pitch generated yet..."
+                        />
+                        <div className="absolute right-2 bottom-2 opacity-0 group-hover/pitch:opacity-100 transition-opacity">
+                          <Edit3 className="w-3 h-3 text-accent/50" />
+                        </div>
+                      </div>
                     </td>
                     <td className="px-8 py-5">
                       <div className={`px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-widest inline-block ${

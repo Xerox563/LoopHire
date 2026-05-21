@@ -97,16 +97,26 @@ async function processJob(
 
     await humanDelay(config.actionDelayMs);
 
-    // Step 2: Generate AI message
-    const message = await generateOutreachMessage(
-      aiClient,
-      jobDetail,
-      resume,
-      config.openRouterModel,
-      config.maxRetries
-    );
+    // Step 2: Use existing outreach message or generate one
+    let message: any;
+    if (job.outreachMessage) {
+      logger.info(`Using pre-defined outreach pitch for ${jobDetail.company}`);
+      message = {
+        subject: job.outreachSubject || `Applying for ${jobDetail.role} at ${jobDetail.company}`,
+        body: job.outreachMessage
+      };
+    } else {
+      logger.info(`Generating AI message for ${jobDetail.company}`);
+      message = await generateOutreachMessage(
+        aiClient,
+        jobDetail,
+        resume,
+        config.openRouterModel,
+        config.maxRetries
+      );
+    }
 
-    logger.info(`Generated subject: "${message.subject}"`);
+    logger.info(`Subject: "${message.subject}"`);
     await humanDelay(config.actionDelayMs);
 
     // Step 3: Fill and review application
