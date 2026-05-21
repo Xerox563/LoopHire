@@ -81,6 +81,25 @@ You're at the stage where [insight about their current challenge]. I've been thr
 
 I'm genuinely interested in exploring this. What does your hiring look like right now?
 [Your name]`
+  },
+  {
+    id: "insight",
+    title: "Insight-Driven",
+    subtitle: "Deeply personalized philosophy",
+    icon: Layers,
+    color: "#ec4899",
+    content: `Hi [Company] team,
+
+I've been watching what you're building because the insight is spot-on: [their core problem/insight that matters].
+
+I've spent [X years] doing the opposite—building systems that are [your core philosophy]. I [specific concrete achievement with impact], [another specific achievement], and [third achievement]. That's the foundation this problem needs.
+
+Your mission resonates because I think the same way: [their core value] isn't a feature—it's foundational. It frees teams to focus on what matters.
+
+I'd like to explore how I could contribute to this, whether that's [specific role/project area/team]. I'm ready to move quickly.
+
+What would make sense to discuss?
+[Your name]`
   }
 ];
 
