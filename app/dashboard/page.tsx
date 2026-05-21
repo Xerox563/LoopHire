@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import OverviewTab from "@/components/dashboard/OverviewTab";
+import JobLinksTab from "@/components/dashboard/JobLinksTab";
 
 /**
  * Main dashboard page for managing and tracking job applications
@@ -67,6 +68,8 @@ export default function DashboardPage() {
     switch (activeTab) {
       case "dashboard":
         return <OverviewTab jobs={jobs} />;
+      case "job-links":
+        return <JobLinksTab />;
       case "resume":
         return <ResumeSection onUpdate={setResumeData} initialData={resumeData} />;
       case "automation":
