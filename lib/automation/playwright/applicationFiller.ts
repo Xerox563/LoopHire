@@ -75,6 +75,8 @@ const APPLY_SELECTORS = {
     'button:has-text("Submit")',
     'button:has-text("Confirm")',
     'button:has-text("Send")',
+    'button:has-text("Confirm interest")',
+    'button:has-text("Apply now")',
     'button[type="submit"]',
     'input[type="submit"]',
     '[data-test="submit-button"]',
@@ -245,8 +247,21 @@ export async function fillAndReviewApplication(
     const submitBtn = await findElement(page, APPLY_SELECTORS.submitButton);
     if (!submitBtn) throw new Error("Submit button not found");
 
+    // Check if button is disabled
+    const isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
+    if (isDisabled) {
+      logger.warn("Submit button is disabled, trying to trigger events on textarea...");
+      await page.locator('textarea').first().focus();
+      await page.keyboard.press('Space');
+      await page.keyboard.press('Backspace');
+      await sleep(1000);
+    }
+
+    const initialUrl = page.url();
     logger.info("Submitting application...");
-    await submitBtn.click();
+    await submitBtn.scrollIntoViewIfNeeded().catch(() => null);
+    await humanDelay(500);
+    await submitBtn.click({ force: true });
     
     // Wait for submission to complete and verify
     logger.info("Verifying submission...");
@@ -257,8 +272,16 @@ export async function fillAndReviewApplication(
     
     // Check for success or error indicators for up to 15 seconds
     while (Date.now() - startTime < 15000) {
+      const currentUrl = page.url();
       const pageContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
       
+      // 0. Check for URL change (often indicates success)
+      if (currentUrl !== initialUrl && !currentUrl.includes("apply") && !currentUrl.includes("job")) {
+        logger.info(`URL changed from ${initialUrl} to ${currentUrl}, assuming success.`);
+        submitted = true;
+        break;
+      }
+
       // 1. Check for explicit error messages
       const errorIndicators = [
         "is required",
@@ -271,7 +294,8 @@ export async function fillAndReviewApplication(
         "missing information",
         "already applied",
         "invalid format",
-        "check the form"
+        "check the form",
+        "error submitting",
       ];
 
       if (errorIndicators.some(indicator => pageContent.includes(indicator))) {
@@ -280,17 +304,17 @@ export async function fillAndReviewApplication(
         break;
       }
 
-      // 2. Check for success indicators
+      // 2. Check for success indicators - make them more specific
       const successIndicators = [
-        "applied", 
         "application sent", 
         "thank you", 
-        "success", 
-        "received", 
+        "success!", 
+        "successfully submitted",
         "we've received your application",
-        "interested",
         "your application was sent",
-        "application submitted"
+        "application submitted",
+        "go to my applications",
+        "view your applications",
       ];
       
       if (successIndicators.some(indicator => pageContent.includes(indicator))) {
@@ -299,15 +323,17 @@ export async function fillAndReviewApplication(
         break;
       }
       
-      // 3. Check if the modal/form is gone (specifically for YC)
-      // We only consider this success if no error was detected
-      const isFormVisible = await page.locator('textarea, button[type="submit"]').first().isVisible().catch(() => false);
-      if (!isFormVisible) {
-        // Wait a small bit more to see if an error appears
-        await sleep(1000);
+      // 3. Check if the modal/form is gone
+      // We check for the textarea or the submit button
+      const textareaStillVisible = await page.locator('textarea').first().isVisible().catch(() => false);
+      const submitBtnStillVisible = await submitBtn.isVisible().catch(() => false);
+
+      if (!textareaStillVisible && !submitBtnStillVisible) {
+        // Form seems gone. Wait a bit more to see if an error pops up
+        await sleep(2000);
         const finalContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
         if (!errorIndicators.some(indicator => finalContent.includes(indicator))) {
-          logger.info("Form/Textarea is no longer visible and no error detected, assuming success.");
+          logger.info("Form and button are gone and no error detected, assuming success.");
           submitted = true;
           break;
         }

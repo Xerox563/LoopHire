@@ -45,7 +45,7 @@ export async function typeSlowly(
 }
 
 /**
- * Fill a textarea instantly using Playwright's fill().
+ * Fill a textarea and ensure events are triggered.
  */
 export async function fillTextarea(
   page: Page,
@@ -54,7 +54,14 @@ export async function fillTextarea(
   delayMs: number,
 ): Promise<void> {
   logger.info(`Filling textarea: ${selector}`);
-  await page.locator(selector).first().fill(text);
+  const locator = page.locator(selector).first();
+  await locator.click();
+  await locator.fill(text);
+  // Trigger input events manually just in case
+  await locator.evaluate((el) => {
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await humanDelay(delayMs);
 }
 
