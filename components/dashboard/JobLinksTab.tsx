@@ -11,22 +11,28 @@ import {
   ExternalLink,
   Trash2,
   Loader2,
-  Edit3
+  Edit3,
+  Send
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { JobRecord } from "@/types";
 import { supabase } from "@/lib/supabase";
+import * as XLSX from "xlsx";
+import { useAutomation } from "@/components/providers/AutomationProvider";
 
 interface Props {
   jobs: JobRecord[];
   onRefresh: () => void;
+  resumeData?: any;
 }
 
-export default function JobLinksTab({ jobs, onRefresh }: Props) {
+export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [newUrl, setNewUrl] = useState("");
   const [isImporting, setIsAddingImport] = useState(false);
+  const [isSending, setIsSending] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { startAutomation } = useAutomation();
 
   const handleAddLink = async () => {
     if (!newUrl.trim()) return;
@@ -57,49 +63,76 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
     
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const text = event.target?.result as string;
-      const lines = text.split("\n").filter(line => line.trim());
-      
-      // Attempt to parse headers
-      const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
-      
-      const companyIdx = headers.findIndex(h => h.includes("company"));
-      const roleIdx = headers.findIndex(h => h.includes("role"));
-      const linkIdx = headers.findIndex(h => h.includes("link") || h.includes("url"));
-      const pitchIdx = headers.findIndex(h => h.includes("pitch") || h.includes("outreach"));
+      try {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
 
-      const newJobs = lines.slice(1).map(line => {
-        const columns = line.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
-        const url = columns[linkIdx] || "";
+        if (jsonData.length < 2) {
+          alert("File is empty or has no data.");
+          setIsAddingImport(false);
+          return;
+        }
+
+        const headers = (jsonData[0] as string[]).map(h => h.trim().toLowerCase());
         
-        if (!url.startsWith("http")) return null;
+        const companyIdx = headers.findIndex(h => h.includes("company"));
+        const roleIdx = headers.findIndex(h => h.includes("role"));
+        const linkIdx = headers.findIndex(h => h.includes("link") || h.includes("url"));
+        const pitchIdx = headers.findIndex(h => h.includes("pitch") || h.includes("outreach"));
 
-        return {
-          id: `job_${Math.random().toString(36).substr(2, 9)}`,
-          url,
-          company: columns[companyIdx] || "Imported",
-          role: columns[roleIdx] || "Job",
-          outreach_message: columns[pitchIdx] || "",
-          status: "pending"
-        } as any;
-      }).filter((j): j is any => j !== null);
+        const newJobs = jsonData.slice(1).map(columns => {
+          const url = String(columns[linkIdx] || "").trim();
+          if (!url.startsWith("http")) return null;
 
-      if (newJobs.length === 0) {
-        alert("No valid job links found in file.");
+          return {
+            id: `job_${Math.random().toString(36).substr(2, 9)}`,
+            url,
+            company: String(columns[companyIdx] || "Imported"),
+            role: String(columns[roleIdx] || "Job"),
+            outreach_message: String(columns[pitchIdx] || ""),
+            status: "pending"
+          } as any;
+        }).filter((j): j is any => j !== null);
+
+        if (newJobs.length === 0) {
+          alert("No valid job links found in file.");
+          setIsAddingImport(false);
+          return;
+        }
+
+        const { error } = await supabase.from("jobs").insert(newJobs);
+        if (error) throw error;
+        onRefresh();
+      } catch (err) {
+        console.error("Import error:", err);
+        alert("Failed to parse file. Ensure it's a valid CSV or XLSX.");
+      } finally {
         setIsAddingImport(false);
-        return;
       }
+    };
+    reader.readAsArrayBuffer(file);
+  };
 
-      const { error } = await supabase.from("jobs").insert(newJobs);
-      if (error) {
-        console.error("Import error:", error);
-        alert("Bulk import failed");
-      } else {
+  const handleSendOne = async (job: JobRecord) => {
+    if (!resumeData) {
+      alert("Please upload your resume in the Resume tab first.");
+      return;
+    }
+    
+    if (window.confirm(`Start automation for ${job.company}? This will open a browser to apply.`)) {
+      setIsSending(job.id);
+      try {
+        await startAutomation([job], resumeData);
+      } catch (err) {
+        console.error("Send error:", err);
+      } finally {
+        setIsSending(null);
         onRefresh();
       }
-      setIsAddingImport(false);
-    };
-    reader.readAsText(file);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -122,7 +155,7 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
             ref={fileInputRef} 
             onChange={handleFileUpload} 
             className="hidden" 
-            accept=".csv,.txt"
+            accept=".csv,.txt,.xlsx,.xls"
           />
           <button 
             onClick={() => fileInputRef.current?.click()}
@@ -130,7 +163,7 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all disabled:opacity-50"
           >
             {isImporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSpreadsheet className="w-4 h-4 text-success" />}
-            Import CSV/TXT
+            Import CSV/XLSX
           </button>
         </div>
       </div>
@@ -201,8 +234,8 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
             <tbody className="divide-y divide-white/[0.03]">
               {jobs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-8 py-20 text-center text-text-muted italic text-sm">
-                    No jobs in queue. Paste a link above to start.
+                  <td colSpan={4} className="px-8 py-20 text-center text-text-muted italic text-sm">
+                    No jobs in queue. Import a file or paste a link.
                   </td>
                 </tr>
               ) : (
@@ -250,6 +283,16 @@ export default function JobLinksTab({ jobs, onRefresh }: Props) {
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        {job.status === 'pending' && (
+                          <button 
+                            onClick={() => handleSendOne(job)}
+                            disabled={!!isSending}
+                            className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-all group/send"
+                            title="Send outreach and apply"
+                          >
+                            {isSending === job.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5 transition-transform" />}
+                          </button>
+                        )}
                         <a href={job.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-white transition-all">
                           <ExternalLink className="w-4 h-4" />
                         </a>

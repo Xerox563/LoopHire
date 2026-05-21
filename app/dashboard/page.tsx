@@ -71,7 +71,7 @@ export default function DashboardPage() {
       case "dashboard":
         return <OverviewTab jobs={jobs} />;
       case "job-links":
-        return <JobLinksTab jobs={jobs} onRefresh={loadJobs} />;
+        return <JobLinksTab jobs={jobs} onRefresh={loadJobs} resumeData={resumeData} />;
       case "ai-messages":
         return <AIMessagesTab />;
       case "resume":
