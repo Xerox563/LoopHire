@@ -6,6 +6,7 @@ import { Play, Square, Terminal as TerminalIcon, Cpu, AlertCircle, CheckCircle2,
 import { JobRecord } from "@/types";
 import { ResumeData } from "./ResumeSection";
 import { supabase } from "@/lib/supabase";
+import { useAutomation } from "@/components/providers/AutomationProvider";
 
 interface LogEntry {
   id: string;
@@ -20,23 +21,11 @@ interface AutomationSectionProps {
 }
 
 export default function AutomationSection({ jobs, resumeData }: AutomationSectionProps) {
-  const [isRunning, setIsRunning] = useState(false);
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [progress, setProgress] = useState(0);
+  const { isRunning, logs, progress, startAutomation, stopAutomation } = useAutomation();
   const logContainerRef = useRef<HTMLDivElement>(null);
 
   // Filter jobs to find if any are currently 'reviewing'
   const reviewingJob = jobs.find(j => j.status === "reviewing");
-
-  const addLog = (message: string, type: LogEntry["type"] = "info") => {
-    const newLog: LogEntry = {
-      id: Math.random().toString(36).substring(7),
-      timestamp: new Date().toLocaleTimeString(),
-      type,
-      message,
-    };
-    setLogs((prev) => [...prev, newLog]);
-  };
 
   useEffect(() => {
     if (logContainerRef.current) {
@@ -44,78 +33,16 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
     }
   }, [logs]);
 
-  const startAutomation = async () => {
+  const handleStart = async () => {
     if (!resumeData) {
-      addLog("Cannot start: No resume profile found. Please upload and parse your resume first.", "error");
+      alert("Please upload and parse your resume first.");
       return;
     }
-
-    setIsRunning(true);
-    setLogs([]);
-    setProgress(0);
-    addLog("Initializing LoopHire OS Automation Core...", "system");
-    addLog("Syncing jobs and resume profile to automation engine...", "info");
-
-    try {
-      const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
-      const apiEndpoint = workerUrl ? `${workerUrl}/run-automation` : "/api/run-automation";
-      
-      addLog(`Connecting to engine at ${apiEndpoint}...`, "info");
-
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        body: JSON.stringify({ jobs, resumeData }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.body) throw new Error("No response body");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n").filter(Boolean);
-
-        for (const line of lines) {
-          try {
-            const data = JSON.parse(line);
-            if (data.type === "log") {
-              addLog(data.message, data.level || "info");
-            } else if (data.type === "progress") {
-              setProgress(data.value);
-            } else if (data.type === "done") {
-              addLog("Automation run completed successfully.", "system");
-              setIsRunning(false);
-            } else if (data.type === "error") {
-              addLog(data.message, "error");
-              setIsRunning(false);
-            }
-          } catch (e) {
-            // Fallback for non-JSON lines
-            addLog(line, "info");
-          }
-        }
-      }
-    } catch (error) {
-      addLog(`Automation failed: ${error instanceof Error ? error.message : String(error)}`, "error");
-      setIsRunning(false);
-    }
-  };
-
-  const stopAutomation = () => {
-    // In a real implementation, this would send a signal to the API to kill the process
-    addLog("Manual abort requested. Cleaning up...", "warn");
-    setIsRunning(false);
+    await startAutomation(jobs, resumeData);
   };
 
   const handleConfirm = async (id: string) => {
     try {
-      addLog(`Confirming application for job ${id} via server...`, "info");
-      
       const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
       const apiEndpoint = workerUrl ? `${workerUrl}/confirm-job` : "/api/confirm-job";
 
@@ -129,18 +56,13 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
         const err = await response.json();
         throw new Error(err.error || "Server failed to update status");
       }
-      
-      addLog("Application confirmed. Proceeding with submission...", "system");
     } catch (err: any) {
       console.error("Confirmation error:", err);
-      addLog(`Critical error: ${err.message || String(err)}`, "error");
     }
   };
 
   const handleSkipReview = async (id: string) => {
     try {
-      addLog(`Skipping job ${id} via server...`, "info");
-      
       const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
       const apiEndpoint = workerUrl ? `${workerUrl}/confirm-job` : "/api/confirm-job";
 
@@ -154,11 +76,8 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
         const err = await response.json();
         throw new Error(err.error || "Server failed to update status");
       }
-
-      addLog("Application skipped by user.", "warn");
     } catch (err: any) {
       console.error("Skip error:", err);
-      addLog(`Critical error: ${err.message || String(err)}`, "error");
     }
   };
 
@@ -247,7 +166,7 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
                 <button
                   onClick={() => {
                     if (window.confirm("Ready to start applying? This will open Chrome and begin the automation flow for all pending jobs.")) {
-                      startAutomation();
+                      handleStart();
                     }
                   }}
                   className="btn-cinematic w-full !py-5 flex items-center justify-center gap-3 !text-[11px] !font-bold !uppercase !tracking-[0.2em]"

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { PremiumProvider } from "@/components/providers/PremiumProvider";
+import { AutomationProvider } from "@/components/providers/AutomationProvider";
 
 // LoopHire - Modern hiring platform metadata
 export const metadata: Metadata = {
@@ -12,9 +13,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="antialiased">
-        <PremiumProvider>
-          {children}
-        </PremiumProvider>
+        <AutomationProvider>
+          <PremiumProvider>
+            {children}
+          </PremiumProvider>
+        </AutomationProvider>
       </body>
     </html>
   );

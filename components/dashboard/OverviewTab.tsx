@@ -51,7 +51,10 @@ const PIE_DATA = [
   { name: "Failed", value: 15, color: "#ef4444" },
 ];
 
+import { useAutomation } from "@/components/providers/AutomationProvider";
+
 export default function OverviewTab({ jobs }: { jobs: any[] }) {
+  const { isRunning, logs, progress, stopAutomation } = useAutomation();
   return (
     <div className="space-y-8 pb-12">
       {/* Header with Search and Actions */}
@@ -135,14 +138,22 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
             <div className="p-6 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h2 className="text-lg font-bold text-white tracking-tight">Live Automation</h2>
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-success/10 border border-success/20">
-                  <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-                  <span className="text-[10px] font-bold text-success uppercase tracking-widest">Running</span>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${isRunning ? "bg-success/10 border-success/20" : "bg-white/5 border-white/10"}`}>
+                  <div className={`w-1.5 h-1.5 rounded-full ${isRunning ? "bg-success animate-pulse" : "bg-text-muted"}`} />
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${isRunning ? "text-success" : "text-text-muted"}`}>
+                    {isRunning ? "Running" : "Standby"}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Pause</button>
-                <button className="px-4 py-2 rounded-lg bg-error/10 border border-error/20 text-[11px] font-bold uppercase tracking-widest text-error hover:bg-error/20 transition-all">Stop</button>
+                <button 
+                  onClick={stopAutomation}
+                  disabled={!isRunning}
+                  className="px-4 py-2 rounded-lg bg-error/10 border border-error/20 text-[11px] font-bold uppercase tracking-widest text-error hover:bg-error/20 transition-all disabled:opacity-30"
+                >
+                  Stop
+                </button>
                 <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">View Logs</button>
               </div>
             </div>
@@ -152,48 +163,35 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
               <div className="bg-background/40 p-6 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-success" />
+                    <div className={`w-2 h-2 rounded-full ${isRunning ? "bg-success" : "bg-text-muted"}`} />
                     <span className="text-[11px] font-bold text-text-secondary uppercase tracking-widest">AI Agent Console</span>
-                  </div>
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/5 border border-white/10" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/5 border border-white/10" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/5 border border-white/10" />
                   </div>
                 </div>
                 <div className="flex-1 font-mono text-[11px] space-y-2.5 overflow-y-auto custom-scrollbar pr-2">
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">09:41:22</span>
-                    <span className="text-text-secondary italic">Initializing AI agent...</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">09:41:25</span>
-                    <span className="text-text-secondary">Opening browser...</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">09:41:27</span>
-                    <span className="text-text-secondary">Navigating to job board</span>
-                  </div>
-                  <div className="flex gap-4 text-accent">
-                    <span className="text-text-muted">09:41:30</span>
-                    <span className="font-bold">Analyzing requirements...</span>
-                  </div>
-                  <div className="flex gap-4 text-success">
-                    <span className="text-text-muted">09:41:42</span>
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span className="font-bold">Application submitted successfully</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-text-muted">09:41:42</span>
-                    <span className="text-text-secondary">Moving to next job...</span>
-                  </div>
+                  {logs.length === 0 ? (
+                    <div className="text-text-muted italic h-full flex items-center justify-center opacity-50">
+                      Engine on standby. Start automation to view live telemetry...
+                    </div>
+                  ) : (
+                    logs.map((log) => (
+                      <div key={log.id} className="flex gap-4 group">
+                        <span className="text-text-muted shrink-0">{log.timestamp}</span>
+                        <span className={`
+                          ${log.type === "error" ? "text-error" : ""}
+                          ${log.type === "warn" ? "text-warning" : ""}
+                          ${log.type === "system" ? "text-accent font-bold" : "text-text-secondary"}
+                        `}>
+                          {log.message}
+                        </span>
+                      </div>
+                    ))
+                  )}
                 </div>
                 <div className="mt-6 flex items-center justify-between pt-6 border-t border-white/5 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                   <div className="flex items-center gap-4">
                     <span>Success Rate: <span className="text-success">94%</span></span>
-                    <span>Time Saved: <span className="text-accent">12h 45m</span></span>
+                    <span>Pipeline: <span className="text-accent">{Math.round(progress)}%</span></span>
                   </div>
-                  <span>Applications Today: 28</span>
                 </div>
               </div>
 
