@@ -244,44 +244,20 @@ export async function fillAndReviewApplication(
       logger.info(`Auto-submitting application for ${job.company}...`);
     }
 
-    const submitBtn = await findElement(page, APPLY_SELECTORS.submitButton);
-    if (!submitBtn) throw new Error("Submit button not found");
-
-    // Check if button is disabled
-    let isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
-    if (isDisabled) {
-      logger.warn("Submit button is disabled, trying to trigger events on textarea...");
-      const textarea = page.locator('textarea').first();
-      await textarea.focus();
-      await page.keyboard.press('Space');
-      await page.keyboard.press('Backspace');
-      await sleep(1500);
-      isDisabled = await submitBtn.getAttribute("disabled").then(v => v !== null).catch(() => false);
-    }
-
     const initialUrl = page.url();
-    logger.info(`Submitting application (Button disabled: ${isDisabled})...`);
-    await submitBtn.scrollIntoViewIfNeeded().catch(() => null);
-    await humanDelay(1000);
+    // --- UNIVERSAL WEAPON: ENTER KEY SUBMISSION ---
+    logger.info("Submitting application via Universal Weapon (Enter Key)...");
+    await page.keyboard.press("Enter");
+    await sleep(2000);
     
-    // Use a more robust click strategy
-    try {
-      logger.info("Attempting primary submission click...");
-      await submitBtn.click({ timeout: 8000 });
-      
-      // If the button reappears or form doesn't close, try clicking again
-      await sleep(3000);
-      const stillVisible = await submitBtn.isVisible().catch(() => false);
-      const isEnabled = await submitBtn.getAttribute("disabled").then(v => v === null).catch(() => true);
-      
-      if (stillVisible && isEnabled) {
-        logger.warn("Submit button still visible and enabled after 3s, retrying click...");
-        await submitBtn.click({ force: true });
-        await sleep(2000);
+    // Fallback: Primary button click
+    const fallbackSubmitBtn = await findElement(page, APPLY_SELECTORS.submitButton);
+    if (fallbackSubmitBtn) {
+      const stillVisible = await fallbackSubmitBtn.isVisible().catch(() => false);
+      if (stillVisible) {
+        logger.info("Enter key didn't close form, attempting Force Click...");
+        await fallbackSubmitBtn.click({ force: true });
       }
-    } catch (e) {
-      logger.warn("Primary click failed or timed out, attempting force click...");
-      await submitBtn.click({ force: true });
     }
     
     // Wait for submission to complete and verify
@@ -347,7 +323,7 @@ export async function fillAndReviewApplication(
       // 3. Check if the modal/form is gone
       // We check for the textarea or the submit button
       const textareaStillVisible = await page.locator('textarea').first().isVisible().catch(() => false);
-      const submitBtnStillVisible = await submitBtn.isVisible().catch(() => false);
+      const submitBtnStillVisible = fallbackSubmitBtn ? await fallbackSubmitBtn.isVisible().catch(() => false) : false;
 
       if (!textareaStillVisible && !submitBtnStillVisible) {
         // Form seems gone. Wait a bit more to see if an error pops up
@@ -361,12 +337,15 @@ export async function fillAndReviewApplication(
       }
       
       // 4. Specifically for Work at a Startup (YC): Check if the 'Apply' button text changed to 'Applied'
-    const applyBtnText = await applyBtn.textContent().then(t => t?.toLowerCase() || "");
-    if (applyBtnText.includes("applied") || applyBtnText.includes("view application")) {
-      logger.info("Apply button text changed to 'Applied', submission confirmed.");
-      submitted = true;
-      break;
-    }
+       const verifyApplyBtn = await findElement(page, APPLY_SELECTORS.applyButton);
+       if (verifyApplyBtn) {
+         const applyBtnText = await verifyApplyBtn.textContent().then(t => t?.toLowerCase() || "");
+         if (applyBtnText.includes("applied") || applyBtnText.includes("view application")) {
+           logger.info("Apply button text changed to 'Applied', submission confirmed.");
+           submitted = true;
+           break;
+         }
+       }
     
     await sleep(2000);
     }
