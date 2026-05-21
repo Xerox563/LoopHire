@@ -7,7 +7,7 @@ import path from "path";
 const pdf = require("pdf-parse/lib/pdf-parse.js");
 
 const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
+  apiKey: process.env.OPENROUTER_API_KEY || "placeholder_for_build",
   baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {
     "HTTP-Referer": "https://loophire.os",
