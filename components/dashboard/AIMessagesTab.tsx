@@ -23,15 +23,11 @@ const client = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const MESSAGE_TYPES = [
-  { id: "linkedin", label: "LinkedIn Outreach", icon: MessageSquare, color: "#0077b5" },
-  { id: "email", label: "Email Application", icon: Mail, color: "#ea4335" },
-  { id: "follow-up", label: "Follow-up Message", icon: RefreshCw, color: "#10b981" },
-  { id: "referral", label: "Referral Request", icon: Send, color: "#ff6640" },
-];
+import { OUTREACH_TEMPLATES } from "./TemplatesTab";
 
 export default function AIMessagesTab() {
   const [activeType, setActiveType] = useState("linkedin");
+  const [activeTemplateId, setActiveTemplateId] = useState("startup");
   const [copied, setCopied] = useState(false);
   const [content, setContent] = useState("Select a job or prompt AI to generate a message...");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -56,9 +52,28 @@ export default function AIMessagesTab() {
       const job = jobs.find(j => j.id === targetJob);
       const { data: profile } = await supabase.from("user_profile").select("*").single();
       
-      const prompt = `Generate a ${activeType} message for a ${job.role} position at ${job.company}. 
-      My experience: ${profile?.experience || "General Software Engineer"}. 
-      Keep it professional, high-conversion, and personalized to the company.`;
+      const selectedTemplate = OUTREACH_TEMPLATES.find(t => t.id === activeTemplateId);
+      
+      const prompt = `Generate a high-conversion job outreach message.
+      
+      BASE TEMPLATE STYLE to follow strictly:
+      ${selectedTemplate?.content}
+
+      TARGET JOB:
+      Role: ${job.role}
+      Company: ${job.company}
+      Job Details: ${job.notes || "Not provided"}
+
+      CANDIDATE PROFILE (Use this to fill [X years], [domain], [achievements], etc.):
+      Full Name: ${profile?.first_name} ${profile?.last_name}
+      Experience Summary: ${profile?.experience || "General Software Engineer"}
+      Skills: ${profile?.technical_skills || "Not provided"}
+
+      INSTRUCTIONS:
+      1. Follow the template structure exactly.
+      2. Replace all placeholders (like [Name], [X years], [concrete achievement]) with real data from the candidate profile or the job.
+      3. Keep the tone ${selectedTemplate?.title === 'Founder / Early Stage' ? 'direct and scrappy' : 'professional and high-impact'}.
+      4. DO NOT include any meta-text, just the final message.`;
 
       const response = await client.chat.completions.create({
         model: "deepseek/deepseek-chat",
@@ -89,7 +104,7 @@ export default function AIMessagesTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="space-y-2">
           <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Target Job</label>
           <select 
@@ -103,18 +118,18 @@ export default function AIMessagesTab() {
             ))}
           </select>
         </div>
-        <div className="space-y-2">
-          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Message Type</label>
-          <div className="flex gap-2">
-            {MESSAGE_TYPES.map(type => (
+        <div className="lg:col-span-2 space-y-2">
+          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Select Strategy Template</label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {OUTREACH_TEMPLATES.map(template => (
               <button
-                key={type.id}
-                onClick={() => setActiveType(type.id)}
-                className={`flex-1 py-3 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all ${
-                  activeType === type.id ? "bg-accent/10 border-accent/40 text-white" : "bg-white/5 border-white/10 text-text-muted hover:text-white"
+                key={template.id}
+                onClick={() => setActiveTemplateId(template.id)}
+                className={`py-3 px-2 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all ${
+                  activeTemplateId === template.id ? "bg-accent/10 border-accent/40 text-white shadow-lg shadow-accent/5" : "bg-white/5 border-white/10 text-text-muted hover:text-white"
                 }`}
               >
-                {type.label.split(" ")[0]}
+                {template.title}
               </button>
             ))}
           </div>

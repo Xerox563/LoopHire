@@ -10,6 +10,7 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import OverviewTab from "@/components/dashboard/OverviewTab";
 import JobLinksTab from "@/components/dashboard/JobLinksTab";
 import AIMessagesTab from "@/components/dashboard/AIMessagesTab";
+import TemplatesTab from "@/components/dashboard/TemplatesTab";
 
 /**
  * Main dashboard page for managing and tracking job applications
@@ -75,6 +76,8 @@ export default function DashboardPage() {
         return <AIMessagesTab />;
       case "resume":
         return <ResumeSection onUpdate={setResumeData} initialData={resumeData} />;
+      case "templates":
+        return <TemplatesTab />;
       case "automation":
         return <AutomationSection jobs={jobs} resumeData={resumeData} />;
       default:
