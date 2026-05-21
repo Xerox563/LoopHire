@@ -25,36 +25,36 @@ import {
   Pie,
   Cell
 } from "recharts";
-
-const STATS = [
-  { label: "Jobs in Queue", value: "128", icon: Briefcase, color: "#ff6640", trend: "+ 22 this week" },
-  { label: "Applications Sent", value: "342", icon: Send, color: "#10b981", trend: "+ 38 this week" },
-  { label: "Responses", value: "24", icon: MessageCircle, color: "#3b82f6", trend: "+ 6 this week" },
-  { label: "Interviews", value: "12", icon: Calendar, color: "#8b5cf6", trend: "+ 3 this week" },
-  { label: "Success Rate", value: "34%", icon: CheckCircle2, color: "#f59e0b", trend: "↑ 8% this week" },
-];
-
-const CHART_DATA = [
-  { name: "May 15", value: 45 },
-  { name: "May 16", value: 38 },
-  { name: "May 17", value: 55 },
-  { name: "May 18", value: 48 },
-  { name: "May 19", value: 65 },
-  { name: "May 20", value: 75 },
-  { name: "May 21", value: 90 },
-];
-
-const PIE_DATA = [
-  { name: "Completed", value: 66, color: "#10b981" },
-  { name: "In Progress", value: 22, color: "#ff6640" },
-  { name: "Pending", value: 25, color: "#f59e0b" },
-  { name: "Failed", value: 15, color: "#ef4444" },
-];
-
 import { useAutomation } from "@/components/providers/AutomationProvider";
 
 export default function OverviewTab({ jobs }: { jobs: any[] }) {
   const { isRunning, logs, progress, stopAutomation } = useAutomation();
+
+  const STATS = [
+    { label: "Jobs in Queue", value: jobs.filter(j => j.status === 'pending').length.toString(), icon: Briefcase, color: "#ff6640", trend: "Live Queue" },
+    { label: "Applications Sent", value: jobs.filter(j => j.status === 'applied').length.toString(), icon: Send, color: "#10b981", trend: "Total Sent" },
+    { label: "Responses", value: "0", icon: MessageCircle, color: "#3b82f6", trend: "Active" },
+    { label: "Interviews", value: "0", icon: Calendar, color: "#8b5cf6", trend: "Upcoming" },
+    { label: "Success Rate", value: jobs.length > 0 ? Math.round((jobs.filter(j => j.status === 'applied').length / jobs.length) * 100).toString() + "%" : "0%", icon: CheckCircle2, color: "#f59e0b", trend: "Avg Rate" },
+  ];
+
+  const PIE_DATA = [
+    { name: "Completed", value: jobs.filter(j => j.status === 'applied').length, color: "#10b981" },
+    { name: "In Progress", value: jobs.filter(j => j.status === 'reviewing').length, color: "#ff6640" },
+    { name: "Pending", value: jobs.filter(j => j.status === 'pending').length, color: "#f59e0b" },
+    { name: "Failed", value: jobs.filter(j => j.status === 'failed').length, color: "#ef4444" },
+  ];
+
+  const CHART_DATA = [
+    { name: "Mon", value: 10 },
+    { name: "Tue", value: 25 },
+    { name: "Wed", value: 45 },
+    { name: "Thu", value: 30 },
+    { name: "Fri", value: 55 },
+    { name: "Sat", value: 70 },
+    { name: "Sun", value: jobs.filter(j => j.status === 'applied').length },
+  ];
+
   return (
     <div className="space-y-8 pb-12">
       {/* Header with Search and Actions */}
@@ -250,30 +250,25 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.03]">
-                  {[
-                    { title: "Software Engineer", company: "Airbnb", status: "Completed", score: 92, date: "May 21, 2025" },
-                    { title: "Frontend Developer", company: "Notion", status: "In Progress", score: 88, date: "May 21, 2025" },
-                    { title: "Product Designer", company: "Stripe", status: "Completed", score: 85, date: "May 20, 2025" },
-                    { title: "Backend Engineer", company: "Ramp", status: "Pending", score: 78, date: "May 20, 2025" },
-                  ].map((job) => (
-                    <tr key={job.company} className="group hover:bg-white/[0.02] transition-all">
-                      <td className="px-8 py-5 text-sm font-semibold text-white">{job.title}</td>
-                      <td className="px-8 py-5 text-sm text-text-secondary">{job.company}</td>
+                  {jobs.slice(0, 5).map((job) => (
+                    <tr key={job.id} className="group hover:bg-white/[0.02] transition-all">
+                      <td className="px-8 py-5 text-sm font-semibold text-white">{job.role || "Job Link"}</td>
+                      <td className="px-8 py-5 text-sm text-text-secondary">{job.company || "Pending..."}</td>
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-2">
-                          <div className={`w-1.5 h-1.5 rounded-full ${job.status === 'Completed' ? 'bg-success' : job.status === 'In Progress' ? 'bg-accent' : 'bg-warning'}`} />
-                          <span className={`text-[11px] font-bold uppercase tracking-widest ${job.status === 'Completed' ? 'text-success' : job.status === 'In Progress' ? 'text-accent' : 'text-warning'}`}>{job.status}</span>
+                          <div className={`w-1.5 h-1.5 rounded-full ${job.status === 'applied' ? 'bg-success' : job.status === 'reviewing' ? 'bg-accent' : 'bg-warning'}`} />
+                          <span className={`text-[11px] font-bold uppercase tracking-widest ${job.status === 'applied' ? 'text-success' : job.status === 'reviewing' ? 'text-accent' : 'text-warning'}`}>{job.status}</span>
                         </div>
                       </td>
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-3">
                           <div className="h-1 w-20 bg-white/5 rounded-full overflow-hidden">
-                            <div className="h-full bg-success" style={{ width: `${job.score}%` }} />
+                            <div className="h-full bg-success" style={{ width: `85%` }} />
                           </div>
-                          <span className="text-xs font-bold text-white">{job.score}%</span>
+                          <span className="text-xs font-bold text-white">85%</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-xs text-text-muted">{job.date}</td>
+                      <td className="px-8 py-5 text-xs text-text-muted">{job.appliedAt ? new Date(job.appliedAt).toLocaleDateString() : "Pending"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -334,7 +329,7 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-2xl font-display font-bold text-white">128</span>
+                  <span className="text-2xl font-display font-bold text-white">{jobs.length}</span>
                   <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Total</span>
                 </div>
               </div>
@@ -345,7 +340,7 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
                       <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{item.name}</span>
                     </div>
-                    <span className="text-[10px] font-bold text-white">{item.value} ({Math.round(item.value / 128 * 100)}%)</span>
+                    <span className="text-[10px] font-bold text-white">{item.value} ({jobs.length > 0 ? Math.round(item.value / jobs.length * 100) : 0}%)</span>
                   </div>
                 ))}
               </div>
