@@ -76,23 +76,39 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
           return;
         }
 
-        const headers = (jsonData[0] as string[]).map(h => h.trim().toLowerCase());
-        
+        // Find the actual header row (it might not be the first row if there's a title)
+        let headerRowIdx = -1;
+        for (let i = 0; i < Math.min(jsonData.length, 10); i++) {
+          const row = (jsonData[i] || []).map(cell => String(cell || "").toLowerCase());
+          if (row.some(h => h.includes("company") || h.includes("apply link") || h.includes("role"))) {
+            headerRowIdx = i;
+            break;
+          }
+        }
+
+        if (headerRowIdx === -1) {
+          alert("Could not find header row (Company, Apply Link, etc.). Please check your file format.");
+          setIsAddingImport(false);
+          return;
+        }
+
+        const headers = (jsonData[headerRowIdx] as any[]).map(h => String(h || "").trim().toLowerCase());
         const companyIdx = headers.findIndex(h => h.includes("company"));
         const roleIdx = headers.findIndex(h => h.includes("role"));
-        const linkIdx = headers.findIndex(h => h.includes("link") || h.includes("url"));
-        const pitchIdx = headers.findIndex(h => h.includes("pitch") || h.includes("outreach"));
+        const linkIdx = headers.findIndex(h => h.includes("link") || h.includes("url") || h.includes("apply"));
+        const pitchIdx = headers.findIndex(h => h.includes("pitch") || h.includes("outreach") || h.includes("message"));
 
-        const newJobs = jsonData.slice(1).map(columns => {
+        const newJobs = jsonData.slice(headerRowIdx + 1).map(columns => {
+          if (!columns || columns.length === 0) return null;
           const url = String(columns[linkIdx] || "").trim();
-          if (!url.startsWith("http")) return null;
+          if (!url || !url.startsWith("http")) return null;
 
           return {
             id: `job_${Math.random().toString(36).substr(2, 9)}`,
             url,
-            company: String(columns[companyIdx] || "Imported"),
-            role: String(columns[roleIdx] || "Job"),
-            outreach_message: String(columns[pitchIdx] || ""),
+            company: String(columns[companyIdx] || "Imported").trim(),
+            role: String(columns[roleIdx] || "Job").trim(),
+            outreach_message: String(columns[pitchIdx] || "").trim(),
             status: "pending"
           } as any;
         }).filter((j): j is any => j !== null);
