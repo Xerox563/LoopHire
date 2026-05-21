@@ -272,28 +272,46 @@ export async function fillAndReviewApplication(
       const currentUrl = page.url();
       const pageContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
       
-      // 0. Check for URL change (often indicates success)
+      // --- ALERT HANDLING ---
+      // Check for browser alerts (like YC application limits)
+      page.on('dialog', async dialog => {
+        const msg = dialog.message().toLowerCase();
+        if (msg.includes("limit") || msg.includes("reached")) {
+          errorDetected = true;
+          errorMessage = `Platform Limit Reached: ${dialog.message()}`;
+        }
+        await dialog.dismiss();
+      });
+
+      // Also check for alert-like text in the page content
+      if (pageContent.includes("reached your limit") || pageContent.includes("applications per week")) {
+        errorDetected = true;
+        errorMessage = "Platform Limit Reached: You've reached your application limit for this week.";
+        break;
+      }
       if (currentUrl !== initialUrl && !currentUrl.includes("apply") && !currentUrl.includes("job")) {
         logger.info(`URL changed from ${initialUrl} to ${currentUrl}, assuming success.`);
         submitted = true;
         break;
       }
 
-      // 1. Check for explicit error messages
-      const errorIndicators = [
-        "is required",
-        "cannot be blank",
-        "please fix",
-        "invalid email",
-        "error occurred",
-        "try again",
-        "must be",
-        "missing information",
-        "already applied",
-        "invalid format",
-        "check the form",
-        "error submitting",
-      ];
+    // 1. Check for explicit error messages
+    const errorIndicators = [
+      "is required",
+      "cannot be blank",
+      "please fix",
+      "invalid email",
+      "error occurred",
+      "try again",
+      "must be",
+      "missing information",
+      "already applied",
+      "invalid format",
+      "check the form",
+      "error submitting",
+      "reached your limit",
+      "applications per week",
+    ];
 
       if (errorIndicators.some(indicator => pageContent.includes(indicator))) {
         errorDetected = true;
