@@ -45,8 +45,25 @@ export default function AIMessagesTab() {
   useEffect(() => {
     setHasApiKey(!!(process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY));
     async function loadJobs() {
-      const { data } = await supabase.from("jobs").select("*").order("created_at", { ascending: false });
-      if (data) setJobs(data);
+      try {
+        const response = await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            table: "jobs",
+            action: "select",
+            data: "*"
+          })
+        });
+        if (response.ok) {
+          const { data } = await response.json();
+          if (data) {
+            setJobs(data.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load jobs in AIMessagesTab:", err);
+      }
     }
     loadJobs();
   }, []);
@@ -59,7 +76,22 @@ export default function AIMessagesTab() {
     setIsGenerating(true);
     try {
       const job = jobs.find(j => j.id === targetJob);
-      const { data: profile } = await supabase.from("user_profile").select("*").single();
+      
+      const profileRes = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "user_profile",
+          action: "select",
+          data: "*"
+        })
+      });
+      
+      let profile = null;
+      if (profileRes.ok) {
+        const { data } = await profileRes.json();
+        profile = Array.isArray(data) ? data[0] : data;
+      }
       
       const selectedTemplate = OUTREACH_TEMPLATES.find(t => t.id === activeTemplateId);
       
@@ -86,13 +118,13 @@ export default function AIMessagesTab() {
       4. Keep the tone ${selectedTemplate?.title === 'Founder / Early Stage' ? 'direct and scrappy' : 'professional and high-impact'}.
       5. DO NOT include any meta-text, just the final message.`;
 
-      const client = getOpenAIClient();
-      const response = await client.chat.completions.create({
+      const aiClient = getOpenAIClient();
+      const aiResponse = await aiClient.chat.completions.create({
         model: "deepseek/deepseek-chat",
         messages: [{ role: "user", content: prompt }],
       });
 
-      setContent(response.choices[0].message.content || "Failed to generate.");
+      setContent(aiResponse.choices[0].message.content || "Failed to generate.");
     } catch (err) {
       console.error(err);
       setContent("Error generating message. Check your API key.");

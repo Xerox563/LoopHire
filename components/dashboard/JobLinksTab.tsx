@@ -45,14 +45,26 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
     if (!newUrl.trim()) return;
     setIsAdding(true);
     try {
-      const { error } = await supabase.from("jobs").insert({
-        id: `job_${Date.now()}`,
-        url: newUrl.trim(),
-        status: "pending",
-        company: "Fetching...",
-        role: "Analyzing..."
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "insert",
+          data: {
+            id: `job_${Date.now()}`,
+            url: newUrl.trim(),
+            status: "pending",
+            company: "Fetching...",
+            role: "Analyzing..."
+          }
+        })
       });
-      if (error) throw error;
+
+      if (!response.ok) {
+        throw new Error("Failed to add job via proxy");
+      }
+
       setNewUrl("");
       onRefresh();
     } catch (err) {
@@ -117,7 +129,7 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
             role: String(columns[roleIdx] || "Job").trim(),
             outreach_message: String(columns[pitchIdx] || "").trim(),
             status: "pending"
-          } as any;
+          };
         }).filter((j): j is any => j !== null);
 
         if (newJobs.length === 0) {
@@ -126,8 +138,20 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
           return;
         }
 
-        const { error } = await supabase.from("jobs").insert(newJobs);
-        if (error) throw error;
+        const response = await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            table: "jobs",
+            action: "insert",
+            data: newJobs
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to import jobs via proxy");
+        }
+
         onRefresh();
       } catch (err) {
         console.error("Import error:", err);
@@ -162,12 +186,21 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
     if (!editingJob) return;
     setIsSavingPitch(true);
     try {
-      const { error } = await supabase
-        .from("jobs")
-        .update({ outreach_message: editPitch })
-        .eq("id", editingJob.id);
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "update",
+          data: { outreach_message: editPitch },
+          query: { id: editingJob.id }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save pitch via proxy");
+      }
       
-      if (error) throw error;
       setEditingJob(null);
       onRefresh();
     } catch (err) {
@@ -191,31 +224,59 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
         updateData.failure_reason = null;
       }
 
-      const { error } = await supabase
-        .from("jobs")
-        .update(updateData)
-        .eq("id", jobId);
-      
-      if (error) throw error;
+      // Use the server-side proxy to bypass browser-level blocking (like Brave Shields)
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "update",
+          data: updateData,
+          query: { id: jobId }
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Server failed to update status");
+      }
+
       onRefresh();
     } catch (err: any) {
       console.error("Status update error:", err);
       
-      // Handle specific network errors
-      if (err.message === "Failed to fetch" || err.name === "TypeError") {
-        alert("Network Error: Failed to connect to Supabase. \n\n1. Check your internet connection.\n2. If you are using Brave/AdBlockers, try disabling shields for this site.\n3. Ensure your .env variables are correct.");
-      } else {
-        alert(`Failed to update status: ${err.message || "Check console for details"}`);
-      }
+      // Fallback or detailed error message
+      const msg = err.message === "Failed to fetch" 
+        ? "Network Error: Browser blocked the request. Please check if your dev server is running or if Brave Shields are interfering."
+        : err.message;
+        
+      alert(`Failed to update status: ${msg}`);
     } finally {
       setIsUpdatingStatus(null);
     }
   };
 
   const handleDelete = async (id: string) => {
-    const { error } = await supabase.from("jobs").delete().eq("id", id);
-    if (error) alert("Delete failed");
-    else onRefresh();
+    try {
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "delete",
+          query: { id }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete job via proxy");
+      }
+      
+      onRefresh();
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Delete failed");
+    }
   };
 
   return (

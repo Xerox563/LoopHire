@@ -35,23 +35,31 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
   useEffect(() => {
     async function loadResume() {
       try {
-        const { data: resume, error } = await supabase
-          .from("resume")
-          .select("*")
-          .order("updated_at", { ascending: false })
-          .limit(1)
-          .single();
+        const response = await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            table: "resume",
+            action: "select",
+            data: "*"
+          })
+        });
 
-        if (resume) {
-          const loadedData = {
-            experience: resume.experience,
-            technicalSkills: resume.technical_skills,
-            education: resume.education,
-            projects: resume.projects,
-          };
-          setData(loadedData);
-          setTempData(loadedData);
-          onUpdate(loadedData);
+        if (response.ok) {
+          const { data: resumeList } = await response.json();
+          const resume = Array.isArray(resumeList) ? resumeList.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0] : null;
+
+          if (resume) {
+            const loadedData = {
+              experience: resume.experience,
+              technicalSkills: resume.technical_skills,
+              education: resume.education,
+              projects: resume.projects,
+            };
+            setData(loadedData);
+            setTempData(loadedData);
+            onUpdate(loadedData);
+          }
         }
       } catch (err) {
         console.error("Failed to load resume from Supabase:", err);

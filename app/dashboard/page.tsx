@@ -23,13 +23,27 @@ export default function DashboardPage() {
 
   const loadJobs = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from("jobs")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "select",
+          data: "*"
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch jobs via proxy");
+      }
+
+      const { data } = await response.json();
 
       if (data) {
-        const formattedJobs: JobRecord[] = data.map(j => ({
+        // The proxy returns data in its raw form, we need to sort it here since order() isn't in proxy yet
+        // but the proxy select actually doesn't support complex queries like order() easily without modification
+        // For now, we'll just map it.
+        const formattedJobs: JobRecord[] = data.map((j: any) => ({
           id: j.id,
           url: j.url,
           company: j.company,
@@ -40,7 +54,9 @@ export default function DashboardPage() {
           notes: j.notes,
           outreachMessage: j.outreach_message,
           outreachSubject: j.outreach_subject,
-        }));
+          createdAt: j.created_at
+        })).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
         setJobs(formattedJobs);
       }
     } catch (err) {

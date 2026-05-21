@@ -26,31 +26,39 @@ export default function PersonalInfoSection() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const { data, error } = await supabase
-          .from("user_profile")
-          .select("*")
-          .order("updated_at", { ascending: false })
-          .limit(1)
-          .single();
+        const response = await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            table: "user_profile",
+            action: "select",
+            data: "*"
+          })
+        });
 
-        if (data) {
-          const loadedProfile = {
-            firstName: data.first_name || "",
-            lastName: data.last_name || "",
-            email: data.email || "",
-            phone: data.phone || "",
-            linkedinUrl: data.linkedin_url || "",
-            currentLocation: data.current_location || "",
-            portfolioUrl: data.portfolio_url || "",
-            githubUrl: data.github_url || "",
-            yearsOfExperience: data.years_of_experience || "",
-            desiredSalary: data.desired_salary || "",
-            usWorkAuthorization: data.us_work_authorization || "",
-            requiresSponsorship: data.requires_sponsorship || "",
-            resumeFilePath: data.resume_file_path || "",
-          };
-          setProfile(loadedProfile);
-          setTempProfile(loadedProfile);
+        if (response.ok) {
+          const { data: profiles } = await response.json();
+          const data = Array.isArray(profiles) ? profiles.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0] : null;
+
+          if (data) {
+            const loadedProfile = {
+              firstName: data.first_name || "",
+              lastName: data.last_name || "",
+              email: data.email || "",
+              phone: data.phone || "",
+              linkedinUrl: data.linkedin_url || "",
+              currentLocation: data.current_location || "",
+              portfolioUrl: data.portfolio_url || "",
+              githubUrl: data.github_url || "",
+              yearsOfExperience: data.years_of_experience || "",
+              desiredSalary: data.desired_salary || "",
+              usWorkAuthorization: data.us_work_authorization || "",
+              requiresSponsorship: data.requires_sponsorship || "",
+              resumeFilePath: data.resume_file_path || "",
+            };
+            setProfile(loadedProfile);
+            setTempProfile(loadedProfile);
+          }
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
