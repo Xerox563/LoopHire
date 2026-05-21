@@ -26,7 +26,11 @@ export async function POST(req: NextRequest) {
         ({ data: result, error } = await supabase.from(table).upsert(data).select());
         break;
       case "select":
-        ({ data: result, error } = await supabase.from(table).select(data).match(query));
+        let q = supabase.from(table).select(data);
+        if (query) {
+          q = q.match(query);
+        }
+        ({ data: result, error } = await q);
         break;
       default:
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
