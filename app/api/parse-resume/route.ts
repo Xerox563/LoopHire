@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import fs from "fs";
+import path from "path";
 
 // Import the core logic directly to avoid the buggy index.js
 const pdf = require("pdf-parse/lib/pdf-parse.js");
@@ -55,6 +57,13 @@ export async function POST(req: Request) {
 
     console.log(`Received file: ${file.name}, type: ${file.type}`);
 
+    // Save file locally
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileName = `${Date.now()}-${file.name}`;
+    const filePath = path.join(process.cwd(), "storage/resumes", fileName);
+    fs.writeFileSync(filePath, buffer);
+    console.log(`File saved to: ${filePath}`);
+
     let text = "";
     if (file.type === "application/pdf") {
       console.log("PDF detected, starting extraction...");
@@ -108,7 +117,7 @@ export async function POST(req: Request) {
     // Clean markdown code blocks if present
     const cleanedContent = content.replace(/```json\n?|```/g, "").trim();
     const parsedData = JSON.parse(cleanedContent);
-    return NextResponse.json(parsedData);
+    return NextResponse.json({ ...parsedData, filePath });
   } catch (error) {
     console.error("Resume parsing error:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";

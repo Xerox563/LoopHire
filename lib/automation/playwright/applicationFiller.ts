@@ -9,6 +9,8 @@ import {
   scrollPage,
   takeScreenshot,
   isLoggedIn,
+  selectOption,
+  uploadFile,
 } from "./pageUtils";
 import { humanDelay, sleep } from "../utils/retry";
 import { supabase } from "@/lib/supabase";
@@ -22,6 +24,8 @@ const APPLY_SELECTORS = {
     'button:has-text("Apply")',
     'a:has-text("Apply Now")',
     'button:has-text("Apply Now")',
+    'a:has-text("Interested")',
+    'button:has-text("Interested")',
     "button.apply-button",
     "a.apply-button",
     '[data-test="apply-button"]',
@@ -36,6 +40,13 @@ const APPLY_SELECTORS = {
   phone: ['input[type="tel"]', 'input[name*="phone"]', 'input[placeholder*="Phone"]'],
   linkedin: ['input[name*="linkedin"]', 'input[placeholder*="LinkedIn"]'],
   location: ['input[name*="location"]', 'input[placeholder*="location"]', 'input[placeholder*="City"]'],
+  wellfound: {
+    salary: ['input[name*="salary"]', 'select[name*="salary"]', 'input[placeholder*="salary"]'],
+    experience: ['input[name*="experience"]', 'select[name*="experience"]', 'input[placeholder*="experience"]'],
+    workAuth: ['input[name*="work_authorization"]', 'select[name*="work_authorization"]'],
+    sponsorship: ['input[name*="sponsorship"]', 'select[name*="sponsorship"]'],
+    resume: ['input[type="file"][name*="resume"]', 'input[type="file"][id*="resume"]', 'input[type="file"]'],
+  },
   messageTextarea: [
     'textarea[name="message"]',
     'textarea[name="intro"]',
@@ -112,7 +123,8 @@ export async function fillAndReviewApplication(
     await page.waitForLoadState("networkidle").catch(() => null);
 
     if (!(await isLoggedIn(page))) {
-       throw new Error("Not logged in. Please log in to YC in the browser first.");
+       const platform = job.url.includes("wellfound.com") ? "Wellfound" : "the platform";
+       throw new Error(`Not logged in. Please log in to ${platform} in the browser first.`);
     }
 
     await scrollPage(page, 500);
@@ -141,6 +153,26 @@ export async function fillAndReviewApplication(
       await fillField(page, APPLY_SELECTORS.phone, p.phone);
       await fillField(page, APPLY_SELECTORS.linkedin, p.linkedinUrl);
       await fillField(page, APPLY_SELECTORS.location, p.currentLocation);
+
+      // Wellfound specific fields
+      if (job.url.includes("wellfound.com") || job.url.includes("angel.co")) {
+        logger.info("Filling Wellfound-specific fields...");
+        await fillField(page, APPLY_SELECTORS.wellfound.salary, p.desiredSalary);
+        await fillField(page, APPLY_SELECTORS.wellfound.experience, p.yearsOfExperience);
+        
+        // Handle dropdowns for Work Auth and Sponsorship
+        if (p.usWorkAuthorization) {
+          await selectOption(page, APPLY_SELECTORS.wellfound.workAuth, p.usWorkAuthorization);
+        }
+        if (p.requiresSponsorship) {
+          await selectOption(page, APPLY_SELECTORS.wellfound.sponsorship, p.requiresSponsorship);
+        }
+
+        if (p.resumeFilePath) {
+          logger.info("Uploading resume...");
+          await uploadFile(page, APPLY_SELECTORS.wellfound.resume, p.resumeFilePath);
+        }
+      }
     }
 
     let textareaSelector: string | null = null;

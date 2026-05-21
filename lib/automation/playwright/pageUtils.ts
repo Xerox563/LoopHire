@@ -98,6 +98,47 @@ export async function extractMultiText(
 }
 
 /**
+ * Select an option from a dropdown.
+ */
+export async function selectOption(
+  page: Page,
+  selectors: string[],
+  value: string,
+): Promise<void> {
+  for (const sel of selectors) {
+    try {
+      const el = await page.locator(sel).first();
+      if (await el.isVisible()) {
+        // Try to match by label or value
+        await el.selectOption({ label: value }).catch(async () => {
+          await el.selectOption(value);
+        });
+        return;
+      }
+    } catch {}
+  }
+}
+
+/**
+ * Handle file upload.
+ */
+export async function uploadFile(
+  page: Page,
+  selectors: string[],
+  filePath: string,
+): Promise<void> {
+  for (const sel of selectors) {
+    try {
+      const el = await page.locator(sel).first();
+      if (await el.isVisible()) {
+        await el.setInputFiles(filePath);
+        return;
+      }
+    } catch {}
+  }
+}
+
+/**
  * Take a screenshot for debugging.
  */
 export async function takeScreenshot(
@@ -114,21 +155,38 @@ export async function takeScreenshot(
  */
 export async function isLoggedIn(page: Page): Promise<boolean> {
   try {
+    const url = page.url();
     const indicators = [
       'a[href="/profile"]',
-      'button:has-text("Amit")',
-      ".user-dropdown",
       'a[href*="/profile"]',
       'text="My profile"',
+      '.user-dropdown',
+      // Wellfound indicators
+      'a[href*="/jobs"]',
+      'a[href*="/messages"]',
+      'img[alt*="Profile"]',
+      'button[aria-label*="Profile"]',
     ];
     for (const sel of indicators) {
       const el = await page.$(sel);
-      if (el) return true;
+      if (el && await el.isVisible()) return true;
     }
-    const signIn = await page.$(
-      'a[href*="sign_in"], a:has-text("Sign in"), button:has-text("Sign in")',
-    );
-    return signIn === null;
+    
+    // Check for sign in buttons - if they are visible, we are likely NOT logged in
+    const signInSelectors = [
+      'a[href*="sign_in"]',
+      'a:has-text("Log in")',
+      'a:has-text("Sign in")',
+      'button:has-text("Log in")',
+      'button:has-text("Sign in")',
+    ];
+    
+    for (const sel of signInSelectors) {
+      const el = await page.$(sel);
+      if (el && await el.isVisible()) return false;
+    }
+
+    return true; // Default to true to avoid blocking if we can't tell
   } catch {
     return true;
   }

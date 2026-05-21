@@ -47,6 +47,11 @@ export async function POST(req: NextRequest) {
           currentLocation: profile.current_location,
           portfolioUrl: profile.portfolio_url,
           githubUrl: profile.github_url,
+          yearsOfExperience: profile.years_of_experience,
+          desiredSalary: profile.desired_salary,
+          usWorkAuthorization: profile.us_work_authorization,
+          requiresSponsorship: profile.requires_sponsorship,
+          resumeFilePath: profile.resume_file_path,
         } : undefined;
 
         const config: AppConfig = {

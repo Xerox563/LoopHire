@@ -48,6 +48,11 @@ export interface UserProfile {
   currentLocation: string;
   portfolioUrl: string;
   githubUrl: string;
+  yearsOfExperience?: string;
+  desiredSalary?: string;
+  usWorkAuthorization?: string;
+  requiresSponsorship?: string;
+  resumeFilePath?: string;
 }
 
 export interface AppConfig {

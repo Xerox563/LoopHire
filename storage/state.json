@@ -281,16 +281,6 @@
       "sameSite": "None"
     },
     {
-      "name": "_gat",
-      "value": "1",
-      "domain": ".ycombinator.com",
-      "path": "/",
-      "expires": 1779085048,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
-    },
-    {
       "name": "_ga_CHJJ1RJL5K",
       "value": "GS2.2.s1779082672$o1$g1$t1779084989$j60$l0$h0",
       "domain": ".ycombinator.com",
@@ -372,7 +362,7 @@
     },
     {
       "name": "XSRF-TOKEN",
-      "value": "wU7sx4o2ZpPkAOz9HCF8Jn-oEM5bg9RLmxnrEqIzYdnl2QUeeLCU-3e2ThEq9i45SjGaOzmMAqqNQHbwmJhwDA",
+      "value": "fgP6bwgA5VuweXmm_0uA7_MiQ-zxoAcoPPaemgWwL3lalBO2-oYXMyPP20rJnNLwxrvJGZOv0ckqrwN4Pxs-rA",
       "domain": "www.workatastartup.com",
       "path": "/",
       "expires": -1,
@@ -382,7 +372,7 @@
     },
     {
       "name": "_bf_session_key",
-      "value": "J59goRwSiB%2BaVv1tWWzb5qstoxk7Z9LcruvjJmPZE2qlXgVAS7J7UjmrNwCYwyj2RZVdzkSS98v%2BEcoGdjmLYLg%2Bm91dU7bH%2FNm1lM6aM4vjnYOIfjvEgoSoObqZwbP9WcACdKV%2F%2F1kapdcT05AEfetQETekdwujlc%2Babsn%2F78I7Gqju4lN9RVUPDBsb0kTu1BNbF9%2BdqP0oZnR9YPTiZ1def4uZ9n5EsdV%2BO79j4N0uBu9MoSiqzRHn4Tb%2FRCMLJKvbxHpj%2FwRXWJ4ho5Tg3ObHMfO98%2Bc%3D--OJFGUesC%2BuHcW2ne--AUjITStZAECpDvBzm1InCw%3D%3D",
+      "value": "eYzwDa%2FU9AWZjVEDh4%2FuOIksYW1uIAETbtblsUGabF9WYjdqEMAUF27iCO2qJdFsW%2BoGBGxy12ccuv0Mn5F3YoiJropIcXd08K3VBYQ8dpW7xcy898AUyJgLsIA1hg9WjCQLM9gCs5MaMI%2F%2FjhUGLC6eppoN2Iu3PgE4dnyPxgXAttp0xu2Rs7hKxV6nSlxwxhazheu%2BG5IU4d7CAI%2F4AEoo4vgGtyI9WdDPkM5hIMNWH3fvsPnb1bRHmQkJOfJgNiaisJhDJbGSsy4Wr2f3hwlRR%2BfBjHw%3D--Isug4BDpTbyzDL0W--4eSXrDdwdcwTRQOqoseo5Q%3D%3D",
       "domain": "www.workatastartup.com",
       "path": "/",
       "expires": -1,
@@ -392,12 +382,614 @@
     },
     {
       "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-      "value": "%7B%22%24device_id%22%3A%22019e3568-ee82-721c-b19c-9ae2a560a244%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779085016795%2C%22019e39ae-628d-78bc-99f7-103a7f53c251%22%2C1779084190342%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.workatastartup.com%2Fjobs%2F44310%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
+      "value": "%7B%22%24device_id%22%3A%22019e3568-ee82-721c-b19c-9ae2a560a244%22%2C%22distinct_id%22%3A%227ae63460-2cc4-45d7-9685-78aa4689e325%22%2C%22%24sesid%22%3A%5B1779085537606%2C%22019e39ae-628d-78bc-99f7-103a7f53c251%22%2C1779084190342%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fwww.workatastartup.com%2Fjobs%2F44310%22%7D%2C%22%24user_state%22%3A%22identified%22%7D",
       "domain": ".workatastartup.com",
       "path": "/",
-      "expires": 1810621016,
+      "expires": 1810621537,
       "httpOnly": false,
       "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "cf_clearance",
+      "value": "9sZdeROA7jQOZjaFd5CowaY0f4RALqqcdHMNMhXRiX4-1779086919-1.2.1.1-jnKulPO.ztBi7aPa8mR7gcZPo4e9TwNwyQUIDZFA6GxTdVlGoe3r4fKr7NUp65ANgzkWp1ZMtXT.TNEFuSSBStvZBqBrDhaRu2lJ5XTwsGxfo.jWIzsKJg3NoU4WqDRAiZXgCyU7EpCVGMB5UPSUP7QbkrIazvrMdtISHDDCHIfvQjYH0ztXXxEP2ILRI.MdMyACzdOlo7znVyvZV_0V7aoErJzYi8._La8ZoJR4jfI9BOc6u0ctvmNih3LwFVE30VqqJ.jldjLMO0fLHUtimwnxf5nfmBL45thBuHAp7lbiQGRI4GdwyXrIa50L5Xu.YbbspB7Cjhxtr1q1ucKPnw",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810622919.311982,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://wellfound.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "g_state",
+      "value": "{\"i_l\":0,\"i_ll\":1779086931430,\"i_b\":\"xGPl6kdn1zxYV6s4Jsn4DSXn3dGU3ayxHiBmRJEO/lU\",\"i_e\":{\"enable_itp_optimization\":0},\"i_et\":1779086931422}",
+      "domain": "wellfound.com",
+      "path": "/",
+      "expires": 1794638931,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "TAsessionID",
+      "value": "b3ca7d0d-1e5d-4687-b875-27468953583c|NEW",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1779088734,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "wellfound_default_consent",
+      "value": "1|implied-full",
+      "domain": "wellfound.com",
+      "path": "/",
+      "expires": 1810623474,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ajs_anonymous_id",
+      "value": "39edb7c2-e974-44d6-9f4b-630f90c8db71",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810623522,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_clck",
+      "value": "1lflle3%5E2%5Eg65%5E1%5E2329",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810622936,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "li_sugr",
+      "value": "704e4afc-a253-4fcd-aa44-1cafff2d8a8c",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1786863485.798699,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bcookie",
+      "value": "\"v=2&d54683da-9e16-4c51-80eb-cfae009d572d\"",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1810623485.798935,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "lidc",
+      "value": "\"b=TGST05:s=T:r=T:a=T:p=T:g=3509:u=1:x=1:i=1779086936:t=1779173336:v=2:sig=AQHMkHWViGt_R1zRjw_cPaQrxilNtwm_\"",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1779173336.715439,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.1.1119201094.1779086937",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1813647484.146273,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "UserMatchHistory",
+      "value": "AQKO10ItsWgWHAAAAZ452EsUkQ1sAB6DlD-NozuykMWvZpxsVFwI6woFOyLBlp6dWizj9pSxzWHCKg",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1781678937.053019,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "AnalyticsSyncHistory",
+      "value": "AQLC10dOmeM_QwAAAZ452EsUy88lkRRGsnazE-sg4mH5NwUsevmOzX1ONhYK9JiMVlJSCcBwJt4otkCAOwrrmg",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1781678937.053071,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bscookie",
+      "value": "\"v=1&202605180648575bfa02e7-7668-4e0a-8e5f-f9d4d027d0a0AQGWk0eB1enmws5h9V0vAXsoN3tdOTgj\"",
+      "domain": ".www.linkedin.com",
+      "path": "/",
+      "expires": 1810622938.502482,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "OTZ",
+      "value": "8613051_72_76_104100_72_446760",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1781679052,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "NID",
+      "value": "531=ELNHNZBk6xIpNmqpn99XryXhkQnoD_gIfUi1tv9_PoWV6evueop0bSIycR7Zl7L8bDbNc6Gos_DDikjMm9MuKnpXEHNcrx0k9H5zDlLdg5JOMMpa6QzXZNi_7nUtzaIaZHHIH4ZAbZRFj-XAWpClj63EoHEToYgI1zVqBJfew5tpWfW7JmU4r41ePiDXP8SWsoDlkef8PqiCpRWgM3MER1u1Fn30zZKkrqSh2PYVSR7l7GIL6wkbBtX5-7r5N2Go22IxbHcql8-_JzIVjM9miOkT9gJEPjQESdckZlF2L2hNN9ZGPjHKLsm8_1MynB2e83qSKqDGKk-FKh5iGS8tOF6Pzl6s0W-qFZYi6-ezvO4jqL_VbJ9Dw4-9idMbC7hVn_JHmy4tL00VIYjEPbdyKpY9XeiSvfKXe1rOP6rRgCHHj2X2YvGWvDmCON6gaSCFTPgA-YAGk6bJ5NM5sA5tIppmfB9-AuSBTJSxZwmCeSuSU4HSAMqr14Pzph5K_WZ-vgx4rjBtjQMDlSewE4xs-tuK0nu6FLQEsbpTe1f-11Q4F7-d_OarcUSesZ_gJAmWAjg8fO-b7kxthIaznRTi6ViBEVEg1_qvpTgFBUDx0_02C_lPA3cnuiuRqLqZaXoHVc7Q4Xg52-g",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1794898252.627213,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwTNd3GiaH-pvt6KJ5BnclKQACgYKATkSARcSFQHGX2Mij-ca3lgDHhijSFaByCXkuBoVAUF8yKou5c56ZoP6_fvf3MaZ2Ow_0076",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.627537,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwV0gT2a5z3OKCWoi2pZjRqwACgYKAWYSARcSFQHGX2Mi1TWTbrykk20VM7yHNKIApRoVAUF8yKqjhm7gfyEujszFkFSUb3ys0076",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.627634,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwGzWdlHHB10HCQj95rdqqcQACgYKAQcSARcSFQHGX2MikvBVE_WRGQV9Fwb1hhyyqxoVAUF8yKpc5NZgYd382KZ1culjvs-C0076",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.627698,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "HSID",
+      "value": "A1OS1eR9Z2izXP3fm",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.627932,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SSID",
+      "value": "AzKRSmbML9DtTN0gU",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.627984,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "APISID",
+      "value": "USslvDHEaLhS1xmz/AdRBG2Z3JaEt-F45e",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.628027,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.628073,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.628125,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813647126.628175,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__Host-GAPS",
+      "value": "1:WeymH3ieSQkmfPgMp7aFmDAOLif5zehMYjlRhClgWzmJBpEiyPsnxv2-ZxUL8dnGPVcrCFRAcNdX2ke7YxzVC3eLZROFkw:tyzxMwBFDfHGTsCr",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1813647126.628276,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "LSID",
+      "value": "s.IN|s.youtube:g.a000-AhuQDYpx3-Mhz90Y0dfHsWSTESwg5H19T1Y5hMmdFcsVvzBi7hEGRwXKRubEKpVYMxqfAACgYKASgSARcSFQHGX2Miqs6zB0pWJaMUFK5p6YE6rRoVAUF8yKqKzz2KP0701cwqHvsrZiDU0076",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1813647126.89888,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Host-1PLSID",
+      "value": "s.IN|s.youtube:g.a000-AhuQDYpx3-Mhz90Y0dfHsWSTESwg5H19T1Y5hMmdFcsVvzBxdHvMgqfQqSporz6VXIp6gACgYKARwSARcSFQHGX2MibpD3uRYX-DdjqBwKvgCFJRoVAUF8yKrdbqWaYskeZBylcBBiJmEl0076",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1813647126.899191,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Host-3PLSID",
+      "value": "s.IN|s.youtube:g.a000-AhuQDYpx3-Mhz90Y0dfHsWSTESwg5H19T1Y5hMmdFcsVvzBlpJMkxvC0TxWfCXCmhS4lAACgYKAdoSARcSFQHGX2Mir9ejD-erfWQlaSjHn5cp-xoVAUF8yKqzuWYGEQgx6ckQrqJ1sKRC0076",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1813647126.899373,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ACCOUNT_CHOOSER",
+      "value": "AFx_qI5gTx5zPUSFd3bd7hKUzERf1HV5EiuSXaGgtGN83NJCS6f_QVASVKWx3Jp2VgTm_uLvNV0tQVC7lvKg3sX-jofFwNXpqk9UGhHVDOeaxrRmxQRXQI__0Rpyvr2jAjpo8a-NcgSD",
+      "domain": "accounts.google.com",
+      "path": "/",
+      "expires": 1813647126.899536,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PSIDTS",
+      "value": "sidts-CjQBhkeRd9L0nTPXPpVaPGzoXWU4H2OQeASf0GUdyGtG4j7s5uRqribT_v8gHXbBiYPNZBVHEAA",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1810623127.287533,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PSIDTS",
+      "value": "sidts-CjQBhkeRd9L0nTPXPpVaPGzoXWU4H2OQeASf0GUdyGtG4j7s5uRqribT_v8gHXbBiYPNZBVHEAA",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1810623127.287811,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "HSID",
+      "value": "ABDlSVyUa0curE9xf",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.287914,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SSID",
+      "value": "AO9TthUSbeH3qpUIe",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "APISID",
+      "value": "USslvDHEaLhS1xmz/AdRBG2Z3JaEt-F45e",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288072,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288145,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288216,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288286,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwTNd3GiaH-pvt6KJ5BnclKQACgYKATkSARcSFQHGX2Mij-ca3lgDHhijSFaByCXkuBoVAUF8yKou5c56ZoP6_fvf3MaZ2Ow_0076",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288359,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwV0gT2a5z3OKCWoi2pZjRqwACgYKAWYSARcSFQHGX2Mi1TWTbrykk20VM7yHNKIApRoVAUF8yKqjhm7gfyEujszFkFSUb3ys0076",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288436,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwGzWdlHHB10HCQj95rdqqcQACgYKAQcSARcSFQHGX2MikvBVE_WRGQV9Fwb1hhyyqxoVAUF8yKpc5NZgYd382KZ1culjvs-C0076",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1813647127.288515,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "HSID",
+      "value": "ABDlSVyUa0curE9xf",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761273,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SSID",
+      "value": "AO9TthUSbeH3qpUIe",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761519,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "APISID",
+      "value": "USslvDHEaLhS1xmz/AdRBG2Z3JaEt-F45e",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761633,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761729,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761817,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PAPISID",
+      "value": "8ubJm1ysRTzywuS0/AVYkjbw-BrNn47Rqp",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.761901,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "NID",
+      "value": "531=YPck4y4wquNeq93LoqSsmWlnyasuk-YzyWoQ82yMI-GFxw7S3BkrJLZIxPXpRRW8_jFf9XclgUxTJi3dSK1x8Y-Wm5jFQTdc7H0pHoxF2yIWObsGkG3MyC3p2plaPhbUG3hXk3CFsZoDc2F7af8LVTD8nOKicdVwsPcDzeEoGR5chelXnymgNsj4DAykttzjN5MxmDIk4Y79k1ch",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1794898327.761974,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwTNd3GiaH-pvt6KJ5BnclKQACgYKATkSARcSFQHGX2Mij-ca3lgDHhijSFaByCXkuBoVAUF8yKou5c56ZoP6_fvf3MaZ2Ow_0076",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.762057,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwV0gT2a5z3OKCWoi2pZjRqwACgYKAWYSARcSFQHGX2Mi1TWTbrykk20VM7yHNKIApRoVAUF8yKqjhm7gfyEujszFkFSUb3ys0076",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.762135,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PSID",
+      "value": "g.a000-AhuQAYByV_haEN-6Yxme0dzNcVhCodJ0NlTIgvTWbVe6HfwGzWdlHHB10HCQj95rdqqcQACgYKAQcSARcSFQHGX2MikvBVE_WRGQV9Fwb1hhyyqxoVAUF8yKpc5NZgYd382KZ1culjvs-C0076",
+      "domain": ".google.co.in",
+      "path": "/",
+      "expires": 1813647127.762217,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_wellfound",
+      "value": "b33b843283d1702964e67cbb67696bdd.i",
+      "domain": "wellfound.com",
+      "path": "/",
+      "expires": 1781506723.478439,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SIDCC",
+      "value": "AKEyXzWs57pyr2v_OQYmdcugqKkGNvDK3gqGJWA5T_tjLlmcaxUHBVuxFQEXXsizB2MUIx7v",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1810623134.361456,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-1PSIDCC",
+      "value": "AKEyXzWKXXqdwhs9C0Heo5EqcNgWm99Od-_1TJDNFmSBkptxgLR9X6FFHYZgEFKJbixj0NkXCA",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1810623134.361647,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__Secure-3PSIDCC",
+      "value": "AKEyXzXDoz2mHHpsEDvkacJ-IIiU2J5hUNqAXzWovQDgL1LmBJSAnSYkNPUa_0PEFhNkqUXZHA",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1810623134.36171,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ajs_user_id",
+      "value": "16853243",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810623522,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "notice_behavior",
+      "value": "implied|as",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_clsk",
+      "value": "lmti1o%5E1779087483594%5E6%5E1%5Ef.clarity.ms%2Fcollect",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1779173883,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ar_debug",
+      "value": "1",
+      "domain": "px.ads.linkedin.com",
+      "path": "/",
+      "expires": 1781717230.85266,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "datadome",
+      "value": "gYXZEjFAN0rDjIxC5YAlVSUH0SGhnII0FV5kHrMavc~AvdUc0Oa2bETOB5XN3YrtVs80IgsF6Ba~O_9kdwmi8ZWOUkl~HWJ6Zf89iw3udmNfoQuHtP7hM8UGHVL6ceWC",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810623523.478653,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_705F94181H",
+      "value": "GS2.1.s1779086936$o1$g1$t1779087528$j16$l0$h0",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1813647528.503811,
+      "httpOnly": false,
+      "secure": false,
       "sameSite": "Lax"
     }
   ],
@@ -415,11 +1007,11 @@
         },
         {
           "name": "algoliasearch-client-js",
-          "value": "{\"45BWZJ1SGC\":{\"hostIndexes\":{\"read\":0,\"write\":0},\"timeoutMultiplier\":1,\"shuffleResult\":[3,2,1],\"lastChange\":1779085002124}}"
+          "value": "{\"45BWZJ1SGC\":{\"hostIndexes\":{\"read\":0,\"write\":0},\"timeoutMultiplier\":1,\"shuffleResult\":[3,2,1],\"lastChange\":1779085127990}}"
         },
         {
           "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
-          "value": "{\"$device_id\":\"019e3568-ee82-721c-b19c-9ae2a560a244\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779085016795,\"019e39ae-628d-78bc-99f7-103a7f53c251\",1779084190342],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.workatastartup.com/jobs/44310\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T06:16:43.364Z\",\"$configured_session_timeout_ms\":1800000,\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779085016793},\"$client_session_props\":{\"sessionId\":\"019e39ae-628d-78bc-99f7-103a7f53c251\",\"props\":{\"r\":\"https://www.ycombinator.com/\",\"u\":\"https://www.workatastartup.com/jobs/81577\"}},\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779085005077,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false,\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"waas-jobs-application-async\",\"landing_page\",\"landing_page_4\",\"landing_page_2\"],\"$enabled_feature_flags\":{\"landing_page_3\":false,\"waas-jobs-application-async\":true,\"landing_page\":\"control\",\"landing_page_4\":true,\"landing_page_2\":\"test\"},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"16246f39-6263-4b10-8ff8-c3b586f1c0b2\",\"$feature_flag_evaluated_at\":1779085005090,\"$session_recording_url_trigger_activated_session\":\"019e39ae-628d-78bc-99f7-103a7f53c251\",\"$sess_rec_flush_size\":793384,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{}}"
+          "value": "{\"$device_id\":\"019e3568-ee82-721c-b19c-9ae2a560a244\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779085537606,\"019e39ae-628d-78bc-99f7-103a7f53c251\",1779084190342],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.workatastartup.com/jobs/44310\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T06:19:51.798Z\",\"$configured_session_timeout_ms\":1800000,\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779085537606},\"$client_session_props\":{\"sessionId\":\"019e39ae-628d-78bc-99f7-103a7f53c251\",\"props\":{\"r\":\"https://www.ycombinator.com/\",\"u\":\"https://www.workatastartup.com/jobs/81577\"}},\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779085192483,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false,\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"landing_page\",\"landing_page_4\",\"landing_page_2\",\"waas-jobs-application-async\"],\"$enabled_feature_flags\":{\"landing_page_3\":false,\"landing_page\":\"control\",\"landing_page_4\":true,\"landing_page_2\":\"test\",\"waas-jobs-application-async\":true},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"c93a3a3f-d32e-4417-a07e-412730be5828\",\"$feature_flag_evaluated_at\":1779085492442,\"$session_recording_url_trigger_activated_session\":\"019e39ae-628d-78bc-99f7-103a7f53c251\",\"$sess_rec_flush_size\":1185398,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$debug_first_full_snapshot_timestamp\":1779085192022}"
         }
       ]
     },
@@ -496,6 +1088,47 @@
         {
           "name": "ph_phc_kqzJJG8aN5nevL0k1oW4Z8iAGswsxBnsWqIBcOuxjah_posthog",
           "value": "{\"$device_id\":\"019e3997-52c2-7592-a86a-91b1c1800ba2\",\"distinct_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$sesid\":[1779084998475,\"019e3997-52cd-75ff-beb4-e460bb6518a8\",1779082678985],\"$epp\":true,\"$initial_person_info\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"},\"$user_state\":\"identified\",\"$initialization_time\":\"2026-05-18T06:16:27.919Z\",\"$configured_session_timeout_ms\":1800000,\"$user_id\":\"7ae63460-2cc4-45d7-9685-78aa4689e325\",\"$stored_person_properties\":{},\"$capture_rate_limit\":{\"tokens\":99,\"last\":1779084998474},\"$client_session_props\":{\"sessionId\":\"019e3997-52cd-75ff-beb4-e460bb6518a8\",\"props\":{\"r\":\"$direct\",\"u\":\"https://www.ycombinator.com/companies/substack/jobs/gD334As-systems-engineer\"}},\"$feature_flag_errors\":[],\"$active_feature_flags\":[\"landing_page_4\",\"landing_page_2\",\"waas-jobs-application-async\",\"landing_page\"],\"$enabled_feature_flags\":{\"landing_page_3\":false,\"landing_page_4\":true,\"landing_page_2\":\"test\",\"waas-jobs-application-async\":true,\"landing_page\":\"control\"},\"$feature_flag_payloads\":{},\"$feature_flag_details\":{\"landing_page_3\":{\"key\":\"landing_page_3\",\"enabled\":false,\"variant\":null,\"reason\":{\"code\":\"out_of_rollout_bound\",\"condition_index\":0,\"description\":\"Out of rollout bound\"},\"metadata\":{\"id\":2040,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_4\":{\"key\":\"landing_page_4\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2069,\"version\":1,\"description\":null,\"payload\":null}},\"landing_page_2\":{\"key\":\"landing_page_2\",\"enabled\":true,\"variant\":\"test\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":2021,\"version\":1,\"description\":null,\"payload\":null}},\"waas-jobs-application-async\":{\"key\":\"waas-jobs-application-async\",\"enabled\":true,\"variant\":null,\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":177549,\"version\":4,\"description\":null,\"payload\":null}},\"landing_page\":{\"key\":\"landing_page\",\"enabled\":true,\"variant\":\"control\",\"reason\":{\"code\":\"condition_match\",\"condition_index\":0,\"description\":\"Matched condition set 1\"},\"metadata\":{\"id\":1727,\"version\":1,\"description\":null,\"payload\":null}}},\"$feature_flag_request_id\":\"5a6592d3-88d4-430e-9d6b-9b83d7e2e31a\",\"$feature_flag_evaluated_at\":1779084989128,\"$error_tracking_suppression_rules\":[],\"$session_recording_remote_config\":{\"cache_timestamp\":1779084989120,\"enabled\":true,\"canvasFps\":3,\"canvasQuality\":\"0.4\",\"consoleLogRecordingEnabled\":true,\"endpoint\":\"/s/\",\"eventTriggers\":[],\"linkedFlag\":null,\"masking\":null,\"minimumDurationMilliseconds\":null,\"networkPayloadCapture\":{\"capturePerformance\":false},\"recordCanvas\":true,\"recorderVersion\":\"v2\",\"sampleRate\":null,\"scriptConfig\":{\"script\":\"posthog-recorder\"},\"triggerMatchType\":null,\"urlBlocklist\":[],\"urlTriggers\":[{\"matching\":\"regex\",\"url\":\"^https://bookface.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://investors.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://events.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://messages.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.startupschool.org.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.workatastartup.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.ycombinator.com.*$\"},{\"matching\":\"regex\",\"url\":\"^https://www.apply.ycombinator.com.*$\"}],\"version\":1,\"canvasRecording\":{\"enabled\":true,\"fps\":3,\"quality\":\"0.4\"}},\"$autocapture_disabled_server_side\":false,\"$product_tours_enabled_server_side\":false,\"$heatmaps_enabled_server_side\":false,\"$web_vitals_enabled_server_side\":false,\"$exception_capture_enabled_server_side\":false,\"$dead_clicks_enabled_server_side\":false}"
+        }
+      ]
+    },
+    {
+      "origin": "https://wellfound.com",
+      "localStorage": [
+        {
+          "name": "ajs_user_id",
+          "value": "\"16853243\""
+        },
+        {
+          "name": "persist:hs-beacon-555ee66a-6ab0-4ff7-9c32-1089d7fbc687",
+          "value": "{\"chat\":\"{\\\"id\\\":\\\"\\\",\\\"messageBody\\\":\\\"\\\",\\\"persistedMessages\\\":[],\\\"state\\\":\\\"CHAT_STATE_EMPTY\\\",\\\"subject\\\":\\\"\\\"}\",\"docs\":\"{\\\"article\\\":{\\\"data\\\":null,\\\"payload\\\":null,\\\"isLoading\\\":false,\\\"isError\\\":false},\\\"beaconIsOpened\\\":false,\\\"openedArticles\\\":[]}\",\"messages\":\"{\\\"shownMessages\\\":[],\\\"staticConditionsState\\\":{\\\"pageViews\\\":3,\\\"repeatPageViews\\\":[{\\\"url\\\":\\\"https://wellfound.com/jobs?job_listing_slug=4092935-software-engineer\\\",\\\"count\\\":1},{\\\"url\\\":\\\"https://wellfound.com/jobs/4092935-software-engineer\\\",\\\"count\\\":2}]},\\\"syncedCustomerHash\\\":\\\"3ede4647fe00f032d3adcf2cbcce1e3d\\\",\\\"lastSyncTimestamp\\\":1779087138983,\\\"shownMessagesTimestamps\\\":{}}\",\"status\":\"{\\\"hasShownFabAnimation\\\":true}\",\"user\":\"{\\\"email\\\":\\\"gangwaramit449@gmail.com\\\",\\\"name\\\":\\\"Amit Gangwar\\\",\\\"signature\\\":\\\"\\\",\\\"identified\\\":true}\",\"auth\":\"{\\\"deviceId\\\":\\\"3391e469-8aa0-446f-9cbd-35f570796c08\\\",\\\"jwt\\\":\\\"\\\"}\",\"stats\":\"{}\",\"timeline\":\"{\\\"activity\\\":[{\\\"type\\\":\\\"page-viewed\\\",\\\"timestamp\\\":\\\"2026-05-18T06:52:18.982Z\\\",\\\"url\\\":\\\"https://wellfound.com/jobs?job_listing_slug=4092935-software-engineer\\\",\\\"title\\\":\\\"Startup Jobs | Wellfound\\\"},{\\\"type\\\":\\\"page-viewed\\\",\\\"timestamp\\\":\\\"2026-05-18T06:57:25.948Z\\\",\\\"url\\\":\\\"https://wellfound.com/jobs/4092935-software-engineer\\\",\\\"title\\\":\\\"Software Engineer at SingleStore • Remote (Work from Home) | Wellfound\\\"}]}\",\"ui\":\"{\\\"expandedArticleView\\\":true}\",\"_persist\":\"{\\\"version\\\":0,\\\"rehydrated\\\":true}\"}"
+        },
+        {
+          "name": "wf-cfp",
+          "value": "ea54c3894699ac72ae1be22b9da21775"
+        },
+        {
+          "name": "jobApplicationUserNotes",
+          "value": "{}"
+        },
+        {
+          "name": "persist:hs-beacon-message-555ee66a-6ab0-4ff7-9c32-1089d7fbc687",
+          "value": "{\"message\":\"{\\\"name\\\":\\\"\\\",\\\"email\\\":\\\"\\\",\\\"subject\\\":\\\"\\\",\\\"text\\\":\\\"\\\",\\\"attachments\\\":[],\\\"fields\\\":[],\\\"persist\\\":true}\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+        },
+        {
+          "name": "li_adsId",
+          "value": "53dd7e9d-f35a-4226-9106-116119c9817e"
+        },
+        {
+          "name": "ajs_anonymous_id",
+          "value": "\"39edb7c2-e974-44d6-9f4b-630f90c8db71\""
+        },
+        {
+          "name": "ajs_user_traits",
+          "value": "{\"name\":\"Amit Gangwar\",\"first_name\":\"Amit\",\"last_name\":\"Gangwar\",\"email\":\"gangwaramit449@gmail.com\",\"email_status\":\"active\",\"profile_url\":\"https://wellfound.com/amit-gangwar-6\",\"created_at\":\"2023-08-20T16:56:58.000+00:00\",\"is_recruiter\":false,\"is_candidate\":true,\"is_candidate_success\":true,\"is_admin\":false,\"is_banned\":false,\"candidate_primary_role\":\"Frontend Engineer\",\"years_experience_in_primary_role\":0,\"job_search_status\":\"interviewing\",\"primary_location\":\"Noida\",\"primary_location_country\":\"India\",\"candidate_location_tags\":[\"Noida\"],\"candidate_interested_locations\":[\"Bengaluru\",\"Delhi\",\"Gurgaon\",\"Pune\",\"Noida\",\"Bangalore Urban\",\"Chennai\"],\"candidate_role_tags\":[\"Software Engineer\",\"Backend Engineer\",\"Frontend Engineer\"],\"candidate_remote_work_preference\":true,\"candidate_desired_salary\":100,\"candidate_desired_salary_currency\":\"USD\",\"candidate_last_active_at\":\"2026-05-16T18:20:44.000+00:00\",\"candidate_quality\":\"quality_candidate\",\"alist_previously_invited\":false,\"last_login_at\":\"2026-04-22T19:22:09.000+00:00\",\"eligible_for_al_elite\":false}"
+        },
+        {
+          "name": "company-completeness-banner",
+          "value": "undefined"
         }
       ]
     }

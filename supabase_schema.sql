@@ -14,6 +14,11 @@ CREATE TABLE user_profile (
     current_location TEXT,
     portfolio_url TEXT,
     github_url TEXT,
+    years_of_experience TEXT,
+    desired_salary TEXT,
+    us_work_authorization TEXT, -- 'Yes' or 'No'
+    requires_sponsorship TEXT,    -- 'Yes' or 'No'
+    resume_file_path TEXT,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

@@ -57,7 +57,12 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
     addLog("Syncing jobs and resume profile to automation engine...", "info");
 
     try {
-      const response = await fetch("/api/run-automation", {
+      const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
+      const apiEndpoint = workerUrl ? `${workerUrl}/run-automation` : "/api/run-automation";
+      
+      addLog(`Connecting to engine at ${apiEndpoint}...`, "info");
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         body: JSON.stringify({ jobs, resumeData }),
         headers: { "Content-Type": "application/json" },
@@ -111,7 +116,10 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
     try {
       addLog(`Confirming application for job ${id} via server...`, "info");
       
-      const response = await fetch("/api/confirm-job", {
+      const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
+      const apiEndpoint = workerUrl ? `${workerUrl}/confirm-job` : "/api/confirm-job";
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         body: JSON.stringify({ id, action: "confirm" }),
         headers: { "Content-Type": "application/json" },
@@ -133,7 +141,10 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
     try {
       addLog(`Skipping job ${id} via server...`, "info");
       
-      const response = await fetch("/api/confirm-job", {
+      const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || "";
+      const apiEndpoint = workerUrl ? `${workerUrl}/confirm-job` : "/api/confirm-job";
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         body: JSON.stringify({ id, action: "skip" }),
         headers: { "Content-Type": "application/json" },
@@ -152,65 +163,79 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Control Card */}
-        <div className="md:col-span-1 space-y-6">
-          <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-6">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-accent" />
-              Engine Control
-            </h3>
+        <div className="lg:col-span-1 space-y-8">
+          <div className="glass-card !p-8 space-y-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20">
+                <Cpu className="w-5 h-5 text-accent" />
+              </div>
+              <div>
+                <h3 className="text-xl font-display font-bold text-white tracking-tight">Engine Control</h3>
+                <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">Automation Core</p>
+              </div>
+            </div>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-text-muted">Status</span>
-                <span className={`font-bold uppercase tracking-widest ${isRunning ? "text-success animate-pulse" : "text-text-secondary"}`}>
-                  {isRunning ? "Active" : "Idle"}
-                </span>
+                <span className="text-text-secondary font-medium">Core Status</span>
+                <div className="flex items-center gap-2">
+                  <div className={`w-1.5 h-1.5 rounded-full ${isRunning ? "bg-success animate-pulse" : "bg-text-muted"}`} />
+                  <span className={`text-[11px] font-bold uppercase tracking-widest ${isRunning ? "text-success" : "text-text-muted"}`}>
+                    {isRunning ? "Active" : "Standby"}
+                  </span>
+                </div>
               </div>
-              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  className="h-full bg-accent"
-                />
-              </div>
-              <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-text-muted">
-                <span>Task Progress</span>
-                <span>{Math.round(progress)}%</span>
+
+              <div className="space-y-3">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted">
+                  <span>Task Pipeline</span>
+                  <span className="text-accent">{Math.round(progress)}%</span>
+                </div>
+                <div className="h-2 w-full bg-surface-2 rounded-full overflow-hidden p-0.5 border border-white/5">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.5 }}
+                    className="h-full bg-accent rounded-full shadow-[0_0_10px_rgba(255,102,64,0.4)]"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <AnimatePresence>
                 {reviewingJob && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="p-4 rounded-xl bg-accent/10 border border-accent/20 space-y-4 mb-3"
+                    className="p-6 rounded-2xl bg-accent/5 border border-accent/20 space-y-5 shadow-2xl"
                   >
-                    <div className="text-xs font-bold text-accent uppercase tracking-widest flex items-center gap-2">
-                      <AlertCircle className="w-3 h-3" />
-                      Review Required
+                    <div className="flex items-center justify-between">
+                      <div className="text-[11px] font-bold text-accent uppercase tracking-[0.2em] flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        Action Required
+                      </div>
                     </div>
-                    <p className="text-[10px] text-text-secondary leading-relaxed">
-                      AI has drafted a message for <strong>{reviewingJob.company}</strong>. Please verify in Chrome and confirm.
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      AI has drafted a message for <span className="text-white font-bold">{reviewingJob.company}</span>. Please verify and confirm submission.
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <button
                         onClick={() => handleConfirm(reviewingJob.id)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-accent text-white text-[10px] font-bold uppercase tracking-widest hover:scale-[1.02] transition-all"
+                        className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-accent text-white text-[11px] font-bold uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-accent/20"
                       >
-                        <Send className="w-3 h-3" />
-                        Confirm Send
+                        <Send className="w-3.5 h-3.5" />
+                        Approve
                       </button>
                       <button
                         onClick={() => handleSkipReview(reviewingJob.id)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-secondary text-[10px] font-bold uppercase tracking-widest hover:text-white transition-all"
+                        className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/5 border border-white/10 text-text-secondary text-[11px] font-bold uppercase tracking-widest hover:text-white hover:bg-white/10 active:scale-[0.98] transition-all"
                       >
-                        <XCircle className="w-3 h-3" />
+                        <XCircle className="w-3.5 h-3.5" />
                         Skip
                       </button>
                     </div>
@@ -225,82 +250,90 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
                       startAutomation();
                     }
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-accent text-white font-bold uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-accent/20"
+                  className="btn-cinematic w-full !py-5 flex items-center justify-center gap-3 !text-[11px] !font-bold !uppercase !tracking-[0.2em]"
                 >
-                  <Play className="w-4 h-4 fill-current" />
-                  Run Automation
+                  <Play className="w-5 h-5 fill-current" />
+                  Initialize Core
                 </button>
               ) : (
                 <button
                   onClick={stopAutomation}
-                  className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-error/20 border border-error/30 text-error font-bold uppercase tracking-widest hover:bg-error/30 transition-all"
+                  className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-error/10 border border-error/20 text-error font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-error/20 active:scale-[0.98] transition-all"
                 >
-                  <Square className="w-4 h-4 fill-current" />
-                  Stop Execution
+                  <Square className="w-5 h-5 fill-current" />
+                  Terminate Flow
                 </button>
               )}
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-text-muted mb-4">Live Metrics</h4>
-            <div className="space-y-4">
-              <MetricItem label="Browser Instances" value={isRunning ? "1 Active" : "0"} />
-              <MetricItem label="AI Response Time" value="1.2s avg" />
-              <MetricItem label="Memory Usage" value="244MB" />
+          <div className="glass-card !p-8">
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted mb-6">Environment Metrics</h4>
+            <div className="space-y-5">
+              <MetricItem label="Browser Cluster" value={isRunning ? "1 Active" : "Standby"} />
+              <MetricItem label="AI Latency" value="1.2s avg" />
+              <MetricItem label="Memory State" value="244MB" />
             </div>
           </div>
         </div>
 
         {/* Terminal Card */}
-        <div className="md:col-span-2">
-          <div className="h-[500px] rounded-2xl bg-black/40 border border-white/10 overflow-hidden flex flex-col shadow-2xl">
-            <div className="px-4 py-3 bg-white/5 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <TerminalIcon className="w-4 h-4 text-text-muted" />
-                <span className="text-xs font-bold uppercase tracking-widest text-text-muted">System Terminal</span>
+        <div className="lg:col-span-2">
+          <div className="glass-card !p-0 overflow-hidden flex flex-col h-full min-h-[600px] border-accent/20">
+            {/* Terminal Header */}
+            <div className="px-8 py-5 bg-white/[0.03] border-b border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-error/50" />
+                  <div className="w-3 h-3 rounded-full bg-warning/50" />
+                  <div className="w-3 h-3 rounded-full bg-success/50" />
+                </div>
+                <div className="h-4 w-px bg-white/10" />
+                <div className="flex items-center gap-2">
+                  <TerminalIcon className="w-4 h-4 text-accent" />
+                  <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">Live Execution Logs</span>
+                </div>
               </div>
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-error/20 border border-error/30" />
-                <div className="w-2.5 h-2.5 rounded-full bg-warning/20 border border-warning/30" />
-                <div className="w-2.5 h-2.5 rounded-full bg-success/20 border border-success/30" />
+              <div className="text-[10px] font-mono text-text-muted">
+                SSH: loophire@neural-core
               </div>
             </div>
-            
+
+            {/* Terminal Content */}
             <div 
               ref={logContainerRef}
-              className="flex-1 p-4 overflow-y-auto font-mono text-xs space-y-2 scrollbar-thin scrollbar-thumb-white/10"
+              className="flex-1 p-8 overflow-y-auto font-mono text-sm space-y-3 bg-[#050505]"
             >
-              <AnimatePresence initial={false}>
-                {logs.length === 0 && !isRunning && (
-                  <div className="h-full flex flex-col items-center justify-center text-text-muted space-y-2 opacity-50">
-                    <TerminalIcon className="w-8 h-8" />
-                    <p>Terminal ready. Awaiting command...</p>
-                  </div>
-                )}
-                {logs.map((log) => (
-                  <motion.div
-                    key={log.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex gap-3 leading-relaxed"
-                  >
-                    <span className="text-text-muted shrink-0">[{log.timestamp}]</span>
-                    <span className={`
-                      ${log.type === "info" ? "text-text-secondary" : ""}
-                      ${log.type === "warn" ? "text-warning" : ""}
-                      ${log.type === "error" ? "text-error" : ""}
-                      ${log.type === "system" ? "text-accent font-bold" : ""}
-                    `}>
-                      {log.message}
-                    </span>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+              {logs.length === 0 && !isRunning && (
+                <div className="h-full flex flex-col items-center justify-center text-text-muted space-y-4 opacity-30">
+                  <TerminalIcon className="w-12 h-12" />
+                  <p className="text-xs uppercase tracking-[0.3em]">Awaiting Command Initialization...</p>
+                </div>
+              )}
+              {logs.map((log) => (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  key={log.id} 
+                  className="flex gap-4 group"
+                >
+                  <span className="text-text-muted select-none whitespace-nowrap opacity-50">[{log.timestamp}]</span>
+                  <span className={`font-bold select-none whitespace-nowrap ${
+                    log.type === "error" ? "text-error" : 
+                    log.type === "warn" ? "text-warning" : 
+                    log.type === "system" ? "text-accent" : "text-success"
+                  }`}>
+                    {log.type.toUpperCase()}
+                  </span>
+                  <span className="text-text-secondary group-hover:text-white transition-colors">{log.message}</span>
+                </motion.div>
+              ))}
               {isRunning && (
-                <div className="flex items-center gap-2 text-accent animate-pulse">
-                  <span>_</span>
-                  <Loader2 className="w-3 h-3 animate-spin" />
+                <div className="flex gap-4 animate-pulse">
+                  <span className="text-text-muted">[{new Date().toLocaleTimeString()}]</span>
+                  <span className="text-accent font-bold uppercase tracking-widest">EXECUTING</span>
+                  <span className="text-white">Processing next instruction set...</span>
+                  <span className="w-2 h-5 bg-accent animate-[blink_1s_infinite]" />
                 </div>
               )}
             </div>

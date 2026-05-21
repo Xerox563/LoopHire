@@ -92,17 +92,25 @@ export default function DashboardPage() {
       status: "pending",
     };
 
-    // Save to Supabase
-    const { error } = await supabase.from("jobs").insert({
-      id,
-      url,
-      company,
-      role,
-      notes: notes || null,
-      status: "pending",
+    // Save to Supabase via server-side proxy
+    const response = await fetch("/api/db", {
+      method: "POST",
+      body: JSON.stringify({
+        table: "jobs",
+        action: "insert",
+        data: {
+          id,
+          url,
+          company,
+          role,
+          notes: notes || null,
+          status: "pending",
+        }
+      })
     });
 
-    if (error) {
+    if (!response.ok) {
+      const error = await response.json();
       console.error("Supabase error:", error);
       showToast("Failed to save job to database");
       return;
@@ -114,9 +122,17 @@ export default function DashboardPage() {
 
   // Handle removing a job from the list
   const handleDelete = useCallback(async (id: string) => {
-    const { error } = await supabase.from("jobs").delete().eq("id", id);
+    const response = await fetch("/api/db", {
+      method: "POST",
+      body: JSON.stringify({
+        table: "jobs",
+        action: "delete",
+        query: { id }
+      })
+    });
     
-    if (error) {
+    if (!response.ok) {
+      const error = await response.json();
       console.error("Supabase error:", error);
       showToast("Failed to remove job from database");
       return;
@@ -132,9 +148,20 @@ export default function DashboardPage() {
       return;
     }
 
-    const { error } = await supabase.from("jobs").delete().neq("id", "0"); // Delete all rows
+    // Since our generic proxy doesn't support complex filters like .neq easily without security risks,
+    // we'll just handle this as a specialized update or simple delete match if possible.
+    // For "delete all", we can use a query that matches everything.
+    const response = await fetch("/api/db", {
+      method: "POST",
+      body: JSON.stringify({
+        table: "jobs",
+        action: "delete",
+        query: {} // Match all
+      })
+    });
     
-    if (error) {
+    if (!response.ok) {
+      const error = await response.json();
       console.error("Supabase error:", error);
       showToast("Failed to clear database");
       return;
@@ -145,180 +172,170 @@ export default function DashboardPage() {
   };
 
   return (
-    <div style={{ background: "var(--background)", minHeight: "100vh" }}>
-      {/* Dashboard navigation bar */}
+    <div className="min-h-screen bg-background text-text-primary selection:bg-accent/30">
+      {/* Background Effects */}
+      <div className="fixed inset-0 glow-mesh pointer-events-none opacity-40" />
+      <div className="noise-bg" />
+
+      {/* Navigation */}
       <DashboardNav />
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        {/* Page Header Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 16 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          className="mb-8 flex items-end justify-between"
-        >
-          <div>
-            <h1 className="font-display text-4xl mb-1" style={{ color: "var(--text-primary)" }}>
-              {activeTab === "overview" ? "Dashboard Overview" : activeTab === "resume" ? "Resume Profile" : "Automation Control"}
+      <main className="relative max-w-7xl mx-auto px-6 py-12 z-10">
+        {/* Page Header */}
+        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }} 
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <h1 className="font-display text-5xl font-bold tracking-tight mb-3 text-gradient">
+              {activeTab === "overview" ? "Dashboard" : activeTab === "resume" ? "Profile" : "Automation"}
             </h1>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            <p className="text-text-secondary text-lg max-w-xl">
               {activeTab === "overview" 
-                ? "Manage and track your job search progress" 
+                ? "Manage and track your job applications in one central hub." 
                 : activeTab === "resume" 
-                ? "Your parsed resume sections used for AI personalization" 
-                : "Run and monitor your application automation"}
+                ? "Fine-tune your professional profile and resume sections." 
+                : "Configure and monitor your automated application workflows."}
             </p>
-          </div>
-          <div className="flex gap-4">
-            <div className="flex p-1 rounded-xl bg-white/5 border border-white/10">
-              <button 
-                onClick={() => setActiveTab("overview")}
-                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "overview" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
-              >
-                Overview
-              </button>
-              <button 
-                onClick={() => setActiveTab("resume")}
-                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "resume" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
-              >
-                Resume
-              </button>
-              <button 
-                onClick={() => setActiveTab("automation")}
-                className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "automation" ? "bg-accent text-white" : "text-text-muted hover:text-white"}`}
-              >
-                Automation
-              </button>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-4"
+          >
+            <div className="flex p-1.5 rounded-2xl bg-surface/50 border border-border backdrop-blur-xl">
+              {[
+                { id: "overview", label: "Overview" },
+                { id: "resume", label: "Resume" },
+                { id: "automation", label: "Automation" }
+              ].map((tab) => (
+                <button 
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`relative px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-[0.15em] transition-all duration-300 ${
+                    activeTab === tab.id 
+                      ? "text-white" 
+                      : "text-text-muted hover:text-text-secondary"
+                  }`}
+                >
+                  {activeTab === tab.id && (
+                    <motion.div 
+                      layoutId="activeTab"
+                      className="absolute inset-0 bg-accent rounded-xl shadow-[0_0_20px_rgba(255,102,64,0.3)]"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              ))}
             </div>
+
             {activeTab === "overview" && (
               <div className="flex gap-3">
-                <motion.button 
-                  whileHover={{ scale: 1.04, y: -2 }} 
-                  whileTap={{ scale: 0.96 }}
+                <button 
                   onClick={handleClearAll}
-                  className="px-6 py-3 rounded-xl text-sm font-medium border border-error/20 bg-error/5 text-error hover:bg-error/10 transition-all flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest border border-error/20 bg-error/5 text-error hover:bg-error/10 transition-all flex items-center gap-2"
                 >
                   Clear All
-                </motion.button>
-                <motion.button 
-                  whileHover={{ scale: 1.04, y: -2 }} 
-                  whileTap={{ scale: 0.96 }}
+                </button>
+                <button 
                   onClick={() => setModalOpen(true)}
-                  className="btn-primary px-6 py-3 rounded-xl text-sm font-medium flex items-center gap-2"
+                  className="btn-cinematic !px-6 !py-2.5 !text-xs !font-bold !uppercase !tracking-widest flex items-center gap-2"
                 >
-                  <span>＋</span> Add New Job
-                </motion.button>
+                  <span className="text-lg leading-none">＋</span> Add Job
+                </button>
               </div>
             )}
-          </div>
-        </motion.div>
+          </motion.div>
+        </header>
 
-        {activeTab === "overview" && (
-          <>
-            {/* Overview Stats Cards */}
-        <div className="mb-8">
-          {isLoading ? (
-            <div className="h-32 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-accent animate-spin" />
-            </div>
-          ) : (
-            <StatsCards stats={stats} />
-          )}
-        </div>
-
-            {/* Application Success Progress Visualization */}
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              transition={{ delay: 0.3 }}
-              className="mb-8 rounded-2xl p-6" 
-              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
-                  Overall Success Rate
-                </span>
-                <span className="text-sm font-bold" style={{ color: "var(--accent)" }}>
-                  {stats.successRate}% successful applications
-                </span>
-              </div>
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: "var(--surface-2)" }}>
-                <motion.div 
-                  initial={{ width: 0 }} 
-                  animate={{ width: `${stats.successRate}%` }}
-                  transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-                  className="h-full rounded-full"
-                  style={{ background: "linear-gradient(90deg, var(--accent), var(--accent-2))" }} 
-                />
-              </div>
-              <div className="flex gap-6 mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
-                <span><span style={{ color: "#22c55e" }}>●</span> {stats.applied} applied</span>
-                <span><span style={{ color: "#eab308" }}>●</span> {stats.pending} pending</span>
-                <span><span style={{ color: "#ef4444" }}>●</span> {stats.failed} failed</span>
-                <span><span style={{ color: "#8888aa" }}>●</span> {stats.skipped} skipped</span>
-              </div>
-            </motion.div>
-
-            {/* Main Content: Jobs Table and Activity Feed */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+        {/* Tab Content with AnimatePresence */}
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="space-y-10"
+        >
+          {activeTab === "overview" && (
+            <>
+              {/* Stats Grid */}
+              <section>
                 {isLoading ? (
-                  <div className="h-64 flex items-center justify-center bg-white/[0.02] rounded-2xl border border-white/5">
+                  <div className="h-32 flex items-center justify-center">
                     <Loader2 className="w-8 h-8 text-accent animate-spin" />
                   </div>
                 ) : (
-                  <JobsTable jobs={jobs} onDelete={handleDelete} />
+                  <StatsCards stats={stats} />
                 )}
-              </div>
-              <div className="lg:col-span-1">
-                {isLoading ? (
-                  <div className="h-64 flex items-center justify-center bg-white/[0.02] rounded-2xl border border-white/5">
-                    <Loader2 className="w-8 h-8 text-accent animate-spin" />
+              </section>
+
+              {/* Success Rate Visualizer */}
+              <section className="glass-card !p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-1">Application Health</h3>
+                    <p className="text-sm text-text-secondary">Overall success rate across all platforms</p>
                   </div>
-                ) : (
+                  <span className="text-3xl font-display font-bold accent-gradient">
+                    {stats.successRate}%
+                  </span>
+                </div>
+                <div className="h-3 rounded-full bg-surface-2 overflow-hidden p-0.5 border border-white/5">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${stats.successRate}%` }}
+                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-full rounded-full bg-gradient-to-right from-accent to-accent-2 shadow-[0_0_15px_rgba(255,102,64,0.4)]"
+                  />
+                </div>
+              </section>
+
+              {/* Main Content Grid */}
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+                <div className="xl:col-span-2">
+                  <JobsTable 
+                    jobs={jobs} 
+                    onDelete={handleDelete}
+                    isLoading={isLoading}
+                  />
+                </div>
+                <div className="xl:col-span-1">
                   <ActivityFeed jobs={jobs} />
-                )}
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
 
-        {activeTab === "resume" && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
+          {activeTab === "resume" && (
             <ResumeSection 
-              initialData={resumeData} 
-              onUpdate={(data) => {
-                setResumeData(data);
-                showToast("Resume profile updated");
-              }} 
+              onUpdate={setResumeData}
+              initialData={resumeData}
             />
-          </motion.div>
-        )}
+          )}
 
-        {activeTab === "automation" && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
+          {activeTab === "automation" && (
             <AutomationSection jobs={jobs} resumeData={resumeData} />
-          </motion.div>
-        )}
-      </div>
+          )}
+        </motion.div>
+      </main>
 
-      {/* Add Job Modal Dialog */}
-      <AddJobModal open={modalOpen} onClose={() => setModalOpen(false)} onAdd={handleAdd} />
+      {/* Modals & Toasts */}
+      <AddJobModal 
+        isOpen={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        onAdd={handleAdd} 
+      />
 
-      {/* Dynamic Toast Feedback */}
       {toast && (
         <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 right-6 px-4 py-2 rounded-lg text-sm font-medium z-50"
-          style={{ background: "var(--surface)", border: "1px solid var(--border-bright)", color: "var(--text-primary)" }}
+          initial={{ opacity: 0, y: 40, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl bg-white text-background font-bold shadow-2xl flex items-center gap-3"
         >
+          <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
           {toast}
         </motion.div>
       )}

@@ -80,15 +80,42 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
       if (response.ok) {
           const parsed = await response.json();
           
-          // Save to Supabase
-          const { error: dbError } = await supabase.from("resume").insert({
-            experience: parsed.experience,
-            technical_skills: parsed.technicalSkills,
-            education: parsed.education,
-            projects: parsed.projects,
+          // Save to Supabase via server-side proxy
+          const dbResponse = await fetch("/api/db", {
+            method: "POST",
+            body: JSON.stringify({
+              table: "resume",
+              action: "insert",
+              data: {
+                experience: parsed.experience,
+                technical_skills: parsed.technicalSkills,
+                education: parsed.education,
+                projects: parsed.projects,
+              }
+            })
           });
 
-          if (dbError) console.error("Supabase error:", dbError);
+          if (!dbResponse.ok) {
+            const dbError = await dbResponse.json();
+            console.error("Supabase error:", dbError);
+          }
+
+          // Also update user_profile with resume path via server-side proxy
+          const profileResponse = await fetch("/api/db", {
+            method: "POST",
+            body: JSON.stringify({
+              table: "user_profile",
+              action: "insert",
+              data: {
+                resume_file_path: parsed.filePath
+              }
+            })
+          });
+
+          if (!profileResponse.ok) {
+            const profileError = await profileResponse.json();
+            console.error("Profile error:", profileError);
+          }
 
           setData(parsed);
           setTempData(parsed);
@@ -114,15 +141,23 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
   };
 
   const handleSave = async () => {
-    // Update in Supabase
-    const { error: dbError } = await supabase.from("resume").insert({
-      experience: tempData.experience,
-      technical_skills: tempData.technicalSkills,
-      education: tempData.education,
-      projects: tempData.projects,
+    // Update in Supabase via server-side proxy
+    const response = await fetch("/api/db", {
+      method: "POST",
+      body: JSON.stringify({
+        table: "resume",
+        action: "insert",
+        data: {
+          experience: tempData.experience,
+          technical_skills: tempData.technicalSkills,
+          education: tempData.education,
+          projects: tempData.projects,
+        }
+      })
     });
 
-    if (dbError) {
+    if (!response.ok) {
+      const dbError = await response.json();
       console.error("Supabase error:", dbError);
       alert("Failed to save changes to database");
       return;
@@ -155,124 +190,145 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
       <div className="h-px bg-white/5" />
 
       {/* Resume Management Section */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-display font-bold text-white flex items-center gap-2">
-          <FileText className="w-6 h-6 text-accent" />
-          Resume Management
-        </h2>
-        <div className="flex gap-3">
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-text-secondary hover:text-white transition-all"
-            >
-              <Edit2 className="w-4 h-4" />
-              Edit Sections
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success/20 border border-success/30 text-success hover:bg-success/30 transition-all"
-              >
-                <Save className="w-4 h-4" />
-                Save Changes
-              </button>
-              <button
-                onClick={handleCancel}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-text-secondary hover:text-white transition-all"
-              >
-                <X className="w-4 h-4" />
-                Cancel
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div 
-        className="p-8 rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center text-center group hover:border-accent/50 transition-all cursor-pointer relative"
-        onClick={() => document.getElementById("resume-upload")?.click()}
-      >
-        <input 
-          id="resume-upload"
-          type="file" 
-          className="hidden" 
-          accept=".txt,.md,.pdf"
-          onChange={handleFileUpload}
-        />
-        <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
-          <Upload className="w-8 h-8 text-text-muted group-hover:text-accent transition-colors" />
-        </div>
-        <h3 className="text-lg font-bold text-white mb-1">
-          {isUploading ? "Analyzing Resume..." : "Upload New Resume"}
-        </h3>
-        <p className="text-sm text-text-muted max-w-xs">
-          {isUploading ? "Our AI is extracting experience and skills..." : "Drag and drop your resume or click to browse (PDF, TXT, MD)"}
-        </p>
-        
-        {isUploading && (
-          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-bold text-white uppercase tracking-widest">Processing...</span>
+      <div className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20 shadow-lg shadow-accent/10">
+              <FileText className="w-6 h-6 text-accent" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-display font-bold text-white tracking-tight">Resume Profile</h2>
+              <p className="text-xs text-text-muted uppercase tracking-[0.2em] font-bold">Document Parsing & Intelligence</p>
             </div>
           </div>
-        )}
-      </div>
+          
+          <div className="flex gap-3">
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-white hover:bg-white/10 transition-all"
+              >
+                <Edit2 className="w-4 h-4" />
+                Edit Profile
+              </button>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSave}
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-success/20 border border-success/30 text-xs font-bold uppercase tracking-widest text-success hover:bg-success/30 transition-all shadow-lg shadow-success/10"
+                >
+                  <Save className="w-4 h-4" />
+                  Save Changes
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-white transition-all"
+                >
+                  <X className="w-4 h-4" />
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <SectionCard 
-          title="Experience" 
-          value={isEditing ? tempData.experience : data.experience}
-          isEditing={isEditing}
-          onChange={(v) => setTempData({...tempData, experience: v})}
-          placeholder="Detailed work history and achievements..."
-        />
-        <SectionCard 
-          title="Technical Skills" 
-          value={isEditing ? tempData.technicalSkills : data.technicalSkills}
-          isEditing={isEditing}
-          onChange={(v) => setTempData({...tempData, technicalSkills: v})}
-          placeholder="Languages, frameworks, tools..."
-        />
-        <SectionCard 
-          title="Education" 
-          value={isEditing ? tempData.education : data.education}
-          isEditing={isEditing}
-          onChange={(v) => setTempData({...tempData, education: v})}
-          placeholder="Degrees, certifications, relevant coursework..."
-        />
-        <SectionCard 
-          title="Projects" 
-          value={isEditing ? tempData.projects : data.projects}
-          isEditing={isEditing}
-          onChange={(v) => setTempData({...tempData, projects: v})}
-          placeholder="Key projects and your contributions..."
-        />
+        <div 
+          className="p-12 rounded-[2.5rem] border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center text-center group hover:border-accent/50 hover:bg-accent/[0.02] transition-all duration-500 cursor-pointer relative overflow-hidden"
+          onClick={() => document.getElementById("resume-upload")?.click()}
+        >
+          {/* Background Glow */}
+          <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" />
+          
+          <input 
+            id="resume-upload"
+            type="file" 
+            className="hidden" 
+            accept=".txt,.md,.pdf"
+            onChange={handleFileUpload}
+          />
+          
+          <div className="relative z-10 w-20 h-20 rounded-[2rem] bg-surface-2 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+            <Upload className="w-10 h-10 text-text-muted group-hover:text-accent transition-colors duration-500" />
+          </div>
+          
+          <div className="relative z-10 space-y-2">
+            <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+              {isUploading ? "Neural Parsing Active..." : "Update Master Resume"}
+            </h3>
+            <p className="text-text-secondary text-sm max-w-sm mx-auto leading-relaxed">
+              {isUploading 
+                ? "Our AI is extracting structured intelligence from your document." 
+                : "Drop your PDF, TXT, or MD file here to sync with the automation engine."}
+            </p>
+          </div>
+          
+          {isUploading && (
+            <div className="absolute inset-0 bg-background/60 backdrop-blur-xl z-20 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-6">
+                <div className="relative">
+                  <div className="w-16 h-16 border-4 border-accent/20 rounded-full" />
+                  <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin absolute inset-0 shadow-[0_0_20px_rgba(255,102,64,0.4)]" />
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-lg font-display font-bold text-white block">Extracting Data</span>
+                  <span className="text-[10px] font-bold text-accent uppercase tracking-[0.3em] animate-pulse">Syncing with LLM</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <SectionCard 
+            title="Professional Experience" 
+            value={isEditing ? tempData.experience : data.experience}
+            isEditing={isEditing}
+            onChange={(v) => setTempData({...tempData, experience: v})}
+            placeholder="Detailed work history and achievements..."
+          />
+          <SectionCard 
+            title="Technical Arsenal" 
+            value={isEditing ? tempData.technicalSkills : data.technicalSkills}
+            isEditing={isEditing}
+            onChange={(v) => setTempData({...tempData, technicalSkills: v})}
+            placeholder="Languages, frameworks, tools..."
+          />
+          <SectionCard 
+            title="Academic Background" 
+            value={isEditing ? tempData.education : data.education}
+            isEditing={isEditing}
+            onChange={(v) => setTempData({...tempData, education: v})}
+            placeholder="Degrees, certifications, relevant coursework..."
+          />
+          <SectionCard 
+            title="Strategic Projects" 
+            value={isEditing ? tempData.projects : data.projects}
+            isEditing={isEditing}
+            onChange={(v) => setTempData({...tempData, projects: v})}
+            placeholder="Personal or professional projects..."
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-function SectionCard({ title, value, isEditing, onChange, placeholder }: { 
-  title: string; 
-  value: string; 
+function SectionCard({ title, value, isEditing, onChange, placeholder }: {
+  title: string;
+  value: string;
   isEditing: boolean;
   onChange: (v: string) => void;
   placeholder: string;
 }) {
   return (
     <motion.div 
-      layout
-      className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3"
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="glass-card flex flex-col h-full min-h-[300px]"
     >
-      <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-          {title}
-        </h4>
-        {value && !isEditing && <Check className="w-4 h-4 text-success" />}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-1.5 h-6 bg-accent rounded-full shadow-[0_0_10px_#ff6640]" />
+        <h3 className="text-lg font-display font-bold text-white tracking-tight">{title}</h3>
       </div>
       
       {isEditing ? (
@@ -280,13 +336,12 @@ function SectionCard({ title, value, isEditing, onChange, placeholder }: {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full h-48 bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/50 transition-all resize-none"
+          className="flex-1 w-full bg-white/[0.03] border border-white/10 rounded-2xl p-6 text-sm text-text-secondary leading-relaxed focus:outline-none focus:border-accent/50 focus:bg-white/[0.05] transition-all resize-none"
         />
       ) : (
-        <div className="text-sm text-text-secondary line-clamp-6 leading-relaxed">
-          {value || <span className="italic text-text-muted">No data extracted yet. Upload your resume to begin.</span>}
+        <div className="flex-1 p-6 rounded-2xl bg-white/[0.01] border border-white/5 text-sm text-text-secondary leading-relaxed whitespace-pre-wrap italic opacity-80">
+          {value || <span className="opacity-30">No data available for this section.</span>}
         </div>
       )}
     </motion.div>
-  );
-}
+  )}
