@@ -17,11 +17,17 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || "",
-  baseURL: "https://openrouter.ai/api/v1",
-  dangerouslyAllowBrowser: true
-});
+const getOpenAIClient = () => {
+  const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing API Key: Please set NEXT_PUBLIC_OPENROUTER_API_KEY in your environment.");
+  }
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://openrouter.ai/api/v1",
+    dangerouslyAllowBrowser: true
+  });
+};
 
 import { OUTREACH_TEMPLATES } from "./TemplatesTab";
 
@@ -75,6 +81,7 @@ export default function AIMessagesTab() {
       3. Keep the tone ${selectedTemplate?.title === 'Founder / Early Stage' ? 'direct and scrappy' : 'professional and high-impact'}.
       4. DO NOT include any meta-text, just the final message.`;
 
+      const client = getOpenAIClient();
       const response = await client.chat.completions.create({
         model: "deepseek/deepseek-chat",
         messages: [{ role: "user", content: prompt }],
