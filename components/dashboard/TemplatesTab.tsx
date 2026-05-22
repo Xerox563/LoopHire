@@ -104,70 +104,99 @@ What would make sense to discuss?
 ];
 
 export default function TemplatesTab() {
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState(OUTREACH_TEMPLATES[0].id);
+  const [copied, setCopied] = useState(false);
 
-  const handleCopy = (id: string, content: string) => {
-    navigator.clipboard.writeText(content);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const activeTemplate = OUTREACH_TEMPLATES.find(t => t.id === activeId)!;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(activeTemplate.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-white tracking-tight">Outreach Templates</h1>
-        <p className="text-text-secondary text-sm mt-1">High-conversion frameworks for your AI automation engine.</p>
+    <div className="space-y-6 lg:space-y-10 pb-12">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <h2 className="text-xl lg:text-2xl font-display font-bold text-white tracking-tight text-center lg:text-left">Outreach Protocols</h2>
+          <p className="text-text-secondary text-sm mt-1 text-center lg:text-left">Select a template philosophy for your AI-generated messages.</p>
+        </div>
+        <div className="flex items-center gap-3 bg-white/5 p-1 rounded-xl self-center lg:self-auto">
+          <button className="px-6 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-accent rounded-lg shadow-lg shadow-accent/20 transition-all">Templates</button>
+          <button className="px-6 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted hover:text-white transition-all">Custom</button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {OUTREACH_TEMPLATES.map((template) => {
-          const Icon = template.icon;
-          return (
-            <motion.div
-              key={template.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="glass-card !p-8 flex flex-col h-full group hover:border-accent/20 transition-all"
-            >
-              <div className="flex items-start justify-between mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+        {/* Template Selector */}
+        <div className="lg:col-span-4 space-y-4">
+          {OUTREACH_TEMPLATES.map((t) => {
+            const Icon = t.icon;
+            const isActive = activeId === t.id;
+            return (
+              <motion.div
+                key={t.id}
+                onClick={() => setActiveId(t.id)}
+                whileHover={{ x: 4 }}
+                className={`glass-card !p-4 cursor-pointer transition-all duration-300 ${
+                  isActive ? 'border-accent/40 bg-accent/[0.03] ring-1 ring-accent/20' : 'hover:border-white/10'
+                }`}
+              >
                 <div className="flex items-center gap-4">
-                  <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center border transition-transform group-hover:scale-110"
-                    style={{ backgroundColor: `${template.color}10`, borderColor: `${template.color}20` }}
-                  >
-                    <Icon className="w-6 h-6" style={{ color: template.color }} />
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 ${
+                    isActive ? 'bg-accent text-white scale-110 shadow-lg shadow-accent/20' : 'bg-white/5 text-text-muted'
+                  }`}>
+                    <Icon className="w-5 h-5" />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white">{template.title}</h3>
-                    <p className="text-xs text-text-muted font-bold uppercase tracking-widest">{template.subtitle}</p>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-bold tracking-tight text-white">
+                      {t.title}
+                    </h4>
+                    <p className="text-[10px] text-text-muted truncate uppercase tracking-widest font-medium mt-0.5">{t.subtitle}</p>
                   </div>
+                  {isActive && <motion.div layoutId="active-indicator" className="w-1.5 h-1.5 rounded-full bg-accent" />}
                 </div>
-                <button 
-                  onClick={() => handleCopy(template.id, template.content)}
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-text-muted hover:text-white transition-all"
-                >
-                  {copiedId === template.id ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
-              <div className="flex-1 p-6 rounded-2xl bg-white/[0.02] border border-white/5 font-mono text-xs text-text-secondary leading-relaxed whitespace-pre-wrap relative overflow-hidden">
-                {template.content}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent pointer-events-none" />
-              </div>
-
-              <div className="mt-6 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-accent" />
-                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Compatible with Neural Engine</span>
+        {/* Template Preview */}
+        <div className="lg:col-span-8">
+          <div className="glass-card h-full flex flex-col !p-0 overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-error/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-warning/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-success/40" />
                 </div>
-                <button className="flex items-center gap-2 text-[10px] font-bold text-accent uppercase tracking-widest hover:underline">
-                  <Edit3 className="w-3.5 h-3.5" />
-                  Customize Framework
-                </button>
+                <div className="h-4 w-px bg-white/10 mx-2" />
+                <span className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Neural Output Preview</span>
               </div>
-            </motion.div>
-          );
-        })}
+              <button 
+                onClick={handleCopy}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-text-secondary hover:text-white hover:bg-white/10 transition-all"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied" : "Copy Source"}
+              </button>
+            </div>
+            
+            <div className="flex-1 p-6 lg:p-10 font-mono text-sm leading-relaxed text-text-secondary whitespace-pre-wrap overflow-y-auto bg-black/20">
+              {activeTemplate.content}
+            </div>
+
+            <div className="px-6 lg:px-10 py-6 border-t border-white/5 bg-white/[0.01] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">AI will fill [placeholders] using your profile.</p>
+              <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white text-xs font-bold uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-accent/20 w-full sm:w-auto justify-center">
+                <Edit3 className="w-4 h-4" />
+                Customize Logic
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

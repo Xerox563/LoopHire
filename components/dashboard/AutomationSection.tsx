@@ -82,143 +82,118 @@ export default function AutomationSection({ jobs, resumeData }: AutomationSectio
   };
 
   return (
-    <div className="space-y-10">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div className="space-y-6 lg:space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
         {/* Control Card */}
-        <div className="lg:col-span-1 space-y-8">
-          <div className="glass-card !p-8 space-y-8">
+        <div className="lg:col-span-1 space-y-6 lg:space-y-8">
+          <div className="glass-card !p-6 lg:!p-8 space-y-6 lg:space-y-8">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20">
                 <Cpu className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <h3 className="text-xl font-display font-bold text-white tracking-tight">Engine Control</h3>
-                <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">Automation Core</p>
+                <h3 className="text-lg lg:text-xl font-display font-bold text-white tracking-tight text-center lg:text-left">Engine Control</h3>
+                <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold text-center lg:text-left">Automation Core</p>
               </div>
             </div>
             
             <div className="space-y-6">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-text-secondary font-medium">Core Status</span>
-                <div className="flex items-center gap-2">
-                  <div className={`w-1.5 h-1.5 rounded-full ${isRunning ? "bg-success animate-pulse" : "bg-text-muted"}`} />
-                  <span className={`text-[11px] font-bold uppercase tracking-widest ${isRunning ? "text-success" : "text-text-muted"}`}>
-                    {isRunning ? "Active" : "Standby"}
-                  </span>
-                </div>
-              </div>
-
               <div className="space-y-3">
-                <div className="flex justify-between text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted">
-                  <span>Task Pipeline</span>
-                  <span className="text-accent">{Math.round(progress)}%</span>
+                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest">
+                  <span className="text-text-muted">Current Progress</span>
+                  <span className="text-accent">{progress}%</span>
                 </div>
-                <div className="h-2 w-full bg-surface-2 rounded-full overflow-hidden p-0.5 border border-white/5">
+                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.5 }}
-                    className="h-full bg-accent rounded-full shadow-[0_0_10px_rgba(255,102,64,0.4)]"
+                    className="h-full bg-gradient-to-r from-accent to-accent-light shadow-[0_0_10px_rgba(255,102,64,0.4)]"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-col gap-4">
-              {!isRunning ? (
-                <button
-                  onClick={() => {
-                    if (window.confirm("Ready to start applying? This will open Chrome and begin the automation flow for all pending jobs.")) {
-                      handleStart();
-                    }
-                  }}
-                  className="btn-cinematic w-full !py-5 flex items-center justify-center gap-3 !text-[11px] !font-bold !uppercase !tracking-[0.2em]"
-                >
-                  <Play className="w-5 h-5 fill-current" />
-                  Initialize Core
-                </button>
-              ) : (
-                <button
-                  onClick={stopAutomation}
-                  className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-error/10 border border-error/20 text-error font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-error/20 active:scale-[0.98] transition-all"
-                >
-                  <Square className="w-5 h-5 fill-current" />
-                  Terminate Flow
-                </button>
-              )}
+              <div className="flex flex-col gap-4">
+                {!isRunning ? (
+                  <button
+                    onClick={() => {
+                      if (window.confirm("Ready to start applying? This will open Chrome and begin the automation flow for all pending jobs.")) {
+                        handleStart();
+                      }
+                    }}
+                    className="btn-cinematic w-full !py-5 flex items-center justify-center gap-3 !text-[11px] !font-bold !uppercase !tracking-[0.2em]"
+                  >
+                    <Play className="w-5 h-5 fill-current" />
+                    Initialize Core
+                  </button>
+                ) : (
+                  <button
+                    onClick={stopAutomation}
+                    className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-error/10 border border-error/20 text-error font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-error/20 active:scale-[0.98] transition-all"
+                  >
+                    <Square className="w-5 h-5 fill-current" />
+                    Terminate Flow
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="glass-card !p-8">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-text-muted mb-6">Environment Metrics</h4>
+          <div className="glass-card !p-6 lg:!p-8">
+            <h4 className="text-[11px] font-bold text-text-muted uppercase tracking-[0.2em] mb-6">Engine Status</h4>
             <div className="space-y-5">
-              <MetricItem label="Browser Cluster" value={isRunning ? "1 Active" : "Standby"} />
-              <MetricItem label="AI Latency" value="1.2s avg" />
-              <MetricItem label="Memory State" value="244MB" />
+              {[
+                { label: "AI Engine", status: isRunning ? "Operational" : "Idle", color: isRunning ? "text-success" : "text-text-muted" },
+                { label: "Browser Core", status: isRunning ? "Active" : "Idle", color: isRunning ? "text-success" : "text-text-muted" },
+                { label: "Neural Flow", status: isRunning ? "Processing" : "Idle", color: isRunning ? "text-accent" : "text-text-muted" }
+              ].map((s) => (
+                <div key={s.label} className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-text-secondary">{s.label}</span>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-1.5 h-1.5 rounded-full ${s.status === 'Idle' ? 'bg-white/10' : 'bg-current animate-pulse'} ${s.color}`} />
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${s.color}`}>{s.status}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Terminal Card */}
-        <div className="lg:col-span-2">
-          <div className="glass-card !p-0 overflow-hidden flex flex-col h-full min-h-[600px] border-accent/20">
-            {/* Terminal Header */}
-            <div className="px-8 py-5 bg-white/[0.03] border-b border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-error/50" />
-                  <div className="w-3 h-3 rounded-full bg-warning/50" />
-                  <div className="w-3 h-3 rounded-full bg-success/50" />
-                </div>
-                <div className="h-4 w-px bg-white/10" />
-                <div className="flex items-center gap-2">
-                  <TerminalIcon className="w-4 h-4 text-accent" />
-                  <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">Live Execution Logs</span>
-                </div>
-              </div>
-              <div className="text-[10px] font-mono text-text-muted">
-                SSH: loophire@neural-core
-              </div>
+        {/* Terminal Log */}
+        <div className="lg:col-span-2 glass-card !p-0 flex flex-col min-h-[400px] lg:min-h-0">
+          <div className="px-4 lg:px-6 py-4 border-b border-white/5 bg-white/[0.01] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <TerminalIcon className="w-4 h-4 text-accent" />
+              <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">Output Logs</span>
             </div>
-
-            {/* Terminal Content */}
-            <div 
-              ref={logContainerRef}
-              className="flex-1 p-8 overflow-y-auto font-mono text-sm space-y-3 bg-[#050505]"
-            >
-              {logs.length === 0 && !isRunning && (
-                <div className="h-full flex flex-col items-center justify-center text-text-muted space-y-4 opacity-30">
-                  <TerminalIcon className="w-12 h-12" />
-                  <p className="text-xs uppercase tracking-[0.3em]">Awaiting Command Initialization...</p>
-                </div>
-              )}
-              {logs.map((log) => (
-                <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  key={log.id} 
-                  className="flex gap-4 group"
-                >
-                  <span className="text-text-muted select-none whitespace-nowrap opacity-50">[{log.timestamp}]</span>
-                  <span className={`font-bold select-none whitespace-nowrap ${
-                    log.type === "error" ? "text-error" : 
-                    log.type === "warn" ? "text-warning" : 
-                    log.type === "system" ? "text-accent" : "text-success"
-                  }`}>
-                    {log.type.toUpperCase()}
-                  </span>
-                  <span className="text-text-secondary group-hover:text-white transition-colors">{log.message}</span>
-                </motion.div>
-              ))}
-              {isRunning && (
-                <div className="flex gap-4 animate-pulse">
-                  <span className="text-text-muted">[{new Date().toLocaleTimeString()}]</span>
-                  <span className="text-accent font-bold uppercase tracking-widest">EXECUTING</span>
-                  <span className="text-white">Processing next instruction set...</span>
-                  <span className="w-2 h-5 bg-accent animate-[blink_1s_infinite]" />
-                </div>
-              )}
+            <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-white/5" />
+              <div className="w-2.5 h-2.5 rounded-full bg-white/5" />
+              <div className="w-2.5 h-2.5 rounded-full bg-white/5" />
             </div>
+          </div>
+          <div 
+            ref={logContainerRef}
+            className="flex-1 p-4 lg:p-6 font-mono text-xs overflow-y-auto space-y-3 custom-scrollbar bg-black/20"
+          >
+            {logs.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center gap-4 opacity-20 py-10">
+                <TerminalIcon className="w-12 h-12" />
+                <p className="text-[11px] font-bold uppercase tracking-widest">Awaiting initialization...</p>
+              </div>
+            ) : (
+              logs.map((log) => (
+                <div key={log.id} className="flex gap-4 group">
+                  <span className="text-text-muted shrink-0 select-none">[{log.timestamp}]</span>
+                  <span className={`uppercase font-bold tracking-widest shrink-0 w-12 select-none ${
+                    log.type === 'error' ? 'text-error' :
+                    log.type === 'warn' ? 'text-warning' :
+                    log.type === 'system' ? 'text-accent' :
+                    'text-success'
+                  }`}>{log.type}</span>
+                  <span className="text-text-secondary leading-relaxed break-words">{log.message}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

@@ -107,146 +107,177 @@ export default function PersonalInfoSection() {
   if (isLoading) return <Loader2 className="w-6 h-6 animate-spin text-accent mx-auto" />;
 
   return (
-    <div className="glass-card !p-10 space-y-10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
-            <User className="w-6 h-6 text-accent" />
+    <div className="glass-card !p-6 lg:!p-8">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+            <User className="w-5 h-5 text-accent" />
           </div>
-          <div>
-            <h3 className="text-2xl font-display font-bold text-white tracking-tight">Identity Details</h3>
-            <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">Personal Parameters</p>
-          </div>
+          <h3 className="text-lg font-bold text-white tracking-tight">Identity Matrix</h3>
         </div>
         
         {!isEditing ? (
-          <button
+          <button 
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[11px] font-bold uppercase tracking-widest text-text-secondary hover:text-white hover:bg-white/10 transition-all"
+            className="p-2.5 rounded-lg bg-white/5 text-text-muted hover:text-white hover:bg-white/10 transition-all"
           >
             <Edit2 className="w-4 h-4" />
-            Modify
           </button>
         ) : (
-          <div className="flex gap-3">
-            <button
-              onClick={handleSave}
-              className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-success/20 border border-success/30 text-[11px] font-bold uppercase tracking-widest text-success hover:bg-success/30 transition-all shadow-lg shadow-success/10"
-            >
-              <Save className="w-4 h-4" />
-              Save
-            </button>
-            <button
+          <div className="flex gap-2">
+            <button 
               onClick={() => {
-                setTempProfile(profile);
                 setIsEditing(false);
+                setTempProfile(profile);
               }}
-              className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[11px] font-bold uppercase tracking-widest text-text-secondary hover:text-white transition-all"
+              className="p-2.5 rounded-lg bg-white/5 text-text-muted hover:text-white transition-all"
             >
               <X className="w-4 h-4" />
-              Cancel
+            </button>
+            <button 
+              onClick={handleSave}
+              className="p-2.5 rounded-lg bg-accent text-white shadow-lg shadow-accent/20 transition-all"
+            >
+              <Save className="w-4 h-4" />
             </button>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <InputGroup
-          label="First Name"
-          icon={User}
-          value={isEditing ? tempProfile.firstName : profile.firstName}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, firstName: v })}
-          isEditing={isEditing}
-          placeholder="John"
-        />
-        <InputGroup
-          label="Last Name"
-          icon={User}
-          value={isEditing ? tempProfile.lastName : profile.lastName}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, lastName: v })}
-          isEditing={isEditing}
-          placeholder="Doe"
-        />
-        <InputGroup
-          label="Email Address"
-          icon={Mail}
-          value={isEditing ? tempProfile.email : profile.email}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, email: v })}
-          isEditing={isEditing}
-          placeholder="john@example.com"
-        />
-        <InputGroup
-          label="Phone Number"
-          icon={Phone}
-          value={isEditing ? tempProfile.phone : profile.phone}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, phone: v })}
-          isEditing={isEditing}
-          placeholder="+1 (555) 000-0000"
-        />
-        <InputGroup
-          label="LinkedIn Network"
-          icon={Globe}
-          value={isEditing ? tempProfile.linkedinUrl : profile.linkedinUrl}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, linkedinUrl: v })}
-          isEditing={isEditing}
-          placeholder="linkedin.com/in/johndoe"
-        />
-        <InputGroup
-          label="Current Location"
-          icon={MapPin}
-          value={isEditing ? tempProfile.currentLocation : profile.currentLocation}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, currentLocation: v })}
-          isEditing={isEditing}
-          placeholder="San Francisco, CA"
-        />
-        <InputGroup
-          label="Portfolio / Site"
-          icon={Globe}
-          value={isEditing ? tempProfile.portfolioUrl : profile.portfolioUrl}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, portfolioUrl: v })}
-          isEditing={isEditing}
-          placeholder="johndoe.com"
-        />
-        <InputGroup
-          label="GitHub Profile"
-          icon={Globe}
-          value={isEditing ? tempProfile.githubUrl : profile.githubUrl}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, githubUrl: v })}
-          isEditing={isEditing}
-          placeholder="github.com/johndoe"
-        />
-        <InputGroup
-          label="Years of Experience"
-          icon={Activity}
-          value={isEditing ? tempProfile.yearsOfExperience || "" : profile.yearsOfExperience || ""}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, yearsOfExperience: v })}
-          isEditing={isEditing}
-          placeholder="5"
-        />
-        <InputGroup
-          label="Target Salary"
-          icon={Globe}
-          value={isEditing ? tempProfile.desiredSalary || "" : profile.desiredSalary || ""}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, desiredSalary: v })}
-          isEditing={isEditing}
-          placeholder="$150,000"
-        />
-        <InputGroup
-          label="US Work Auth"
-          icon={Globe}
-          value={isEditing ? tempProfile.usWorkAuthorization || "" : profile.usWorkAuthorization || ""}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, usWorkAuthorization: v })}
-          isEditing={isEditing}
-          placeholder="Yes / No"
-        />
-        <InputGroup
-          label="Sponsorship Req."
-          icon={Globe}
-          value={isEditing ? tempProfile.requiresSponsorship || "" : profile.requiresSponsorship || ""}
-          onChange={(v: string) => setTempProfile({ ...tempProfile, requiresSponsorship: v })}
-          isEditing={isEditing}
-          placeholder="Yes / No"
-        />
+      <div className="space-y-6">
+        {/* Name Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">First Name</label>
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.firstName : profile.firstName}
+                onChange={(e) => setTempProfile({ ...tempProfile, firstName: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Last Name</label>
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.lastName : profile.lastName}
+                onChange={(e) => setTempProfile({ ...tempProfile, lastName: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Info */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Email Node</label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="email" 
+                value={isEditing ? tempProfile.email : profile.email}
+                onChange={(e) => setTempProfile({ ...tempProfile, email: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Neural Comms (Phone)</label>
+            <div className="relative">
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.phone : profile.phone}
+                onChange={(e) => setTempProfile({ ...tempProfile, phone: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Links */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Location Sync</label>
+            <div className="relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.currentLocation : profile.currentLocation}
+                onChange={(e) => setTempProfile({ ...tempProfile, currentLocation: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Web Portals (LinkedIn/GitHub)</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="relative">
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+                <input 
+                  type="text" 
+                  placeholder="LinkedIn"
+                  value={isEditing ? tempProfile.linkedinUrl : profile.linkedinUrl}
+                  onChange={(e) => setTempProfile({ ...tempProfile, linkedinUrl: e.target.value })}
+                  disabled={!isEditing}
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+                />
+              </div>
+              <div className="relative">
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+                <input 
+                  type="text" 
+                  placeholder="GitHub"
+                  value={isEditing ? tempProfile.githubUrl : profile.githubUrl}
+                  onChange={(e) => setTempProfile({ ...tempProfile, githubUrl: e.target.value })}
+                  disabled={!isEditing}
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Experience & Salary */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">XP Years</label>
+            <div className="relative">
+              <Activity className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.yearsOfExperience : profile.yearsOfExperience}
+                onChange={(e) => setTempProfile({ ...tempProfile, yearsOfExperience: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Salary Sync ($)</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted font-bold text-sm">$</span>
+              <input 
+                type="text" 
+                value={isEditing ? tempProfile.desiredSalary : profile.desiredSalary}
+                onChange={(e) => setTempProfile({ ...tempProfile, desiredSalary: e.target.value })}
+                disabled={!isEditing}
+                className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all disabled:opacity-50"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

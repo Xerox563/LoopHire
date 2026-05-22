@@ -59,69 +59,74 @@ export default function OverviewTab({ jobs }: { jobs: any[] }) {
   return (
     <div className="space-y-8 pb-12">
       {/* Header with Search and Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-display font-bold text-white tracking-tight text-center lg:text-left">
             Good evening, Rohit 👋
           </h1>
-          <p className="text-text-secondary text-sm mt-1">
+          <p className="text-text-secondary text-sm mt-1 text-center lg:text-left">
             Here's what's happening with your job automation today.
           </p>
         </div>
         
-        <div className="flex items-center gap-6">
-          <div className="relative group hidden xl:block">
+        <div className="flex flex-col sm:flex-row items-center gap-4 lg:gap-6">
+          <div className="relative group hidden sm:block xl:block">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within:text-accent transition-colors" />
             <input 
               type="text" 
               placeholder="Search jobs, companies..." 
-              className="bg-white/[0.03] border border-white/5 rounded-xl pl-11 pr-16 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all w-80"
+              className="bg-white/[0.03] border border-white/5 rounded-xl pl-11 pr-16 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all w-full sm:w-64 lg:w-80"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] text-text-muted font-bold">
               ⌘K
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
             <button className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-text-secondary hover:text-white hover:bg-white/10 transition-all relative">
               <Bell className="w-5 h-5" />
               <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent border-2 border-background" />
             </button>
-            <button className="btn-cinematic !py-3 !px-6 !rounded-xl flex items-center gap-2 text-sm">
+            <button className="btn-cinematic !py-3 !px-6 !rounded-xl flex items-center gap-2 text-sm flex-1 sm:flex-none justify-center">
               <Plus className="w-4 h-4" />
-              Add Job Links
+              Add Jobs
             </button>
-            <div className="w-10 h-10 rounded-full border-2 border-accent/20 overflow-hidden ml-2 cursor-pointer hover:border-accent transition-all">
+            <div className="w-10 h-10 rounded-full border-2 border-accent/20 overflow-hidden cursor-pointer hover:border-accent transition-all shrink-0">
               <img src="https://ui-avatars.com/api/?name=Rohit+G&background=ff6640&color=fff" alt="User" className="w-full h-full object-cover" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Top Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 lg:gap-6">
         {STATS.map((stat, i) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="glass-card !p-6 flex flex-col justify-between group hover:border-accent/20 transition-all cursor-default"
+            className="glass-card !p-5 lg:!p-6 flex flex-row lg:flex-col items-center lg:items-start justify-between lg:justify-start gap-4 group hover:border-accent/20 transition-all cursor-default"
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between w-full lg:w-auto">
               <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center border transition-transform duration-500 group-hover:scale-110"
+                className="w-10 lg:w-12 h-10 lg:h-12 rounded-xl flex items-center justify-center border transition-transform duration-500 group-hover:scale-110"
                 style={{ backgroundColor: `${stat.color}10`, borderColor: `${stat.color}20` }}
               >
-                <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                <stat.icon className="w-5 lg:w-6 h-5 lg:h-6" style={{ color: stat.color }} />
               </div>
-              <div className="text-[10px] font-bold text-success uppercase tracking-widest bg-success/5 px-2 py-1 rounded-md border border-success/10">
+              <div className="text-[10px] font-bold text-success uppercase tracking-widest bg-success/5 px-2 py-1 rounded-md border border-success/10 lg:hidden">
                 {stat.trend}
               </div>
             </div>
-            <div className="mt-6">
-              <div className="text-3xl font-display font-bold text-white tracking-tighter mb-1">
-                {stat.value}
+            <div className="flex-1 lg:mt-6">
+              <div className="flex items-baseline justify-between lg:block">
+                <div className="text-xl lg:text-3xl font-display font-bold text-white tracking-tighter mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-[10px] font-bold text-success uppercase tracking-widest bg-success/5 px-2 py-1 rounded-md border border-success/10 hidden lg:inline-block">
+                  {stat.trend}
+                </div>
               </div>
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">
                 {stat.label}

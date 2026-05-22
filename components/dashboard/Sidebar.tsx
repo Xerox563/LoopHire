@@ -12,7 +12,8 @@ import {
   History,
   LogOut,
   ChevronRight,
-  Rocket
+  Rocket,
+  X
 } from "lucide-react";
 import Link from "next/link";
 
@@ -30,22 +31,34 @@ const NAV_ITEMS = [
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: any) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
+export default function Sidebar({ activeTab, setActiveTab, isOpen, onClose }: SidebarProps) {
   return (
-    <aside className="w-72 h-screen fixed left-0 top-0 z-[70] flex flex-col premium-blur border-r border-white/5 p-6 overflow-y-auto custom-scrollbar">
+    <aside className={`w-72 h-screen fixed left-0 top-0 z-[70] flex flex-col premium-blur border-r border-white/5 p-6 overflow-y-auto custom-scrollbar transition-transform duration-300 lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
       {/* Brand Header */}
-      <div className="flex items-center gap-3 mb-12 px-2">
-        <div className="relative">
-          <div className="absolute inset-0 bg-accent blur-lg opacity-20" />
-          <div className="relative w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
-            <Rocket className="w-5 h-5 text-white" />
+      <div className="flex items-center justify-between mb-12 px-2">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="absolute inset-0 bg-accent blur-lg opacity-20" />
+            <div className="relative w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+              <Rocket className="w-5 h-5 text-white" />
+            </div>
           </div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+            LoopHire
+          </h1>
         </div>
-        <h1 className="font-display text-2xl font-bold tracking-tight text-white">
-          LoopHire
-        </h1>
+        {onClose && (
+          <button 
+            onClick={onClose}
+            className="lg:hidden p-2 text-text-muted hover:text-white transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Navigation Links */}

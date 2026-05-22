@@ -191,130 +191,143 @@ export default function ResumeSection({ onUpdate, initialData }: ResumeSectionPr
   }
 
   return (
-    <div className="space-y-12">
-      {/* Personal Info Section */}
-      <PersonalInfoSection />
+    <div className="space-y-6 lg:space-y-10 pb-12">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <h2 className="text-xl lg:text-2xl font-display font-bold text-white tracking-tight text-center lg:text-left">Candidate Dossier</h2>
+          <p className="text-text-secondary text-sm mt-1 text-center lg:text-left">Your professional background and technical identity.</p>
+        </div>
+        
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+          <input
+            type="file"
+            id="resume-upload"
+            className="hidden"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileUpload}
+          />
+          <button
+            onClick={() => document.getElementById("resume-upload")?.click()}
+            disabled={isUploading}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/[0.03] border border-white/5 text-text-secondary text-sm font-bold hover:text-white hover:bg-white/10 transition-all disabled:opacity-50"
+          >
+            {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+            {isUploading ? "Analyzing..." : "Update Resume"}
+          </button>
+        </div>
+      </div>
 
-      <div className="h-px bg-white/5" />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-10">
+        {/* Personal Details - Full Width on smaller screens */}
+        <div className="xl:col-span-1">
+          <PersonalInfoSection />
+        </div>
 
-      {/* Resume Management Section */}
-      <div className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20 shadow-lg shadow-accent/10">
-              <FileText className="w-6 h-6 text-accent" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-display font-bold text-white tracking-tight">Resume Profile</h2>
-              <p className="text-xs text-text-muted uppercase tracking-[0.2em] font-bold">Document Parsing & Intelligence</p>
-            </div>
-          </div>
-          
-          <div className="flex gap-3">
-            {!isEditing ? (
+        {/* Experience & Skills - Main Column */}
+        <div className="xl:col-span-2 space-y-6 lg:space-y-10">
+          <div className="glass-card relative overflow-hidden group">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-accent" />
+                </div>
+                <h3 className="text-lg font-bold text-white tracking-tight">Neural Intelligence Profile</h3>
+              </div>
+              
               <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-white hover:bg-white/10 transition-all"
+                onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all ${
+                  isEditing ? "bg-success text-white shadow-lg shadow-success/20" : "bg-white/5 text-text-muted hover:text-white hover:bg-white/10"
+                }`}
               >
-                <Edit2 className="w-4 h-4" />
-                Edit Profile
+                {isEditing ? <Save className="w-3.5 h-3.5" /> : <Edit2 className="w-3.5 h-3.5" />}
+                {isEditing ? "Save Profile" : "Edit Details"}
               </button>
-            ) : (
-              <div className="flex gap-3">
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Experience Framework</label>
+                {isEditing ? (
+                  <textarea
+                    value={tempData.experience}
+                    onChange={(e) => setTempData({ ...tempData, experience: e.target.value })}
+                    className="w-full h-48 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/30 transition-all font-mono"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-sm text-text-secondary overflow-y-auto leading-relaxed custom-scrollbar">
+                    {data.experience || "No experience data provided."}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Technical Stack</label>
+                {isEditing ? (
+                  <textarea
+                    value={tempData.technicalSkills}
+                    onChange={(e) => setTempData({ ...tempData, technicalSkills: e.target.value })}
+                    className="w-full h-48 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/30 transition-all font-mono"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-sm text-text-secondary overflow-y-auto leading-relaxed custom-scrollbar">
+                    {data.technicalSkills || "No skills data provided."}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Academic Background</label>
+                {isEditing ? (
+                  <textarea
+                    value={tempData.education}
+                    onChange={(e) => setTempData({ ...tempData, education: e.target.value })}
+                    className="w-full h-48 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/30 transition-all font-mono"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-sm text-text-secondary overflow-y-auto leading-relaxed custom-scrollbar">
+                    {data.education || "No education data provided."}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Neural Projects</label>
+                {isEditing ? (
+                  <textarea
+                    value={tempData.projects}
+                    onChange={(e) => setTempData({ ...tempData, projects: e.target.value })}
+                    className="w-full h-48 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/30 transition-all font-mono"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-sm text-text-secondary overflow-y-auto leading-relaxed custom-scrollbar">
+                    {data.projects || "No project data provided."}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {isEditing && (
+              <div className="mt-8 pt-8 border-t border-white/5 flex justify-end gap-3">
                 <button
-                  onClick={handleSave}
-                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-success/20 border border-success/30 text-xs font-bold uppercase tracking-widest text-success hover:bg-success/30 transition-all shadow-lg shadow-success/10"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setTempData(data);
+                  }}
+                  className="px-6 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-widest text-text-muted hover:text-white transition-all"
                 >
-                  <Save className="w-4 h-4" />
-                  Save Changes
+                  Cancel
                 </button>
                 <button
-                  onClick={handleCancel}
-                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-white transition-all"
+                  onClick={handleSave}
+                  className="px-8 py-2.5 rounded-lg bg-accent text-white text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:scale-[1.02] transition-all"
                 >
-                  <X className="w-4 h-4" />
-                  Cancel
+                  Confirm Changes
                 </button>
               </div>
             )}
           </div>
-        </div>
-
-        <div 
-          className="p-12 rounded-[2.5rem] border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-col items-center justify-center text-center group hover:border-accent/50 hover:bg-accent/[0.02] transition-all duration-500 cursor-pointer relative overflow-hidden"
-          onClick={() => document.getElementById("resume-upload")?.click()}
-        >
-          {/* Background Glow */}
-          <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl" />
-          
-          <input 
-            id="resume-upload"
-            type="file" 
-            className="hidden" 
-            accept=".txt,.md,.pdf"
-            onChange={handleFileUpload}
-          />
-          
-          <div className="relative z-10 w-20 h-20 rounded-[2rem] bg-surface-2 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
-            <Upload className="w-10 h-10 text-text-muted group-hover:text-accent transition-colors duration-500" />
-          </div>
-          
-          <div className="relative z-10 space-y-2">
-            <h3 className="text-2xl font-display font-bold text-white tracking-tight">
-              {isUploading ? "Neural Parsing Active..." : "Update Master Resume"}
-            </h3>
-            <p className="text-text-secondary text-sm max-w-sm mx-auto leading-relaxed">
-              {isUploading 
-                ? "Our AI is extracting structured intelligence from your document." 
-                : "Drop your PDF, TXT, or MD file here to sync with the automation engine."}
-            </p>
-          </div>
-          
-          {isUploading && (
-            <div className="absolute inset-0 bg-background/60 backdrop-blur-xl z-20 flex items-center justify-center">
-              <div className="flex flex-col items-center gap-6">
-                <div className="relative">
-                  <div className="w-16 h-16 border-4 border-accent/20 rounded-full" />
-                  <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin absolute inset-0 shadow-[0_0_20px_rgba(255,102,64,0.4)]" />
-                </div>
-                <div className="space-y-1 text-center">
-                  <span className="text-lg font-display font-bold text-white block">Extracting Data</span>
-                  <span className="text-[10px] font-bold text-accent uppercase tracking-[0.3em] animate-pulse">Syncing with LLM</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <SectionCard 
-            title="Professional Experience" 
-            value={isEditing ? tempData.experience : data.experience}
-            isEditing={isEditing}
-            onChange={(v) => setTempData({...tempData, experience: v})}
-            placeholder="Detailed work history and achievements..."
-          />
-          <SectionCard 
-            title="Technical Arsenal" 
-            value={isEditing ? tempData.technicalSkills : data.technicalSkills}
-            isEditing={isEditing}
-            onChange={(v) => setTempData({...tempData, technicalSkills: v})}
-            placeholder="Languages, frameworks, tools..."
-          />
-          <SectionCard 
-            title="Academic Background" 
-            value={isEditing ? tempData.education : data.education}
-            isEditing={isEditing}
-            onChange={(v) => setTempData({...tempData, education: v})}
-            placeholder="Degrees, certifications, relevant coursework..."
-          />
-          <SectionCard 
-            title="Strategic Projects" 
-            value={isEditing ? tempData.projects : data.projects}
-            isEditing={isEditing}
-            onChange={(v) => setTempData({...tempData, projects: v})}
-            placeholder="Personal or professional projects..."
-          />
         </div>
       </div>
     </div>

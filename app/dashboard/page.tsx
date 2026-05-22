@@ -5,7 +5,7 @@ import { JobRecord } from "@/types";
 import ResumeSection, { ResumeData } from "@/components/dashboard/ResumeSection";
 import AutomationSection from "@/components/dashboard/AutomationSection";
 import { supabase } from "@/lib/supabase";
-import { Loader2 } from "lucide-react";
+import { Loader2, Menu, X } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import OverviewTab from "@/components/dashboard/OverviewTab";
 import JobLinksTab from "@/components/dashboard/JobLinksTab";
@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [jobs, setJobs] = useState<JobRecord[]>([]);
   const [resumeData, setResumeData] = useState<ResumeData | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const loadJobs = useCallback(async () => {
     try {
@@ -120,13 +121,37 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Mobile Sidebar Toggle */}
+      <button 
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="lg:hidden fixed top-6 right-6 z-[80] p-3 rounded-xl bg-accent text-white shadow-lg shadow-accent/20"
+      >
+        {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setIsSidebarOpen(false);
+        }} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
       
-      <main className="pl-72 pt-8 min-h-screen">
-        <div className="max-w-[1600px] mx-auto px-10">
+      <main className={`transition-all duration-300 ${isSidebarOpen ? "blur-sm lg:blur-none" : ""} lg:pl-72 pt-8 min-h-screen`}>
+        <div className="max-w-[1600px] mx-auto px-6 lg:px-10">
           {renderContent()}
         </div>
       </main>
+
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Global Grainy Noise Overlay */}
       <div className="noise-bg" />
