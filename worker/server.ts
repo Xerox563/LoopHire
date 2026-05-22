@@ -5,11 +5,17 @@ import { runJobApplications } from '../lib/automation/runner';
 import { setLogger } from '../lib/automation/utils/logger';
 import { AppConfig, JobRecord } from '../types';
 import { supabase } from '../lib/supabase';
+import { startBackgroundSync } from './sync';
+import { startBackgroundWorker } from './processor';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Start background processes
+startBackgroundSync();
+startBackgroundWorker();
 
 app.use(cors());
 app.use(express.json());
