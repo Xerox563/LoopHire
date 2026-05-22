@@ -30,6 +30,7 @@ const APPLY_SELECTORS = {
     'button:has-text("Connect to apply")',
     'a:has-text("Quick Apply")',
     'button:has-text("Quick Apply")',
+    'button:has-text("Apply to")',
     "button.apply-button",
     "a.apply-button",
     '[data-test="apply-button"]',
@@ -39,6 +40,8 @@ const APPLY_SELECTORS = {
     'a[class*="Apply"]',
     'button[id*="apply"]',
     'a[id*="apply"]',
+    'button[class*="styles_apply"]',
+    'button[class*="styles_interested"]',
   ],
   firstName: ['input[name*="first_name"]', 'input[placeholder*="First Name"]', 'input[id*="first_name"]'],
   lastName: ['input[name*="last_name"]', 'input[placeholder*="Last Name"]', 'input[id*="last_name"]'],
@@ -354,16 +357,21 @@ export async function fillAndReviewApplication(
         }
       }
       
-      // 4. Specifically for Work at a Startup (YC): Check if the 'Apply' button text changed to 'Applied'
-       const verifyApplyBtn = await findElement(page, APPLY_SELECTORS.applyButton);
-       if (verifyApplyBtn) {
-         const applyBtnText = await verifyApplyBtn.textContent().then(t => t?.toLowerCase() || "");
-         if (applyBtnText.includes("applied") || applyBtnText.includes("view application")) {
-           logger.info("Apply button text changed to 'Applied', submission confirmed.");
-           submitted = true;
-           break;
-         }
-       }
+    // 4. Specifically for Work at a Startup (YC) & Wellfound: Check if the 'Apply' button text changed to 'Applied' or 'Interested'
+    const verifyApplyBtn = await findElement(page, APPLY_SELECTORS.applyButton);
+    if (verifyApplyBtn) {
+      const applyBtnText = await verifyApplyBtn.textContent().then(t => t?.toLowerCase() || "");
+      if (
+        applyBtnText.includes("applied") || 
+        applyBtnText.includes("view application") || 
+        applyBtnText.includes("interested") || 
+        applyBtnText.includes("connected")
+      ) {
+        logger.info(`Apply button text changed to '${applyBtnText.trim()}', submission confirmed.`);
+        submitted = true;
+        break;
+      }
+    }
     
     await sleep(2000);
     }

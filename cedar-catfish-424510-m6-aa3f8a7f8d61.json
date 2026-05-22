@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "cedar-catfish-424510-m6",
+  "private_key_id": "aa3f8a7f8d619fd520bcd54e554ddda1adafcd5f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5M/QVZzX4k1sp\nTD6RsV/0HVKucDbTT8dOzyLFkrKGljRkWRnsbHts90RSBTTdVR3PJ3dZFnrP6xjN\nAtwgcNTvWw6yHukor7jB9X/jOOBfdkiqMIrYoCbAc06YIs3z+gw4EUdpVtPxxqKY\nZ36KmFX3d6WiWoc2aaAK0dZNogitUqSTY8rwyTCcuk4zsQMh+gZt7HtUeaCnlsR4\nFafiI4b6G6ut2Afi713yuAfQpr0gkO6xF1lLBoFVNaXBKslmzEylOOfaDkUQrygI\n0XFhBbUpn7l4as13TzsaXxftRxBzOlE9RHSRyJAUIYHluXpu6JRuMdkuJIXzosmh\ncUrhxQYDAgMBAAECggEAEvwtQRps8RfjSEb9bQBNUUrGOdqH9ukeicjNtt9/DIaO\nRVvQPqkE4q/a9uYmEVWoh3Pzaz7/hPEugCmTDizy2byFs6MGjLoCtbioYk8SH8cS\nKNwZXPPXNR2SM3dHPIOSnWwWsXOJ/ia6GTxsFOIL10vnv05faP0H6m6wn2cE/ltQ\nU1HCThsVT8CAH2IyX2CIoXmiHtJ6oS6Mw35KFk8bSFl6FOq14YtWHrYxZARsvl1B\n1kXRpSIyJluPVZviRODZs6RZItf70taayfNujhTnyNSzNvbW2bFohnZ7Ld7WCRBj\nbORWjFaWZn9hYheWz5b0BB0P0HSpORpAuMT/QjkhgQKBgQD0JMMWe/5GGjF7oBKM\nNFVpVPt34+tQH/KxEEgF1seAAo0GMP4olYqgo+ANLvFxATOmIOQSGBMYiHNlHTyP\n8WHsbtUU0IlhxfM0wBg7XiHjpMr/a+z+HmlWp1FK7zvqSTsR+EYPws1t4LtsOKwE\nJ6QAt+FeFM5mZBZZacTsrhuigQKBgQDCMm4qbhi+XUy6eQ9WHdTHZPO/PrdgDuCY\nkgDTKKYjoWc3UM8SGAFuEMOWr27po+Ov4rSs334qpcMsI7Jguq5AaeGmucjrSccm\nBqVwtmaVQI13rNthCVyYh2Ot2L5wjnCoAT6cQ7miNQHvVh86syQmw/9oUy6Es7y2\nUXtGLjXegwKBgQDhrWm4Sv2Mh4HeKOV8PJQHPcsF0+Uct6t7CPXKj/Lx3WnGo1sM\n4M64F0NwbEg6kUXQ9u5b220rbFZezVvCIvrFtt2409tqSbS6uiasGiNxbk9HM9hq\nPmpY82ktv16+/tpfjgQVZZjHTMlzDB/V516uW0sz0D/KXhJarG6f6YEaAQKBgDpi\nHPrGpMu+kw3QzYqPZ2QW9qz9dvX7IwzbgEH7i49UvApGUirXar6jbZoE3iyB6Db9\nymHawzyhHz9K8BripPaanouYeU47nRLSlrR/MfIXOTDMmBvhS6RTt+URL5f5SudH\nkII8XjflBdLlqnfkWa8J5+R+dZLR0p9hedVMmUdvAoGAO1mNxpOYO2VJc1T/jknL\n1/CHXxBbN+AbmWRjfCHW2kgajqACrf8hjrVz6m4aqcOSK9aEiGyZjCnjrf+ahIda\ncIGNUYI5Kpz5Bsp0weD4yNYXR8NpDmwb36DAjLLIUVEvgE8OrdWaLs9HNx426uc8\nNOHWYAaUznyLFDgJE2pi0jo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "loophire-sync@cedar-catfish-424510-m6.iam.gserviceaccount.com",
+  "client_id": "103143329039901380581",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/loophire-sync%40cedar-catfish-424510-m6.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

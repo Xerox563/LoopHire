@@ -20,6 +20,8 @@ const SELECTORS = {
     ".role-title",
     'h2[class*="JobTitle"]',
     'h1[class*="JobTitle"]',
+    'h2[class*="styles_title"]',
+    'h1[class*="styles_title"]',
   ],
   companyName: [
     ".company-name",
@@ -29,6 +31,9 @@ const SELECTORS = {
     "a.company-name",
     'h2[class*="CompanyName"]',
     'span[class*="CompanyName"]',
+    'div[class*="styles_companyName"]',
+    'a[class*="styles_companyName"]',
+    'h1[class*="styles_companyName"]',
   ],
   jobDescription: [
     ".job-description",
@@ -39,6 +44,8 @@ const SELECTORS = {
     "article",
     'div[class*="JobDescription"]',
     'div[class*="description"]',
+    'div[class*="styles_description"]',
+    'div[class*="styles_jobDescription"]',
   ],
 };
 
