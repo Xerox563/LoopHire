@@ -64,8 +64,8 @@ export async function runJobApplications(
 
       // Human-like delay between jobs
       if (pending.indexOf(job) < pending.length - 1) {
-        const waitMs = 5000 + Math.random() * 5000;
-        logger.info(`Waiting ${Math.round(waitMs / 1000)}s before next job...`);
+        const waitMs = 8000 + Math.random() * 12000; // Increased and more randomized
+        logger.info(`Waiting ${Math.round(waitMs / 1000)}s before next job to avoid detection...`);
         await humanDelay(waitMs);
       }
     }

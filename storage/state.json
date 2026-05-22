@@ -321,18 +321,6 @@
       "sameSite": "Lax"
     },
     {
-      "name": "cf_clearance",
-      "value": "9sZdeROA7jQOZjaFd5CowaY0f4RALqqcdHMNMhXRiX4-1779086919-1.2.1.1-jnKulPO.ztBi7aPa8mR7gcZPo4e9TwNwyQUIDZFA6GxTdVlGoe3r4fKr7NUp65ANgzkWp1ZMtXT.TNEFuSSBStvZBqBrDhaRu2lJ5XTwsGxfo.jWIzsKJg3NoU4WqDRAiZXgCyU7EpCVGMB5UPSUP7QbkrIazvrMdtISHDDCHIfvQjYH0ztXXxEP2ILRI.MdMyACzdOlo7znVyvZV_0V7aoErJzYi8._La8ZoJR4jfI9BOc6u0ctvmNih3LwFVE30VqqJ.jldjLMO0fLHUtimwnxf5nfmBL45thBuHAp7lbiQGRI4GdwyXrIa50L5Xu.YbbspB7Cjhxtr1q1ucKPnw",
-      "domain": ".wellfound.com",
-      "path": "/",
-      "expires": 1810622919.311982,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None",
-      "partitionKey": "https://wellfound.com",
-      "_crHasCrossSiteAncestor": false
-    },
-    {
       "name": "g_state",
       "value": "{\"i_l\":0,\"i_ll\":1779086931430,\"i_b\":\"xGPl6kdn1zxYV6s4Jsn4DSXn3dGU3ayxHiBmRJEO/lU\",\"i_e\":{\"enable_itp_optimization\":0},\"i_et\":1779086931422}",
       "domain": "wellfound.com",
@@ -873,16 +861,6 @@
       "sameSite": "None"
     },
     {
-      "name": "datadome",
-      "value": "gYXZEjFAN0rDjIxC5YAlVSUH0SGhnII0FV5kHrMavc~AvdUc0Oa2bETOB5XN3YrtVs80IgsF6Ba~O_9kdwmi8ZWOUkl~HWJ6Zf89iw3udmNfoQuHtP7hM8UGHVL6ceWC",
-      "domain": ".wellfound.com",
-      "path": "/",
-      "expires": 1810623523.478653,
-      "httpOnly": false,
-      "secure": true,
-      "sameSite": "Lax"
-    },
-    {
       "name": "_ga_705F94181H",
       "value": "GS2.1.s1779086936$o1$g1$t1779087528$j16$l0$h0",
       "domain": ".wellfound.com",
@@ -918,6 +896,28 @@
       "domain": ".workatastartup.com",
       "path": "/",
       "expires": 1810920686,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "cf_clearance",
+      "value": "J2cle9HkX9jmTzYATAVRb0DiacAroCrJ2e30ryB9W2g-1779431509-1.2.1.1-PRRh68SJU6bCe4PT9XQK.ddr6s5m4dUJbk7qP.f.focenqygPCSF7Yb_.OTM6NoI66.sedF5A7yEeSVOQata.Ne1IxOTYmemQJqRttUs90aV3hapRDmCKRdnuSFnTRyw6IrVUrM6GonHYki6N4TOTEBRVVOPYgNXKtNZUQdNLdvIslxhnPqUEGB8g4DzGg1jk_bbbVTFg40FbEPZ4aLdO0BLlOEzoSrP8y4jU0lEzxNNVjjqgYexXZpdE_dcL4pjDyfmRUWv.6jAbShjq9ftFiPQJBBLKUCk4miEb0D.xNsBt.HPp9olWV5ycPZNYAQwoHAESPejdAQbVvEAEkhG1A",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810967510.025149,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://wellfound.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "datadome",
+      "value": "Ep25hxyHZ6DP35cVfdpKSjta~_F3ks7zN1~8v8P27INLh6VZzWW6IIaMlORuQHlQDTQTO~7S4ZdgesJb0nnSafpPnCVq~JfGQRrkpo~TNTbBB4pdrotHa6wV29RFN2Ce",
+      "domain": ".wellfound.com",
+      "path": "/",
+      "expires": 1810967589.200279,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"

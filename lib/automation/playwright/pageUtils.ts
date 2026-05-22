@@ -13,8 +13,45 @@ export async function navigateTo(
   delayMs: number,
 ): Promise<void> {
   logger.info(`Navigating to: ${url}`);
-  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 });
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+  
+  // Check for "Access restricted" or Cloudflare
+  const pageContent = await page.textContent('body').then(t => t?.toLowerCase() || "");
+  if (
+    pageContent.includes("access is temporarily restricted") || 
+    pageContent.includes("unusual activity from your device") ||
+    pageContent.includes("verify you are human")
+  ) {
+    logger.warn("⚠️ BOT DETECTION TRIGGERED: Access Restricted.");
+    logger.info("Waiting 30 seconds for manual intervention (solve captcha if any)...");
+    await sleep(30_000);
+    
+    // Check again
+    const stillRestricted = await page.textContent('body').then(t => t?.toLowerCase() || "");
+    if (stillRestricted.includes("access is temporarily restricted")) {
+      throw new Error("Wellfound blocked access. Try running in non-headless mode and solve the captcha manually.");
+    }
+  }
+
+  // Random micro-movements to look human
+  await simulateHumanActivity(page);
+  
   await humanDelay(delayMs);
+}
+
+/**
+ * Move mouse randomly to simulate human presence.
+ */
+export async function simulateHumanActivity(page: Page): Promise<void> {
+  const { width, height } = page.viewportSize() || { width: 1280, height: 800 };
+  
+  // Move to 2-3 random spots
+  for (let i = 0; i < 2; i++) {
+    const x = Math.floor(Math.random() * width);
+    const y = Math.floor(Math.random() * height);
+    await page.mouse.move(x, y, { steps: 10 });
+    await sleep(200 + Math.random() * 500);
+  }
 }
 
 /**

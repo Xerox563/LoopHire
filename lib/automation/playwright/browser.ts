@@ -46,10 +46,34 @@ export async function launchBrowser(headless: boolean): Promise<BrowserSession> 
 
   const context = await browser.newContext(contextOptions);
 
-  // Hide automation signals
+  // --- STEALTH & ANTI-DETECTION LAYER ---
   await context.addInitScript(() => {
+    // 1. Hide Webdriver
     const nav = (globalThis as any).navigator;
-    if (nav) Object.defineProperty(nav, "webdriver", { get: () => undefined });
+    if (nav) {
+      Object.defineProperty(nav, "webdriver", { get: () => undefined });
+    }
+
+    // 2. Mock Plugins and Hardware
+    (globalThis as any).navigator.chrome = { runtime: {} };
+    Object.defineProperty(nav, 'languages', { get: () => ['en-US', 'en'] });
+    Object.defineProperty(nav, 'plugins', { get: () => [1, 2, 3, 4, 5] });
+    
+    // 3. Mock WebGL vendor
+    const getParameter = WebGLRenderingContext.prototype.getParameter;
+    WebGLRenderingContext.prototype.getParameter = function(parameter) {
+      if (parameter === 37445) return 'Intel Inc.';
+      if (parameter === 37446) return 'Intel(R) Iris(TM) Graphics 6100';
+      return getParameter.apply(this, [parameter]);
+    };
+
+    // 4. Mock permissions
+    const originalQuery = (globalThis as any).navigator.permissions.query;
+    (globalThis as any).navigator.permissions.query = (parameters: any) => (
+      parameters.name === 'notifications' ?
+        Promise.resolve({ state: Notification.permission }) :
+        originalQuery(parameters)
+    );
   });
 
   return { browser, context };
