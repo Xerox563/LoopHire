@@ -14,7 +14,10 @@ import {
   Edit3,
   Send,
   Eye,
-  X
+  X,
+  Link as LinkIcon,
+  Upload,
+  MessageSquare
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { JobRecord } from "@/types";
@@ -31,6 +34,13 @@ interface Props {
 
 export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
   const [isAdding, setIsAdding] = useState(false);
+  const [isManualAddOpen, setIsManualAddOpen] = useState(false);
+  const [manualJob, setManualJob] = useState({
+    url: "",
+    company: "",
+    role: "",
+    pitch: ""
+  });
   const [newUrl, setNewUrl] = useState("");
   const [isImporting, setIsAddingImport] = useState(false);
   const [isSending, setIsSending] = useState<string | null>(null);
@@ -70,6 +80,45 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
     } catch (err) {
       console.error("Add error:", err);
       alert("Failed to add link");
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleManualAdd = async () => {
+    if (!manualJob.url.trim() || !manualJob.company.trim()) {
+      alert("URL and Company are required.");
+      return;
+    }
+    setIsAdding(true);
+    try {
+      const response = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          table: "jobs",
+          action: "insert",
+          data: {
+            id: `job_${Date.now()}`,
+            url: manualJob.url.trim(),
+            company: manualJob.company.trim(),
+            role: manualJob.role.trim() || "Job",
+            outreach_message: manualJob.pitch.trim(),
+            status: "pending"
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add job via proxy");
+      }
+
+      setManualJob({ url: "", company: "", role: "", pitch: "" });
+      setIsManualAddOpen(false);
+      onRefresh();
+    } catch (err) {
+      console.error("Manual add error:", err);
+      alert("Failed to add job manually");
     } finally {
       setIsAdding(false);
     }
@@ -289,16 +338,14 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="relative group w-full sm:w-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within:text-accent transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Search queue..." 
-              className="bg-white/[0.03] border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent/30 transition-all w-full sm:w-64"
-            />
-          </div>
-          
           <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button 
+              onClick={() => setIsManualAddOpen(true)}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-accent/20"
+            >
+              <Plus className="w-4 h-4" />
+              Manual Add
+            </button>
             <button 
               onClick={() => fileInputRef.current?.click()}
               disabled={isImporting}
@@ -326,7 +373,7 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
             type="text" 
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
-            placeholder="Paste job application URL (LinkedIn, Indeed, etc.)" 
+            placeholder="Quick add: Paste job URL (LinkedIn, YC, Wellfound)" 
             className="bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-accent/30 transition-all w-full"
           />
         </div>
@@ -339,6 +386,118 @@ export default function JobLinksTab({ jobs, onRefresh, resumeData }: Props) {
           Add to Queue
         </button>
       </div>
+
+      {/* Manual Add Modal */}
+      <AnimatePresence>
+        {isManualAddOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsManualAddOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-2xl bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20">
+                    <Plus className="w-5 h-5 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-display font-bold text-white tracking-tight">Add Job Manually</h3>
+                    <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">New Entry Protocol</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setIsManualAddOpen(false)}
+                  className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-white transition-all"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-8 space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Company Name</label>
+                    <div className="relative">
+                      <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                      <input 
+                        type="text" 
+                        value={manualJob.company}
+                        onChange={(e) => setManualJob({ ...manualJob, company: e.target.value })}
+                        placeholder="e.g. OpenAI" 
+                        className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-accent/30 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Job Role / Title</label>
+                    <div className="relative">
+                      <Edit3 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                      <input 
+                        type="text" 
+                        value={manualJob.role}
+                        onChange={(e) => setManualJob({ ...manualJob, role: e.target.value })}
+                        placeholder="e.g. Frontend Engineer" 
+                        className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-accent/30 transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Job Application URL</label>
+                   <div className="relative">
+                     <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                     <input 
+                      type="text" 
+                      value={manualJob.url}
+                      onChange={(e) => setManualJob({ ...manualJob, url: e.target.value })}
+                      placeholder="Paste the full job link" 
+                      className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-accent/30 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] ml-1">Custom Outreach Pitch (Optional)</label>
+                  <textarea 
+                    value={manualJob.pitch}
+                    onChange={(e) => setManualJob({ ...manualJob, pitch: e.target.value })}
+                    placeholder="Enter your custom message or leave blank for AI generation" 
+                    className="w-full h-32 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-accent/30 transition-all resize-none font-mono"
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button 
+                    onClick={() => setIsManualAddOpen(false)}
+                    className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={handleManualAdd}
+                    disabled={isAdding}
+                    className="flex-[2] btn-cinematic !py-4 flex items-center justify-center gap-3 !text-[11px] !font-bold !uppercase !tracking-[0.2em]"
+                  >
+                    {isAdding ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
+                    Deploy to Queue
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
