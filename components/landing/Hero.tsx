@@ -113,18 +113,18 @@ export default function Hero() {
             </motion.div>
 
             {/* Main Title */}
-            <div className="mb-8">
-              <h1 ref={titleRef} className="reveal-text font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight font-bold text-white">
-                Land your <br />
-                <span className="relative inline-block h-[1.1em] align-top overflow-visible">
+            <div className="mb-8 relative">
+              <h1 ref={titleRef} className="reveal-text font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.2] sm:leading-[1.1] tracking-tight font-bold text-white">
+                Land your <br className="sm:hidden" />
+                <span className="relative inline-block h-[1.1em] align-top overflow-visible min-w-[200px] sm:min-w-[300px]">
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={ROTATING_WORDS[wordIndex]}
-                      initial={{ y: "100%", opacity: 0 }}
+                      initial={{ y: "50%", opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: "-100%", opacity: 0 }}
+                      exit={{ y: "-50%", opacity: 0 }}
                       transition={{ duration: 0.5, ease: "circOut" }}
-                      className="accent-gradient italic block px-2"
+                      className="accent-gradient italic block px-2 py-1"
                     >
                       {ROTATING_WORDS[wordIndex]}
                     </motion.span>

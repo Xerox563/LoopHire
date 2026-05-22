@@ -44,8 +44,8 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop Nav - Switched to lg:flex to prevent overlapping */}
+          <div className="hidden lg:flex items-center gap-8">
             {[
               { label: "Features", href: "#features" },
               { label: "How it Works", href: "#how" },
@@ -65,19 +65,19 @@ export default function Navbar() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors mr-2">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Link href="/dashboard" className="hidden sm:block text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary hover:text-white transition-colors mr-2">
               Log in
             </Link>
             <Link href="/dashboard">
-              <button className="bg-accent hover:bg-accent-2 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-6 py-3 rounded-xl transition-all shadow-lg shadow-accent/20">
+              <button className="bg-accent hover:bg-accent-2 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-all shadow-lg shadow-accent/20 whitespace-nowrap">
                 Get Started
               </button>
             </Link>
 
-            {/* Mobile Toggle */}
+            {/* Mobile Toggle - Switched to lg:hidden */}
             <button 
-              className="md:hidden p-2 text-white"
+              className="lg:hidden p-2 text-white ml-1"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X /> : <Menu />}
