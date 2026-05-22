@@ -29,11 +29,25 @@ export async function launchBrowser(headless: boolean): Promise<BrowserSession> 
 
   const contextOptions: Parameters<Browser["newContext"]>[0] = {
     userAgent:
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
-      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    viewport: { width: 1440, height: 900 },
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    viewport: { 
+      width: 1280 + Math.floor(Math.random() * 200), 
+      height: 720 + Math.floor(Math.random() * 200) 
+    },
+    deviceScaleFactor: 1,
+    hasTouch: false,
     locale: "en-US",
     timezoneId: "America/New_York",
+    extraHTTPHeaders: {
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+      'Sec-Fetch-Site': 'same-origin',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-User': '?1',
+      'Sec-Fetch-Dest': 'document',
+      'Referer': 'https://www.wellfound.com/',
+      'Upgrade-Insecure-Requests': '1',
+    }
   };
 
   // Load persisted session state if it exists

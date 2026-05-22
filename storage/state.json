@@ -902,10 +902,10 @@
     },
     {
       "name": "cf_clearance",
-      "value": "J2cle9HkX9jmTzYATAVRb0DiacAroCrJ2e30ryB9W2g-1779431509-1.2.1.1-PRRh68SJU6bCe4PT9XQK.ddr6s5m4dUJbk7qP.f.focenqygPCSF7Yb_.OTM6NoI66.sedF5A7yEeSVOQata.Ne1IxOTYmemQJqRttUs90aV3hapRDmCKRdnuSFnTRyw6IrVUrM6GonHYki6N4TOTEBRVVOPYgNXKtNZUQdNLdvIslxhnPqUEGB8g4DzGg1jk_bbbVTFg40FbEPZ4aLdO0BLlOEzoSrP8y4jU0lEzxNNVjjqgYexXZpdE_dcL4pjDyfmRUWv.6jAbShjq9ftFiPQJBBLKUCk4miEb0D.xNsBt.HPp9olWV5ycPZNYAQwoHAESPejdAQbVvEAEkhG1A",
+      "value": ".2E7FsEpZAwzKYnZNGGKEjR20DhsFOfjf_pS1TCLD8M-1779431852-1.2.1.1-_0PvCdeDo3M6TBUtMiTFm4qiLV7CkLAERhWa6NZvJ6.i3IJBmo1TsQLyubeRs2rBev4S.wb.0qOwrC.hrzun_G.nal1TANDah0BfcZj95nxpVN0KDPGOfrots9z2DXvgAhZSWUc8f_uNojmBQKN6F3mFnIBuOitJ6cLBKs_69uXHTR9koMVxc4RW3C4vweuIIP0ks7iJzW21r.DF2Sw9Y2BwuShEpT_vJPf5UEX..LrZBMMv9WO3LkxwnG.UgROZSLqlj_R8zRnt49rrGNSMP0FNH_GN1CH9y3jgAxOfOiRNYnj8CpWAoS32LbExUPvUC55TXZcLdNqzLGLlxcQTuQ",
       "domain": ".wellfound.com",
       "path": "/",
-      "expires": 1810967510.025149,
+      "expires": 1810967852.575131,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None",
@@ -914,10 +914,10 @@
     },
     {
       "name": "datadome",
-      "value": "Ep25hxyHZ6DP35cVfdpKSjta~_F3ks7zN1~8v8P27INLh6VZzWW6IIaMlORuQHlQDTQTO~7S4ZdgesJb0nnSafpPnCVq~JfGQRrkpo~TNTbBB4pdrotHa6wV29RFN2Ce",
+      "value": "yMtwn0kOLVwvz8bkb3OijchM3gpAGvKFXaV0iuL8tdz5D8U3NQyDRPffIyMEqbCqMKT__pEK8zazZ39X1b9T8h0DIRbIIxp2ej4P94zvw3wmP5SgMYxx_txKKc6mbBze",
       "domain": ".wellfound.com",
       "path": "/",
-      "expires": 1810967589.200279,
+      "expires": 1810967913.797574,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"

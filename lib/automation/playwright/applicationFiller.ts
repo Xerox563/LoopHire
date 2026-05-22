@@ -11,11 +11,13 @@ import {
   isLoggedIn,
   selectOption,
   uploadFile,
+  clickHumanly,
+  findElementCrossFrame,
 } from "./pageUtils";
 import { humanDelay, sleep } from "../utils/retry";
 import { supabase } from "@/lib/supabase";
 
-// Common selectors for YC Work at a Startup apply forms
+// Common selectors for various job platforms (YC, Wellfound, LinkedIn, Greenhouse, Lever, etc.)
 const APPLY_SELECTORS = {
   applyButton: [
     'a:has-text("Apply to role")',
@@ -31,6 +33,8 @@ const APPLY_SELECTORS = {
     'a:has-text("Quick Apply")',
     'button:has-text("Quick Apply")',
     'button:has-text("Apply to")',
+    'a:has-text("Apply with")',
+    'button:has-text("Apply with")',
     "button.apply-button",
     "a.apply-button",
     '[data-test="apply-button"]',
@@ -42,13 +46,53 @@ const APPLY_SELECTORS = {
     'a[id*="apply"]',
     'button[class*="styles_apply"]',
     'button[class*="styles_interested"]',
+    '#apply-button',
+    '.postings-btn', // Lever
+    '.apply-button', // Greenhouse
   ],
-  firstName: ['input[name*="first_name"]', 'input[placeholder*="First Name"]', 'input[id*="first_name"]'],
-  lastName: ['input[name*="last_name"]', 'input[placeholder*="Last Name"]', 'input[id*="last_name"]'],
-  email: ['input[type="email"]', 'input[name*="email"]', 'input[placeholder*="Email"]'],
-  phone: ['input[type="tel"]', 'input[name*="phone"]', 'input[placeholder*="Phone"]'],
-  linkedin: ['input[name*="linkedin"]', 'input[placeholder*="LinkedIn"]'],
-  location: ['input[name*="location"]', 'input[placeholder*="location"]', 'input[placeholder*="City"]'],
+  firstName: [
+    'input[name*="first_name"]', 
+    'input[name*="firstName"]',
+    'input[placeholder*="First Name"]', 
+    'input[id*="first_name"]',
+    'input[id*="firstName"]',
+    'input[name="first_name"]',
+    'input[id="first_name"]'
+  ],
+  lastName: [
+    'input[name*="last_name"]', 
+    'input[name*="lastName"]',
+    'input[placeholder*="Last Name"]', 
+    'input[id*="last_name"]',
+    'input[id*="lastName"]',
+    'input[name="last_name"]',
+    'input[id="last_name"]'
+  ],
+  email: [
+    'input[type="email"]', 
+    'input[name*="email"]', 
+    'input[placeholder*="Email"]',
+    'input[id*="email"]'
+  ],
+  phone: [
+    'input[type="tel"]', 
+    'input[name*="phone"]', 
+    'input[placeholder*="Phone"]',
+    'input[id*="phone"]',
+    'input[name*="mobile"]'
+  ],
+  linkedin: [
+    'input[name*="linkedin"]', 
+    'input[placeholder*="LinkedIn"]',
+    'input[id*="linkedin"]',
+    'input[name*="LinkedIn"]'
+  ],
+  location: [
+    'input[name*="location"]', 
+    'input[placeholder*="location"]', 
+    'input[placeholder*="City"]',
+    'input[id*="location"]'
+  ],
   wellfound: {
     salary: ['input[name*="salary"]', 'select[name*="salary"]', 'input[placeholder*="salary"]'],
     experience: ['input[name*="experience"]', 'select[name*="experience"]', 'input[placeholder*="experience"]'],
@@ -63,12 +107,14 @@ const APPLY_SELECTORS = {
     'textarea[id*="interest"]',
     'textarea[id*="message"]',
     'textarea[id*="note"]',
+    'textarea[id*="cover_letter"]',
     'textarea[placeholder*="message"]',
     'textarea[placeholder*="introduce"]',
     'textarea[placeholder*="tell"]',
     'textarea[placeholder*="why"]',
     'textarea[placeholder*="interests you"]',
     'textarea[placeholder*="about you"]',
+    'textarea[placeholder*="Cover Letter"]',
     'textarea[data-test="message"]',
     "textarea",
   ],
@@ -80,25 +126,19 @@ const APPLY_SELECTORS = {
     'button:has-text("Submit")',
     'button:has-text("Confirm")',
     'button:has-text("Send")',
+    'button:has-text("Submit Application")',
     'button[type="submit"]',
     'input[type="submit"]',
     '[data-test="submit-button"]',
     'button[class*="submit"]',
     'button[class*="Submit"]',
     'button[id*="submit"]',
+    '#submit-application',
   ],
 };
 
 async function findElement(page: Page, selectors: string[]): Promise<Locator | null> {
-  for (const sel of selectors) {
-    try {
-      const locator = page.locator(sel).first();
-      if ((await locator.count()) > 0 && (await locator.isVisible().catch(() => false))) {
-        return locator;
-      }
-    } catch {}
-  }
-  return null;
+  return findElementCrossFrame(page, selectors);
 }
 
 async function fillField(page: Page, selectors: string[], value?: string) {
@@ -152,7 +192,7 @@ export async function fillAndReviewApplication(
     }
 
     logger.info("Clicking apply button...");
-    await applyBtn.click();
+    await clickHumanly(page, applyBtn);
     
     // Wait for form to appear
     await page.waitForSelector("textarea", { timeout: 15000 }).catch(() => null);
@@ -259,7 +299,7 @@ export async function fillAndReviewApplication(
       const stillVisible = await fallbackSubmitBtn.isVisible().catch(() => false);
       if (stillVisible) {
         logger.info("Enter key didn't close form, attempting Force Click...");
-        await fallbackSubmitBtn.click({ force: true });
+        await clickHumanly(page, fallbackSubmitBtn);
       }
     }
     

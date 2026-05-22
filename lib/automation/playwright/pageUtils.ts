@@ -5,6 +5,61 @@ import { humanDelay, sleep } from "../utils/retry";
 import { logger } from "../utils/logger";
 
 /**
+ * Click an element with a randomized offset to avoid robotic precision.
+ */
+export async function clickHumanly(
+  page: Page,
+  selector: string | import("playwright").Locator,
+): Promise<void> {
+  const locator = typeof selector === 'string' ? page.locator(selector).first() : selector;
+  const box = await locator.boundingBox();
+  
+  if (box) {
+    // Click at a random point within the element, avoiding the very edges
+    const x = box.x + box.width * (0.2 + Math.random() * 0.6);
+    const y = box.y + box.height * (0.2 + Math.random() * 0.6);
+    
+    await page.mouse.move(x, y, { steps: 15 });
+    await sleep(100 + Math.random() * 200);
+    await page.mouse.down();
+    await sleep(50 + Math.random() * 100);
+    await page.mouse.up();
+  } else {
+    // Fallback to standard click if bounding box is not available
+    await locator.click();
+  }
+}
+
+/**
+ * Find an element across the main page and all iframes.
+ */
+export async function findElementCrossFrame(
+  page: Page,
+  selectors: string[],
+): Promise<import("playwright").Locator | null> {
+  // Check main frame first
+  for (const sel of selectors) {
+    const loc = page.locator(sel).first();
+    if ((await loc.count()) > 0 && (await loc.isVisible().catch(() => false))) {
+      return loc;
+    }
+  }
+
+  // Check all iframes
+  const frames = page.frames();
+  for (const frame of frames) {
+    for (const sel of selectors) {
+      const loc = frame.locator(sel).first();
+      if ((await loc.count()) > 0 && (await loc.isVisible().catch(() => false))) {
+        return loc;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
  * Navigate to a URL and wait for the page to be stable.
  */
 export async function navigateTo(
